@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -19,7 +20,7 @@ class CreatePagesTable extends Migration
             $table->string('uri')->nullable();
             $table->boolean('has_fixed_uri')->default(false);
             $table->unsignedInteger('parent_id')->index()->nullable();
-            $table->string('template');
+            $table->string('template_name');
             $table->boolean('has_fixed_template')->default(false);
             $table->boolean('is_stand_alone');
             $table->boolean('is_deletable')->default(true);
@@ -27,18 +28,21 @@ class CreatePagesTable extends Migration
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
-        Schema::create('page_contents', function (Blueprint $table) {
+
+        Schema::create('page_attributes', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('page_id')->index();
             $table->string('key');
             $table->text('value')->nullable();
             $table->timestamps();
+
             $table->foreign('page_id')
-                ->references('id')
-                ->on('pages')
-                ->onDelete('cascade');
+                  ->references('id')
+                  ->on('pages')
+                  ->onDelete('cascade');
         });
     }
+
     /**
      * Reverse the migrations.
      *
@@ -46,7 +50,7 @@ class CreatePagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('page_contents');
+        Schema::dropIfExists('page_attributes');
         Schema::dropIfExists('pages');
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use OptimusCMS\Pages\Models\Page;
 use Illuminate\Routing\Controller;
 use OptimusCMS\Pages\TemplateRegistry;
-use OptimusCMS\Pages\Jobs\UpdatePageUri;
+use OptimusCMS\Pages\Jobs\UpdatePagePath;
 use OptimusCMS\Pages\Http\Resources\PageResource;
 
 class PagesController extends Controller
@@ -75,7 +75,7 @@ class PagesController extends Controller
 
         $page->save();
 
-        UpdatePageUri::dispatch($page);
+        UpdatePagePath::dispatch($page);
 
         $template->save($page, $request);
 
@@ -133,7 +133,7 @@ class PagesController extends Controller
         $page->save();
 
         if (! $page->has_fixed_uri) {
-            UpdatePageUri::dispatch($page);
+            UpdatePagePath::dispatch($page);
         }
 
         $page->detachMedia();

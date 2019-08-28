@@ -3,75 +3,95 @@
 namespace OptimusCMS\Pages\Models;
 
 use OptimusCMS\Meta\HasMeta;
-use OptimusCMS\Media\HasMedia;
-use Illuminate\Http\Request;
 use Spatie\Sluggable\HasSlug;
-use OptimusCMS\Draftable\Draftable;
 use Spatie\Sluggable\SlugOptions;
-use OptimusCMS\Pages\TemplateRegistry;
+use OptimusCMS\Pages\Facades\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Page extends Model
 {
-    use Draftable,
-        HasMedia,
-        HasMeta,
+    use HasMeta,
         HasSlug;
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'has_fixed_template' => 'bool',
         'has_fixed_uri' => 'bool',
         'is_deletable' => 'bool',
-        'is_stand_alone' => 'bool'
+        'is_stand_alone' => 'bool',
     ];
 
-    protected $dates = ['published_at'];
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'published_at',
+    ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
-        'title',
-        'slug',
-        'template',
-        'parent_id',
-        'is_stand_alone',
-        'is_deletable',
-        'order'
+        'title', 'slug', 'template_name', 'parent_id', 'is_stand_alone', 'is_deletable', 'order',
     ];
 
-    public function scopeFilter(Builder $query, Request $request)
+    /**
+     * Apply filters to the query.
+     *
+     * @param Builder $query
+     * @param array $filters
+     * @return void
+     */
+    public function scopeApplyFilters(Builder $query, array $filters)
     {
         // Parent
-        if ($request->filled('parent')) {
-            $parent = $request->input('parent');
-            $query->where('parent_id', $parent === 'root' ? null : $parent);
+        if (! empty($filters['parent'])) {
+            $parent = $filters['parent'] === 'root'
+                ? $filters['parent']
+                : null;
+
+            $query->where('parent_id', $parent);
         }
     }
 
+    /**
+     * Get the page's template handler.
+     *
+     * @return
+     */
+    public function getTemplateAttribute()
+    {
+        return Template::load($this->template_name);
+    }
+
+    /**
+     * Only retrieve deletable pages.
+     *
+     * @param Builder $query
+     * @return void
+     */
     public function scopeDeletable(Builder $query)
     {
-        return $query->where('is_deletable', true);
+        $query->where('is_deletable', true);
     }
 
-    public function scopeWhereUri(Builder $query, $uri)
-    {
-        $query->where('uri', $this->prepareUri($uri));
-    }
-
-    protected function prepareUri($uri)
-    {
-        return (! $uri || $uri === '/') ? null : $uri;
-    }
-
-    public static function findByUri($uri)
-    {
-        return static::whereUri($uri)->first();
-    }
-
-    public static function findByUriOrFail($uri)
-    {
-        return static::whereUri($uri)->firstOrFail();
-    }
-
+    /**
+     * Get the page's slug options.
+     *
+     * @return SlugOptions
+     */
     public function getSlugOptions(): SlugOptions
     {
         $options = SlugOptions::create()
@@ -85,6 +105,12 @@ class Page extends Model
         return $options;
     }
 
+    /**
+     * Determine if another model exists with the given slug.
+     *
+     * @param string $slug
+     * @return bool
+     */
     protected function otherRecordExistsWithSlug(string $slug): bool
     {
         return static::where($this->slugOptions->slugField, $slug)
@@ -94,12 +120,12 @@ class Page extends Model
             ->exists();
     }
 
-    public function getTemplateHandlerAttribute()
-    {
-        return app(TemplateRegistry::class)->find($this->template);
-    }
-
-    public function generateUri()
+    /**
+     * Generate the page's path.
+     *
+     * @return string
+     */
+    public function generatePath()
     {
         $prefix = '';
 
@@ -109,9 +135,15 @@ class Page extends Model
             $prefix .= '/';
         }
 
-        return $prefix . $this->slug;
+        return $prefix.$this->slug;
     }
 
+    /**
+     * Add contents to the page.
+     *
+     * @param array $contents
+     * @return Collection
+     */
     public function addContents(array $contents)
     {
         $records = [];
@@ -123,16 +155,30 @@ class Page extends Model
             ];
         }
 
-        $this->contents()->createMany($records);
+        return $this->contents()->createMany($records);
     }
 
+    /**
+     * Determine if the page has content with the given key.
+     *
+     * @param string $key
+     * @return bool
+     */
     public function hasContent($key)
     {
-        return $this->contents->contains(function ($content) use ($key) {
-            return $content->key === $key && ! empty($content->value);
-        });
+        return $this->contents
+            ->contains(function ($content) use ($key) {
+                return $content->key === $key;
+            });
     }
 
+    /**
+     * Get the content value with the given key.
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
     public function getContent($key, $default = null)
     {
         if (! $this->hasContent($key)) {
@@ -144,33 +190,43 @@ class Page extends Model
         return $content->value;
     }
 
-    public function deleteContents()
+    /**
+     * Clear the page's contents.
+     *
+     * @return mixed
+     */
+    public function clearContents()
     {
-        $this->contents()->delete();
+        return $this->contents()->delete();
     }
 
+    /**
+     * Get the parent relationship.
+     *
+     * @return BelongsTo
+     */
     public function parent()
     {
         return $this->belongsTo(Page::class, 'parent_id');
     }
 
+    /**
+     * Get the children relationship.
+     *
+     * @return HasMany
+     */
     public function children()
     {
         return $this->hasMany(Page::class, 'parent_id');
     }
 
+    /**
+     * Get the contents relationship.
+     *
+     * @return HasMany
+     */
     public function contents()
     {
-        return $this->hasMany(PageContent::class);
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::saved(function ($model) {
-            /** @var HasMeta $model */
-            $model->saveMeta(request('meta') ?? []);
-        });
+        return $this->hasMany(PageContent::class, 'page_id');
     }
 }
