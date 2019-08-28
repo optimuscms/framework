@@ -75,8 +75,10 @@ class MediaFoldersController extends Controller
 
         $this->validateFolder($request, $folder);
 
-        $folder->name = $request->input('name');
-        $folder->parent_id = $request->input('parent_id');
+        $folder->fill($request->only([
+            'name',
+            'parent_id',
+        ]));
 
         $folder->save();
 
@@ -107,9 +109,9 @@ class MediaFoldersController extends Controller
     protected function validateFolder(Request $request, MediaFolder $folder = null)
     {
         $request->validate([
-            'name' => 'filled|string|max:255',
+            'name' => ($folder ? 'filled' : 'required').'|string|max:255',
+            // Todo: Must not be an ancestor of the current folder...
             'parent_id' => 'nullable|exists:media_folders,id',
-            // Todo: Not an ancestor of the current folder...
         ]);
     }
 }
