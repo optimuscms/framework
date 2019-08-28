@@ -9,7 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class UpdateChildPageUris
+class UpdateChildPagePaths
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
