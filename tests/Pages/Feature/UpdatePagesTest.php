@@ -4,8 +4,8 @@ namespace OptimusCMS\Pages\Tests\Feature;
 
 use Illuminate\Support\Arr;
 use OptimusCMS\Pages\Models\Page;
-use OptimusCMS\Pages\Tests\TestCase;
-use OptimusCMS\Pages\Tests\DummyTemplate;
+use OptimusCMS\Tests\Pages\TestCase;
+use OptimusCMS\Tests\Pages\DummyTemplate;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UpdatePagesTest extends TestCase

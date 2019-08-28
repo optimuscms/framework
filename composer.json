@@ -1,6 +1,5 @@
 {
     "name": "optimuscms/framework",
-    "version": "dev-master",
     "license": "MIT",
     "description": "The OptimusCMS framework.",
     "authors": [
@@ -18,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "OptimusCMS\\": "src"
+            "OptimusCMS\\": "src/"
         }
     },
     "autoload-dev": {

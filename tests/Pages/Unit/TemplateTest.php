@@ -1,6 +1,8 @@
 <?php
 
-namespace OptimusCMS\Pages\Tests;
+namespace OptimusCMS\Tests\Pages\Unit;
+
+use OptimusCMS\Tests\Pages\TestCase;
 
 class TemplateTest extends TestCase
 {

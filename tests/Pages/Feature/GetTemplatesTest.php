@@ -2,7 +2,7 @@
 
 namespace OptimusCMS\Pages\Tests\Feature;
 
-use OptimusCMS\Pages\Tests\TestCase;
+use OptimusCMS\Tests\Pages\TestCase;
 
 class GetTemplatesTest extends TestCase
 {

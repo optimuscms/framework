@@ -1,8 +1,9 @@
 <?php
 
-namespace OptimusCMS\Pages\Tests;
+namespace OptimusCMS\Tests\Pages\Unit;
 
 use InvalidArgumentException;
+use OptimusCMS\Tests\Pages\TestCase;
 use OptimusCMS\Pages\TemplateRegistry;
 
 class TemplateRegistryTest extends TestCase

@@ -1,10 +1,10 @@
 <?php
 
-namespace OptimusCMS\Pages\Tests\Unit;
+namespace OptimusCMS\Tests\Pages\Unit;
 
 use Mockery;
 use OptimusCMS\Pages\Models\Page;
-use OptimusCMS\Pages\Tests\TestCase;
+use OptimusCMS\Tests\Pages\TestCase;
 use OptimusCMS\Pages\Models\PageContent;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

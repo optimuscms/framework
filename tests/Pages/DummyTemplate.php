@@ -1,9 +1,9 @@
 <?php
 
-namespace OptimusCMS\Pages\Tests;
+namespace OptimusCMS\Tests\Pages;
 
-use OptimusCMS\Pages\Template;
 use Illuminate\Http\Request;
+use OptimusCMS\Pages\Template;
 use OptimusCMS\Pages\Models\Page;
 
 class DummyTemplate extends Template

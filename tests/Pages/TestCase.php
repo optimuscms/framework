@@ -1,6 +1,6 @@
 <?php
 
-namespace OptimusCMS\Pages\Tests;
+namespace OptimusCMS\Tests\Pages;
 
 use Mockery;
 use OptimusCMS\Pages\Template;
