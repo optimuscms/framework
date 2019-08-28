@@ -6,7 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class AdminUserResource extends JsonResource
 {
-    public function toArray()
+    public function toArray($request)
     {
         return [
             'id' => $this->getKey(),

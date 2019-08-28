@@ -13,8 +13,10 @@ class UserServiceProvider extends ServiceProvider
     {
         // Migrations
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
+
         // Auth
         $this->registerAdminGuard();
+
         // Routes
         $this->registerAdminRoutes();
     }
@@ -25,6 +27,7 @@ class UserServiceProvider extends ServiceProvider
             'driver' => 'session',
             'provider' => 'admins'
         ]);
+
         $this->app['config']->set('auth.providers.admins', [
             'driver' => 'eloquent',
             'model' => AdminUser::class
@@ -34,15 +37,15 @@ class UserServiceProvider extends ServiceProvider
     protected function registerAdminRoutes()
     {
         $this->app['router']
-            ->name('admin.api.')
-            ->prefix('admin/api')
-            ->middleware('web', 'auth:admin')
-            ->namespace($this->controllerNamespace)
-            ->group(function ($router) {
-                $router->apiResource('users', 'AdminUsersController');
-                $router->get('user', 'AdminUsersController@show')->name(
-                    'users.authenticated'
-                );
-            });
+             ->name('admin.api.')
+             ->prefix('admin/api')
+             ->middleware('web', 'auth:admin')
+             ->namespace($this->controllerNamespace)
+             ->group(function ($router) {
+                 $router->apiResource('users', 'AdminUsersController');
+                 $router->get('user', 'AdminUsersController@show')->name(
+                     'users.authenticated'
+                 );
+             });
     }
 }
