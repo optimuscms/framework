@@ -40,7 +40,7 @@ class MediaServiceProvider extends ServiceProvider
              ->name('admin.api.')
              ->prefix('admin/api')
              ->namespace('OptimusCMS\Media\Http\Controllers')
-             ->middleware('web', 'auth:admin')
+             //->middleware('web', 'auth:admin')
              ->group(function ($router) {
                  // Media
                  $router->apiResource('media', 'MediaController');
