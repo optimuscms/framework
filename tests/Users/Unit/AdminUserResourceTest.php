@@ -4,7 +4,7 @@ namespace OptimusCMS\Users\Tests\Unit;
 
 use Mockery;
 use Illuminate\Http\Request;
-use OptimusCMS\Users\Tests\TestCase;
+use OptimusCMS\Tests\Users\TestCase;
 use OptimusCMS\Users\Models\AdminUser;
 use OptimusCMS\Users\Http\Resources\AdminUserResource;
 

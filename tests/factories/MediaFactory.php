@@ -1,8 +1,8 @@
 <?php
 
 use Faker\Generator as Faker;
-use Optimus\Media\Models\Media;
-use Optimus\Media\Models\MediaFolder;
+use OptimusCMS\Media\Models\Media;
+use OptimusCMS\Media\Models\MediaFolder;
 
 $factory->define(Media::class, function (Faker $faker) {
     return [

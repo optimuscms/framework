@@ -1,10 +1,10 @@
 <?php
 
-namespace OptimusCMS\Users\Tests\Feature;
+namespace OptimusCMS\Tests\Users\Feature;
 
-use OptimusCMS\Users\Tests\TestCase;
-use OptimusCMS\Users\Models\AdminUser;
 use Illuminate\Support\Facades\Hash;
+use OptimusCMS\Tests\Users\TestCase;
+use OptimusCMS\Users\Models\AdminUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CreateAdminUserTest extends TestCase

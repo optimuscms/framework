@@ -1,6 +1,6 @@
 <?php
 
-namespace OptimusCMS\Users\Tests;
+namespace OptimusCMS\Tests\Users;
 
 use OptimusCMS\Users\Models\AdminUser;
 use OptimusCMS\Users\UserServiceProvider;
