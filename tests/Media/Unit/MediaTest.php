@@ -1,11 +1,11 @@
 <?php
 
-namespace OptimusCMS\Media\Tests\Unit;
+namespace OptimusCMS\Tests\Media\Unit;
 
 use Mockery;
 use Illuminate\Http\Request;
 use OptimusCMS\Media\Models\Media;
-use OptimusCMS\Media\Tests\TestCase;
+use OptimusCMS\Tests\Media\TestCase;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

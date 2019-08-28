@@ -1,14 +1,14 @@
 <?php
 
-namespace OptimusCMS\Media\Tests\Feature;
+namespace OptimusCMS\Tests\Media\Feature;
 
 use OptimusCMS\Media\Models\Media;
 use Illuminate\Http\UploadedFile;
-use OptimusCMS\Media\Tests\TestCase;
+use OptimusCMS\Tests\Media\TestCase;
 use Illuminate\Support\Facades\Queue;
-use OptimusCMS\Media\Models\MediaFolder;
 use Illuminate\Support\Facades\Storage;
-use OptimusCMS\Media\Jobs\PerformConversions;
+use OptimusCMS\Media\Models\MediaFolder;
+use Optix\Media\Jobs\PerformConversions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CreateMediaTest extends TestCase

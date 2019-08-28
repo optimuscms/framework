@@ -4,7 +4,7 @@ namespace OptimusCMS\Media\Tests\Unit;
 
 use Mockery;
 use Illuminate\Http\Request;
-use OptimusCMS\Media\Tests\TestCase;
+use OptimusCMS\Tests\Media\TestCase;
 use OptimusCMS\Media\Models\MediaFolder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;

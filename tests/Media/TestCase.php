@@ -7,7 +7,7 @@ use OptimusCMS\Users\Models\AdminUser;
 use OptimusCMS\Users\UserServiceProvider;
 use OptimusCMS\Media\MediaServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use OptimusCMS\Media\MediaServiceProvider as OptimusCMSMediaServiceProvider;
+use Optix\Media\MediaServiceProvider as OptixMediaServiceProvider;
 
 class TestCase extends BaseTestCase
 {
@@ -23,7 +23,7 @@ class TestCase extends BaseTestCase
         return [
             UserServiceProvider::class,
             MediaServiceProvider::class,
-            OptimusCMSMediaServiceProvider::class
+            OptixMediaServiceProvider::class
         ];
     }
 

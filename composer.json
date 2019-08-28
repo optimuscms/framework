@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "laravel/framework": "^5.8"
+        "laravel/framework": "^5.8",
+        "optix/media": "^0.2.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.3",

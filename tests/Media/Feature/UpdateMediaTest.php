@@ -1,9 +1,9 @@
 <?php
 
-namespace OptimusCMS\Media\Tests\Feature;
+namespace OptimusCMS\Tests\Media\Feature;
 
 use OptimusCMS\Media\Models\Media;
-use OptimusCMS\Media\Tests\TestCase;
+use OptimusCMS\Tests\Media\TestCase;
 use OptimusCMS\Media\Models\MediaFolder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
