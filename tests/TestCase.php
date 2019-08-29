@@ -2,6 +2,9 @@
 
 namespace OptimusCMS\Tests;
 
+use OptimusCMS\Pages\PageServiceProvider;
+use OptimusCMS\Users\UserServiceProvider;
+use OptimusCMS\Media\MediaServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
@@ -15,7 +18,11 @@ class TestCase extends BaseTestCase
 
     protected function getPackageProviders($app)
     {
-        return []; // Todo...
+        return [
+            MediaServiceProvider::class,
+            PageServiceProvider::class,
+            UserServiceProvider::class,
+        ];
     }
 
     public function getEnvironmentSetUp($app)
