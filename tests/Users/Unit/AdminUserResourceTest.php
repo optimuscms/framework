@@ -3,6 +3,7 @@
 namespace OptimusCMS\Users\Tests\Unit;
 
 use Mockery;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use OptimusCMS\Tests\Users\TestCase;
 use OptimusCMS\Users\Models\AdminUser;
@@ -18,16 +19,19 @@ class AdminUserResourceTest extends TestCase
     public function it_will_transform_user_data()
     {
         $user = new AdminUser();
+
         $user->id = 1;
         $user->name = 'Foo Bar';
         $user->email = 'foo@bar.com';
         $user->username = 'foobar';
         $user->password = 'fooBar123';
         $user->unknown_field = true;
-        $user->created_at = now()->subDay();
-        $user->updated_at = now();
+        $user->created_at = Carbon::now()->subDay();
+        $user->updated_at = Carbon::now();
+
         $resource = new AdminUserResource($user);
         $request = Mockery::mock(Request::class);
+
         $this->assertEquals([
             'id' => 1,
             'name' => $user->name,
