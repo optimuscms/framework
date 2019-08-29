@@ -31,10 +31,12 @@ class CreateMediaTest extends TestCase
 
         Queue::fake();
 
-        $response = $this->postJson(route('admin.api.media.store'), $data = [
-            'folder_id' => null,
-            'file' => $image
-        ]);
+        $response = $this->postJson(
+            route('admin.api.media.store'), $data = [
+                'folder_id' => null,
+                'file' => $image
+            ]
+        );
 
         // Assert media thumbnail conversion ran...
         Queue::assertPushed(PerformConversions::class);
@@ -67,10 +69,12 @@ class CreateMediaTest extends TestCase
 
         $document = UploadedFile::fake()->create('document.doc')->size(128);
 
-        $response = $this->postJson(route('admin.api.media.store'), $data = [
-            'folder_id' => $folder->id,
-            'file' => $document
-        ]);
+        $response = $this->postJson(
+            route('admin.api.media.store'), $data = [
+                'folder_id' => $folder->id,
+                'file' => $document
+            ]
+        );
 
         $response
             ->assertStatus(201)
@@ -98,9 +102,11 @@ class CreateMediaTest extends TestCase
     {
         $audio = UploadedFile::fake()->create('audio.mp3')->size(32);
 
-        $response = $this->postJson(route('admin.api.media.store'), [
-            'file' => $audio
-        ]);
+        $response = $this->postJson(
+            route('admin.api.media.store'), [
+                'file' => $audio
+            ]
+        );
 
         $response
             ->assertJsonStructure([
@@ -130,16 +136,20 @@ class CreateMediaTest extends TestCase
 
         Queue::fake();
 
-        $this->postJson(route('admin.api.media.store'), [
-            'file' => $document
-        ]);
+        $this->postJson(
+            route('admin.api.media.store'), [
+                'file' => $document
+            ]
+        );
 
         // Assert conversion did not run...
         Queue::assertNotPushed(PerformConversions::class);
 
-        $this->postJson(route('admin.api.media.store'), [
-            'file' => $image
-        ]);
+        $this->postJson(
+            route('admin.api.media.store'), [
+                'file' => $image
+            ]
+        );
 
         // Assert conversion ran...
         Queue::assertPushed(PerformConversions::class);
@@ -160,9 +170,11 @@ class CreateMediaTest extends TestCase
     /** @test */
     public function the_file_field_must_be_a_file_when_present()
     {
-        $response = $this->postJson(route('admin.api.media.store'), [
-            'file' => 'not-a-file'
-        ]);
+        $response = $this->postJson(
+            route('admin.api.media.store'), [
+                'file' => 'not-a-file'
+            ]
+        );
 
         $response
             ->assertStatus(422)
@@ -176,10 +188,12 @@ class CreateMediaTest extends TestCase
     {
         $document = UploadedFile::fake()->create('document.doc');
 
-        $response = $this->postJson(route('admin.api.media.store'), [
-            'file' => $document,
-            'folder_id' => 9999
-        ]);
+        $response = $this->postJson(
+            route('admin.api.media.store'), [
+                'file' => $document,
+                'folder_id' => 9999
+            ]
+        );
 
         $response
             ->assertStatus(422)
@@ -190,8 +204,6 @@ class CreateMediaTest extends TestCase
 
     protected function assertMediaExists($id)
     {
-        $this->assertTrue(
-            Media::where('id', $id)->exists()
-        );
+        $this->assertNotNull(Media::find($id));
     }
 }

@@ -23,7 +23,9 @@ class GetMediaTest extends TestCase
     {
         $media = factory(Media::class, 3)->create();
 
-        $response = $this->getJson(route('admin.api.media.index'));
+        $response = $this->getJson(
+            route('admin.api.media.index')
+        );
 
         $response
             ->assertOk()
@@ -44,11 +46,11 @@ class GetMediaTest extends TestCase
     /** @test */
     public function it_can_get_all_the_media_in_a_specific_folder()
     {
+        $mediaInRoot = factory(Media::class)->create();
+
         $folder = factory(MediaFolder::class)->create();
 
-        $rootMedia = factory(Media::class)->create();
-
-        $folderMedia = factory(Media::class, 2)->create([
+        $mediaInFolder = factory(Media::class, 2)->create([
             'folder_id' => $folder->id
         ]);
 
@@ -66,9 +68,9 @@ class GetMediaTest extends TestCase
 
         $ids = $response->decodeResponseJson('data.*.id');
 
-        $this->assertNotContains($rootMedia->id, $ids);
+        $this->assertNotContains($mediaInRoot->id, $ids);
 
-        $folderMedia->each(function (Media $media) use ($ids) {
+        $mediaInFolder->each(function (Media $media) use ($ids) {
             $this->assertContains($media->id, $ids);
         });
     }
@@ -78,9 +80,11 @@ class GetMediaTest extends TestCase
     {
         $media = factory(Media::class)->create();
 
-        $response = $this->getJson(route('admin.api.media.show', [
-            'id' => $media->id
-        ]));
+        $response = $this->getJson(
+            route('admin.api.media.show', [
+                'id' => $media->id
+            ])
+        );
 
         $response
             ->assertOk()

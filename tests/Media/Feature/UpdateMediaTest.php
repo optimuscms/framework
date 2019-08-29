@@ -33,8 +33,11 @@ class UpdateMediaTest extends TestCase
     public function it_can_change_the_name_of_a_media_item()
     {
         $response = $this->patchJson(
-            route('admin.api.media.update', ['id' => $this->media->id]),
-            $newData = ['name' => 'New name']
+            route('admin.api.media.update', [
+                'id' => $this->media->id
+            ]), $newData = [
+                'name' => 'New name'
+            ]
         );
 
         $response
@@ -58,8 +61,11 @@ class UpdateMediaTest extends TestCase
         ]);
 
         $response = $this->patchJson(
-            route('admin.api.media.update', ['id' => $this->media->id]),
-            $newData = ['folder_id' => $newFolder->id]
+            route('admin.api.media.update', [
+                'id' => $this->media->id
+            ]), $newData = [
+                'folder_id' => $newFolder->id
+            ]
         );
 
         $response
@@ -79,8 +85,11 @@ class UpdateMediaTest extends TestCase
     public function it_can_move_a_media_item_into_the_root_folder()
     {
         $response = $this->patchJson(
-            route('admin.api.media.update', ['id' => $this->media->id]),
-            $newData = ['folder_id' => null]
+            route('admin.api.media.update', [
+                'id' => $this->media->id
+            ]), $newData = [
+                'folder_id' => null
+            ]
         );
 
         $response
@@ -100,8 +109,11 @@ class UpdateMediaTest extends TestCase
     public function the_folder_id_must_be_an_existing_folder_id_if_not_null()
     {
         $response = $this->patchJson(
-            route('admin.api.media.update', ['id' => $this->media->id]),
-            ['folder_id' => 9999]
+            route('admin.api.media.update', [
+                'id' => $this->media->id
+            ]), [
+                'folder_id' => 9999
+            ]
         );
 
         $response
@@ -115,8 +127,11 @@ class UpdateMediaTest extends TestCase
     public function the_name_field_must_not_be_empty_when_present()
     {
         $response = $this->patchJson(
-            route('admin.api.media.update', ['id' => $this->media->id]),
-            ['name' => '']
+            route('admin.api.media.update', [
+                'id' => $this->media->id
+            ]), [
+                'name' => ''
+            ]
         );
 
         $response

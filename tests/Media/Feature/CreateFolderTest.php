@@ -21,8 +21,7 @@ class CreateFolderTest extends TestCase
     public function it_can_add_a_folder_to_the_root()
     {
         $response = $this->postJson(
-            route('admin.api.media-folders.store'),
-            $data = [
+            route('admin.api.media-folders.store'), $data = [
                 'name' => 'Name',
                 'parent_id' => null,
             ]
@@ -48,9 +47,11 @@ class CreateFolderTest extends TestCase
     /** @test */
     public function it_will_add_folders_to_the_root_if_a_parent_id_is_not_present()
     {
-        $response = $this->postJson(route('admin.api.media-folders.store'), $data = [
-            'name' => 'Name'
-        ]);
+        $response = $this->postJson(
+            route('admin.api.media-folders.store'), $data = [
+                'name' => 'Name'
+            ]
+        );
 
         $response
             ->assertStatus(201)
@@ -77,8 +78,7 @@ class CreateFolderTest extends TestCase
         ]);
 
         $response = $this->postJson(
-            route('admin.api.media-folders.store'),
-            $data = [
+            route('admin.api.media-folders.store'), $data = [
                 'name' => 'Name',
                 'parent_id' => $parent->id
             ]
