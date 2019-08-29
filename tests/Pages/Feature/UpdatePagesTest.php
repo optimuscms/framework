@@ -33,7 +33,9 @@ class UpdatePagesTest extends TestCase
     public function it_can_update_a_page()
     {
         $response = $this->patchJson(
-            route('admin.api.pages.update', ['id' => $this->page->id]),
+            route('admin.api.pages.update', [
+                'id' => $this->page->id
+            ]),
             $newData = $this->validData()
         );
 

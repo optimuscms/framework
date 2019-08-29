@@ -9,42 +9,10 @@ use OptimusCMS\Pages\TemplateRegistry;
 use OptimusCMS\Pages\PageServiceProvider;
 use OptimusCMS\Users\UserServiceProvider;
 use OptimusCMS\Media\MediaServiceProvider;
-use Orchestra\Testbench\TestCase as BaseTestCase;
+use OptimusCMS\Tests\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-    protected function getPackageProviders($app)
-    {
-        return [
-            UserServiceProvider::class,
-            PageServiceProvider::class,
-            MediaServiceProvider::class
-        ];
-    }
-
-    protected function getEnvironmentSetUp($app)
-    {
-        $app['config']->set('database.default', 'sqlite');
-        $app['config']->set('database.connections.sqlite', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
-        ]);
-    }
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->withFactories(__DIR__ . '/database/factories');
-
-        foreach (['users', 'media'] as $package) {
-            $this->loadMigrationsFrom(
-                __DIR__ . "/../vendor/optimuscms/{$package}/database/migrations"
-            );
-        }
-    }
-
     protected function signIn()
     {
         $user = AdminUser::create([

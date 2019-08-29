@@ -24,7 +24,9 @@ class GetPagesTest extends TestCase
         $firstPage = factory(Page::class)->create(['order' => 1]);
         $thirdPage = factory(Page::class)->create(['order' => 3]);
 
-        $response = $this->getJson(route('admin.api.pages.index'));
+        $response = $this->getJson(
+            route('admin.api.pages.index')
+        );
 
         $response
             ->assertOk()

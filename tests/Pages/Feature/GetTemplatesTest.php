@@ -28,7 +28,9 @@ class GetTemplatesTest extends TestCase
             $templateThree
         ]);
 
-        $response = $this->getJson(route('admin.api.page-templates.index'));
+        $response = $this->getJson(
+            route('admin.api.page-templates.index')
+        );
 
         $response
             ->assertOk()

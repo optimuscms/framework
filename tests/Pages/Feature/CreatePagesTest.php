@@ -51,7 +51,9 @@ class CreatePagesTest extends TestCase
     /** @test */
     public function there_are_required_fields()
     {
-        $response = $this->postJson(route('admin.api.pages.store'));
+        $response = $this->postJson(
+            route('admin.api.pages.store')
+        );
 
         $response
             ->assertStatus(422)
@@ -65,7 +67,9 @@ class CreatePagesTest extends TestCase
     {
         $response = $this->postJson(
             route('admin.api.pages.store'),
-            $this->validData(['template' => 'unregistered'])
+            $this->validData([
+                'template' => 'unregistered'
+            ])
         );
 
         $response
@@ -85,7 +89,9 @@ class CreatePagesTest extends TestCase
     {
         $response = $this->postJson(
             route('admin.api.pages.store'),
-            $this->validData(['parent_id' => -1])
+            $this->validData([
+                'parent_id' => -1
+            ])
         );
 
         $response
@@ -105,7 +111,9 @@ class CreatePagesTest extends TestCase
     {
         $response = $this->postJson(
             route('admin.api.pages.store'),
-            $this->validData(['is_stand_alone' => 'string'])
+            $this->validData([
+                'is_stand_alone' => 'string'
+            ])
         );
 
         $response
@@ -125,7 +133,9 @@ class CreatePagesTest extends TestCase
     {
         $response = $this->postJson(
             route('admin.api.pages.store'),
-            $this->validData(['is_published' => 'string'])
+            $this->validData([
+                'is_published' => 'string'
+            ])
         );
 
         $response
