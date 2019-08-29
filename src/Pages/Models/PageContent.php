@@ -13,7 +13,7 @@ class PageContent extends Model
      * @var array
      */
     protected $fillable = [
-        'key', 'value'
+        'key', 'value',
     ];
 
     /**

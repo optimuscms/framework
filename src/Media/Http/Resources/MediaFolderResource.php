@@ -13,7 +13,7 @@ class MediaFolderResource extends JsonResource
             'name' => $this->name,
             'parent_id' => $this->parent_id,
             'created_at' => (string) $this->created_at,
-            'updated_at' => (string) $this->updated_at
+            'updated_at' => (string) $this->updated_at,
         ];
     }
 }

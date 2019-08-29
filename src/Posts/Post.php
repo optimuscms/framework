@@ -2,9 +2,9 @@
 
 namespace OptimusCMS\Posts;
 
-use OptimusCMS\Media\HasMedia;
 use Illuminate\Http\Request;
 use Spatie\Sluggable\HasSlug;
+use OptimusCMS\Media\HasMedia;
 use Optix\Draftable\Draftable;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +17,7 @@ class Post extends Model
     protected $dates = ['published_at'];
 
     protected $fillable = [
-        'title', 'body', 'published_at'
+        'title', 'body', 'published_at',
     ];
 
     public function getSlugOptions(): SlugOptions

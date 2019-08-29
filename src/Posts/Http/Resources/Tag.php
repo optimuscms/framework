@@ -13,7 +13,7 @@ class Tag extends Resource
             'name' => $this->body,
             'slug' => $this->slug,
             'created_at' => (string) $this->created_at,
-            'updated_at' => (string) $this->updated_at
+            'updated_at' => (string) $this->updated_at,
         ];
     }
 }

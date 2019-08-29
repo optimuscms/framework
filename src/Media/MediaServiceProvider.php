@@ -47,6 +47,6 @@ class MediaServiceProvider extends ServiceProvider
 
                  // Folders
                  $router->apiResource('media-folders', 'MediaFoldersController');
-            });
+             });
     }
 }

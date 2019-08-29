@@ -25,7 +25,7 @@ class GetTemplatesTest extends TestCase
         $this->registerTemplates([
             $templateOne,
             $templateTwo,
-            $templateThree
+            $templateThree,
         ]);
 
         $response = $this->getJson(
@@ -39,16 +39,16 @@ class GetTemplatesTest extends TestCase
                 'data' => [
                     '*' => [
                         'name',
-                        'label'
-                    ]
-                ]
+                        'label',
+                    ],
+                ],
             ])
             ->assertJson([
                 'data' => [
                     ['name' => $templateOne->name()],
                     ['name' => $templateTwo->name()],
-                    ['name' => $templateThree->name()]
-                ]
+                    ['name' => $templateThree->name()],
+                ],
             ]);
     }
 }

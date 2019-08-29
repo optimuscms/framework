@@ -68,7 +68,6 @@ class MediaFoldersController extends Controller
      *
      * @throws ValidationException
      */
-
     public function update(Request $request, $id)
     {
         $folder = MediaFolder::findOrFail($id);

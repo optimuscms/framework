@@ -25,8 +25,8 @@ class GetAdminUsersTest extends TestCase
             ->assertJsonCount(3, 'data')
             ->assertJsonStructure([
                 'data' => [
-                    '*' => $this->expectedJsonStructure()
-                ]
+                    '*' => $this->expectedJsonStructure(),
+                ],
             ]);
     }
 
@@ -40,12 +40,12 @@ class GetAdminUsersTest extends TestCase
         $user = factory(AdminUser::class)->create();
         $this->signIn($user);
         $response = $this->getJson(route('admin.api.users.show', [
-            'id' => $user->id
+            'id' => $user->id,
         ]));
         $response
             ->assertOk()
             ->assertJsonStructure([
-                'data' => $this->expectedJsonStructure()
+                'data' => $this->expectedJsonStructure(),
             ])
             ->assertJson([
                 'data' => [
@@ -54,8 +54,8 @@ class GetAdminUsersTest extends TestCase
                     'email' => $user->email,
                     'username' => $user->username,
                     'created_at' => (string) $user->created_at,
-                    'updated_at' => (string) $user->updated_at
-                ]
+                    'updated_at' => (string) $user->updated_at,
+                ],
             ]);
     }
 
@@ -71,7 +71,7 @@ class GetAdminUsersTest extends TestCase
         $response
             ->assertOk()
             ->assertJsonStructure([
-                'data' => $this->expectedJsonStructure()
+                'data' => $this->expectedJsonStructure(),
             ])
             ->assertJson([
                 'data' => [
@@ -80,8 +80,8 @@ class GetAdminUsersTest extends TestCase
                     'email' => $user->email,
                     'username' => $user->username,
                     'created_at' => (string) $user->created_at,
-                    'updated_at' => (string) $user->updated_at
-                ]
+                    'updated_at' => (string) $user->updated_at,
+                ],
             ]);
     }
 }

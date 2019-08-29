@@ -18,11 +18,11 @@ class DeleteAdminUserTest extends TestCase
     {
         $user = $this->signIn();
         $response = $this->deleteJson(route('admin.api.users.destroy', [
-            'id' => $user->id
+            'id' => $user->id,
         ]));
         $response->assertStatus(204);
         $this->assertDatabaseMissing($user->getTable(), [
-            'id' => $user->id
+            'id' => $user->id,
         ]);
     }
 }

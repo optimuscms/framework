@@ -76,7 +76,7 @@ class PostsController extends Controller
             'image' => 'exists:media,id|nullable',
             'tags' => 'required|array|min:1',
             'tags.*' => 'required|exists:post_tags,id',
-            'published_at' => 'date|nullable'
+            'published_at' => 'date|nullable',
         ]);
     }
 }

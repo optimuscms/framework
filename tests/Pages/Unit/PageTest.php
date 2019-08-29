@@ -146,7 +146,7 @@ class PageTest extends TestCase
         $this->registerTemplate($template);
 
         $page = new Page([
-            'template' => $template->name()
+            'template' => $template->name(),
         ]);
 
         $this->assertSame($template, $page->getTemplateHandlerAttribute());

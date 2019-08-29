@@ -4,6 +4,6 @@ return [
 
     'prefix' => 'news',
 
-    'imageConversions' => []
+    'imageConversions' => [],
 
 ];

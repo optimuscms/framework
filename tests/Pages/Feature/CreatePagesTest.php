@@ -30,7 +30,7 @@ class CreatePagesTest extends TestCase
         $response
             ->assertStatus(201)
             ->assertJsonStructure([
-                'data' => $this->expectedPageJsonStructure()
+                'data' => $this->expectedPageJsonStructure(),
             ])
             ->assertJson([
                 'data' => [
@@ -39,12 +39,12 @@ class CreatePagesTest extends TestCase
                     'parent_id' => $data['parent_id'],
                     'contents' => [[
                         'key' => 'content',
-                        'value' => $data['content']
+                        'value' => $data['content'],
                     ]],
                     'is_stand_alone' => $data['is_stand_alone'],
                     'is_published' => $data['is_published'],
-                    'is_deletable' => true
-                ]
+                    'is_deletable' => true,
+                ],
             ]);
     }
 
@@ -58,7 +58,7 @@ class CreatePagesTest extends TestCase
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'title', 'template', 'is_stand_alone', 'is_published'
+                'title', 'template', 'is_stand_alone', 'is_published',
             ]);
     }
 
@@ -68,14 +68,14 @@ class CreatePagesTest extends TestCase
         $response = $this->postJson(
             route('admin.api.pages.store'),
             $this->validData([
-                'template' => 'unregistered'
+                'template' => 'unregistered',
             ])
         );
 
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'template'
+                'template',
             ]);
 
         $this->assertEquals(
@@ -90,14 +90,14 @@ class CreatePagesTest extends TestCase
         $response = $this->postJson(
             route('admin.api.pages.store'),
             $this->validData([
-                'parent_id' => -1
+                'parent_id' => -1,
             ])
         );
 
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'parent_id'
+                'parent_id',
             ]);
 
         $this->assertEquals(
@@ -112,14 +112,14 @@ class CreatePagesTest extends TestCase
         $response = $this->postJson(
             route('admin.api.pages.store'),
             $this->validData([
-                'is_stand_alone' => 'string'
+                'is_stand_alone' => 'string',
             ])
         );
 
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'is_stand_alone'
+                'is_stand_alone',
             ]);
 
         $this->assertEquals(
@@ -134,14 +134,14 @@ class CreatePagesTest extends TestCase
         $response = $this->postJson(
             route('admin.api.pages.store'),
             $this->validData([
-                'is_published' => 'string'
+                'is_published' => 'string',
             ])
         );
 
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'is_published'
+                'is_published',
             ]);
 
         $this->assertEquals(
@@ -160,7 +160,7 @@ class CreatePagesTest extends TestCase
             'parent_id' => factory(Page::class)->create()->id,
             'content' => 'Content', // Required by the dummy template...
             'is_stand_alone' => false,
-            'is_published' => true
+            'is_published' => true,
         ], $overrides);
     }
 }

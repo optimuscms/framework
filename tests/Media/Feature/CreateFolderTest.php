@@ -30,13 +30,13 @@ class CreateFolderTest extends TestCase
         $response
             ->assertStatus(201)
             ->assertJsonStructure([
-                'data' => $this->expectedFolderJsonStructure()
+                'data' => $this->expectedFolderJsonStructure(),
             ])
             ->assertJson([
                 'data' => [
                     'name' => $data['name'],
-                    'parent_id' => $data['parent_id']
-                ]
+                    'parent_id' => $data['parent_id'],
+                ],
             ]);
 
         $this->assertFolderExists(
@@ -49,20 +49,20 @@ class CreateFolderTest extends TestCase
     {
         $response = $this->postJson(
             route('admin.api.media-folders.store'), $data = [
-                'name' => 'Name'
+                'name' => 'Name',
             ]
         );
 
         $response
             ->assertStatus(201)
             ->assertJsonStructure([
-                'data' => $this->expectedFolderJsonStructure()
+                'data' => $this->expectedFolderJsonStructure(),
             ])
             ->assertJson([
                 'data' => [
                     'name' => $data['name'],
-                    'parent_id' => null
-                ]
+                    'parent_id' => null,
+                ],
             ]);
 
         $this->assertFolderExists(
@@ -80,20 +80,20 @@ class CreateFolderTest extends TestCase
         $response = $this->postJson(
             route('admin.api.media-folders.store'), $data = [
                 'name' => 'Name',
-                'parent_id' => $parent->id
+                'parent_id' => $parent->id,
             ]
         );
 
         $response
             ->assertStatus(201)
             ->assertJsonStructure([
-                'data' => $this->expectedFolderJsonStructure()
+                'data' => $this->expectedFolderJsonStructure(),
             ])
             ->assertJson([
                 'data' => [
                     'name' => $data['name'],
                     'parent_id' => $data['parent_id'],
-                ]
+                ],
             ]);
 
         $this->assertFolderExists(

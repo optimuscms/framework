@@ -20,12 +20,12 @@ class UpdateMediaTest extends TestCase
         $this->signIn();
 
         $folder = factory(MediaFolder::class)->create([
-            'name' => 'New folder name'
+            'name' => 'New folder name',
         ]);
 
         $this->media = factory(Media::class)->create([
             'name' => 'Old name',
-            'folder_id' => $folder->id
+            'folder_id' => $folder->id,
         ]);
     }
 
@@ -34,22 +34,22 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id
+                'id' => $this->media->id,
             ]), $newData = [
-                'name' => 'New name'
+                'name' => 'New name',
             ]
         );
 
         $response
             ->assertOk()
             ->assertJsonStructure([
-                'data' => $this->expectedMediaJsonStructure()
+                'data' => $this->expectedMediaJsonStructure(),
             ])
             ->assertJson([
                 'data' => [
                     'name' => $newData['name'],
-                    'folder_id' => $this->media->folder_id
-                ]
+                    'folder_id' => $this->media->folder_id,
+                ],
             ]);
     }
 
@@ -57,27 +57,27 @@ class UpdateMediaTest extends TestCase
     public function it_can_move_a_media_item_into_another_folder()
     {
         $newFolder = factory(MediaFolder::class)->create([
-            'name' => 'New folder name'
+            'name' => 'New folder name',
         ]);
 
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id
+                'id' => $this->media->id,
             ]), $newData = [
-                'folder_id' => $newFolder->id
+                'folder_id' => $newFolder->id,
             ]
         );
 
         $response
             ->assertOk()
             ->assertJsonStructure([
-                'data' => $this->expectedMediaJsonStructure()
+                'data' => $this->expectedMediaJsonStructure(),
             ])
             ->assertJson([
                 'data' => [
                     'name' => $this->media->name,
-                    'folder_id' => $newData['folder_id']
-                ]
+                    'folder_id' => $newData['folder_id'],
+                ],
             ]);
     }
 
@@ -86,22 +86,22 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id
+                'id' => $this->media->id,
             ]), $newData = [
-                'folder_id' => null
+                'folder_id' => null,
             ]
         );
 
         $response
             ->assertOk()
             ->assertJsonStructure([
-                'data' => $this->expectedMediaJsonStructure()
+                'data' => $this->expectedMediaJsonStructure(),
             ])
             ->assertJson([
                 'data' => [
                     'name' => $this->media->name,
-                    'folder_id' => $newData['folder_id']
-                ]
+                    'folder_id' => $newData['folder_id'],
+                ],
             ]);
     }
 
@@ -110,16 +110,16 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id
+                'id' => $this->media->id,
             ]), [
-                'folder_id' => 9999
+                'folder_id' => 9999,
             ]
         );
 
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'folder_id'
+                'folder_id',
             ]);
     }
 
@@ -128,16 +128,16 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id
+                'id' => $this->media->id,
             ]), [
-                'name' => ''
+                'name' => '',
             ]
         );
 
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'name'
+                'name',
             ]);
     }
 }

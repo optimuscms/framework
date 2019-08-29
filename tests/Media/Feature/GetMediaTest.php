@@ -32,8 +32,8 @@ class GetMediaTest extends TestCase
             ->assertJsonCount(3, 'data')
             ->assertJsonStructure([
                 'data' => [
-                    '*' => $this->expectedMediaJsonStructure()
-                ]
+                    '*' => $this->expectedMediaJsonStructure(),
+                ],
             ]);
 
         $ids = $response->decodeResponseJson('data.*.id');
@@ -51,19 +51,19 @@ class GetMediaTest extends TestCase
         $folder = factory(MediaFolder::class)->create();
 
         $mediaInFolder = factory(Media::class, 2)->create([
-            'folder_id' => $folder->id
+            'folder_id' => $folder->id,
         ]);
 
         $response = $this->getJson(
-            route('admin.api.media.index') . '?folder=' . $folder->id
+            route('admin.api.media.index').'?folder='.$folder->id
         );
 
         $response
             ->assertJsonCount(2, 'data')
             ->assertJsonStructure([
                 'data' => [
-                    '*' => $this->expectedMediaJsonStructure()
-                ]
+                    '*' => $this->expectedMediaJsonStructure(),
+                ],
             ]);
 
         $ids = $response->decodeResponseJson('data.*.id');
@@ -82,14 +82,14 @@ class GetMediaTest extends TestCase
 
         $response = $this->getJson(
             route('admin.api.media.show', [
-                'id' => $media->id
+                'id' => $media->id,
             ])
         );
 
         $response
             ->assertOk()
             ->assertJsonStructure([
-                'data' => $this->expectedMediaJsonStructure()
+                'data' => $this->expectedMediaJsonStructure(),
             ])
             ->assertJson([
                 'data' => [
@@ -100,8 +100,8 @@ class GetMediaTest extends TestCase
                     'mime_type' => $media->mime_type,
                     'size' => $media->size,
                     'created_at' => (string) $media->created_at,
-                    'updated_at' => (string) $media->updated_at
-                ]
+                    'updated_at' => (string) $media->updated_at,
+                ],
             ]);
     }
 }
