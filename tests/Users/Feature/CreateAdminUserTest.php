@@ -17,7 +17,12 @@ class CreateAdminUserTest extends TestCase
         $this->signIn();
     }
 
-    /** @test */
+    /**
+     * Test that an Admin user can be created,
+     * the response will be json and the Password is hash checked.
+     *
+     * @test
+     */
     public function it_can_create_an_admin_user()
     {
         $response = $this->postJson(
@@ -36,6 +41,7 @@ class CreateAdminUserTest extends TestCase
                     'username' => $data['username']
                 ]
             ]);
+
         $this->assertNotNull($user = AdminUser::find(
             $response->decodeResponseJson('data.id')
         ));
@@ -45,7 +51,12 @@ class CreateAdminUserTest extends TestCase
         ));
     }
 
-    /** @test */
+    /**
+     * Test that fields are required, the 422 (unprocessed) code is returned,
+     * there are also validation errors present.
+     *
+     * @test
+     */
     public function there_are_required_fields()
     {
         $response = $this->postJson(route('admin.api.users.store'));
@@ -63,7 +74,12 @@ class CreateAdminUserTest extends TestCase
         }
     }
 
-    /** @test */
+    /**
+     * Verify that the user must provided an email address.
+     * The email string must be in the correct format.
+     *
+     * @test
+     */
     public function the_email_field_must_be_a_valid_email_address()
     {
         $response = $this->postJson(
@@ -83,7 +99,14 @@ class CreateAdminUserTest extends TestCase
         );
     }
 
-    /** @test */
+    /**
+     * Verify that the password must be 6 characters or longer,
+     * Supply a short password to test
+     *
+     * There should be validation errors and unprocessed code returned.
+     *
+     * @test
+     */
     public function the_password_field_must_be_at_least_6_characters()
     {
         $response = $this->postJson(

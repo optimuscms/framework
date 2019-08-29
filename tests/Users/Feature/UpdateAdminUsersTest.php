@@ -25,7 +25,11 @@ class UpdateAdminUsersTest extends TestCase
         $this->signIn($this->user);
     }
 
-    /** @test */
+    /**
+     * Test that a use can be updated using that patch method, a json response is returned.
+     *
+     * @test
+     */
     public function it_can_update_an_admin_user()
     {
         $response = $this->patchJson(route('admin.api.users.update', [
@@ -49,7 +53,12 @@ class UpdateAdminUsersTest extends TestCase
         ));
     }
 
-    /** @test */
+    /**
+     * To update a password a password field is required.
+     * Do not send a password and verify that the record matches the old password via a hash check.
+     *
+     * @test
+     */
     public function it_will_not_update_passwords_unless_the_field_is_present()
     {
         $response = $this->patchJson(route('admin.api.users.update', [
@@ -72,7 +81,11 @@ class UpdateAdminUsersTest extends TestCase
         ));
     }
 
-    /** @test */
+    /**
+     * Test that there are required fields and that not sending them generates validation error messages.
+     *
+     * @test
+     */
     public function there_are_required_fields()
     {
         $response = $this->patchJson(route('admin.api.users.update', [
@@ -92,7 +105,13 @@ class UpdateAdminUsersTest extends TestCase
         }
     }
 
-    /** @test */
+    /**
+     * Ensure that he email can not be updated unless it is in the correct format
+     *
+     * Provide the wrong format to generate validation errors.
+     *
+     * @test
+     */
     public function the_email_field_must_be_a_valid_email_address()
     {
         $response = $this->patchJson(route('admin.api.users.update', [
@@ -111,7 +130,13 @@ class UpdateAdminUsersTest extends TestCase
         );
     }
 
-    /** @test */
+    /**
+     * Ensure that the password should be 6 chars or longer.
+     *
+     * Provide a short password and expect Validation errors.
+     *
+     * @test
+     */
     public function the_password_field_must_be_at_least_6_characters()
     {
         $response = $this->patchJson(route('admin.api.users.update', [

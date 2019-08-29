@@ -10,7 +10,11 @@ class GetAdminUsersTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    /**
+     * Create and then retrieve a list of 3 users, verify the response is in the correct format.
+     *
+     * @test
+     */
     public function it_can_display_all_admin_users()
     {
         $users = factory(AdminUser::class, 3)->create();
@@ -26,7 +30,11 @@ class GetAdminUsersTest extends TestCase
             ]);
     }
 
-    /** @test */
+    /**
+     * Create a user, sign them in and retrieve the row that matches the users ID.
+     *
+     * @test
+     */
     public function it_can_display_a_specific_admin_user()
     {
         $user = factory(AdminUser::class)->create();
@@ -51,7 +59,11 @@ class GetAdminUsersTest extends TestCase
             ]);
     }
 
-    /** @test */
+    /**
+     * Sign in a user and retrieve the DB row that is related to that user only.
+     *
+     * @test
+     */
     public function it_can_display_the_currently_authenticated_admin_user()
     {
         $user = $this->signIn();

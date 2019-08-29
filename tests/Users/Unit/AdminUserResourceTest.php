@@ -10,7 +10,11 @@ use OptimusCMS\Users\Http\Resources\AdminUserResource;
 
 class AdminUserResourceTest extends TestCase
 {
-    /** @test */
+    /**
+     * Test that User resource is working, a used Row can be returned as an expected array.
+     *
+     * @test
+     */
     public function it_will_transform_user_data()
     {
         $user = new AdminUser();

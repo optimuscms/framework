@@ -9,7 +9,11 @@ class DeleteAdminUserTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    /**
+     * Test that a use can be deleted by returning a successful error code.
+     *
+     * @test
+     */
     public function it_can_delete_an_admin_user()
     {
         $user = $this->signIn();
