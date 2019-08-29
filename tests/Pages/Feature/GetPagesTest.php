@@ -32,15 +32,15 @@ class GetPagesTest extends TestCase
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
-                    '*' => $this->expectedJsonStructure()
-                ]
+                    '*' => $this->expectedJsonStructure(),
+                ],
             ])
             ->assertJson([
                 'data' => [
                     ['id' => $firstPage->id],
                     ['id' => $secondPage->id],
-                    ['id' => $thirdPage->id]
-                ]
+                    ['id' => $thirdPage->id],
+                ],
             ]);
     }
 
@@ -49,11 +49,11 @@ class GetPagesTest extends TestCase
     {
         $parentPage = factory(Page::class)->create();
         $childPages = factory(Page::class, 2)->create([
-            'parent_id' => $parentPage->id
+            'parent_id' => $parentPage->id,
         ]);
 
         $response = $this->getJson(
-            route('admin.api.pages.index') . "?parent={$parentPage->id}"
+            route('admin.api.pages.index')."?parent={$parentPage->id}"
         );
 
         $response
@@ -61,8 +61,8 @@ class GetPagesTest extends TestCase
             ->assertJsonCount(2, 'data')
             ->assertJsonStructure([
                 'data' => [
-                    '*' => $this->expectedJsonStructure()
-                ]
+                    '*' => $this->expectedJsonStructure(),
+                ],
             ]);
 
         $ids = $response->decodeResponseJson('data.*.id');
@@ -78,13 +78,13 @@ class GetPagesTest extends TestCase
         $page = factory(Page::class)->create()->fresh();
 
         $response = $this->getJson(route('admin.api.pages.show', [
-            'id' => $page->id
+            'id' => $page->id,
         ]));
 
         $response
             ->assertOk()
             ->assertJsonStructure([
-                'data' => $this->expectedJsonStructure()
+                'data' => $this->expectedJsonStructure(),
             ])
             ->assertJson([
                 'data' =>[
@@ -102,8 +102,8 @@ class GetPagesTest extends TestCase
                     'is_published' => $page->isPublished(),
                     'is_deletable' => $page->is_deletable,
                     'created_at' => (string) $page->created_at,
-                    'updated_at' => (string) $page->updated_at
-                ]
+                    'updated_at' => (string) $page->updated_at,
+                ],
             ]);
     }
 
@@ -121,15 +121,15 @@ class GetPagesTest extends TestCase
             'contents' => [
                 '*' => [
                     'key',
-                    'value'
-                ]
+                    'value',
+                ],
             ],
             'media' => [],
             'is_stand_alone',
             'is_published',
             'is_deletable',
             'created_at',
-            'updated_at'
+            'updated_at',
         ];
     }
 }

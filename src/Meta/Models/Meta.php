@@ -1,4 +1,5 @@
 <?php
+
 namespace Optix\Meta\Models;
 
 use OptimusCMS\Media\HasMedia;
@@ -23,17 +24,20 @@ class Meta extends Model
     protected $fillable = [
         'title', 'description', 'og_title', 'og_description', 'custom_tags',
     ];
+
     public function registerMediaGroups()
     {
         $this->addMediaGroup(self::OG_MEDIA_GROUP)->performConversions(self::OG_MEDIA_CONVERSION);
     }
+
     /**
      * @return Media|null
      */
     public function getOgImage()
     {
-        return $this->getFirstMedia(Meta::OG_MEDIA_GROUP);
+        return $this->getFirstMedia(self::OG_MEDIA_GROUP);
     }
+
     /**
      * When presenting the Meta Model on an API endpoint, always include a Media representation of the OG Image.
      *
@@ -44,6 +48,7 @@ class Meta extends Model
         $representation = parent::toArray();
         $ogImage = $this->getOgImage();
         $representation['og_image'] = $ogImage ? MediaResource::make($this->getOgImage()) : null;
+
         return $representation;
     }
 }

@@ -39,7 +39,7 @@ class TemplateRegistryTest extends TestCase
 
         $this->templates->registerMany([
             $templateOne,
-            $templateTwo
+            $templateTwo,
         ]);
 
         $templates = $this->templates->all();
@@ -58,7 +58,7 @@ class TemplateRegistryTest extends TestCase
 
         $this->templates->registerMany([
             $templateOne,
-            $templateTwo
+            $templateTwo,
         ]);
 
         $this->assertSame($templateTwo, $this->templates->find('two'));

@@ -14,7 +14,7 @@ class MediaResource extends JsonResource
             'alt_text' => $this->alt_text,
             //
             'created_at' => (string) $this->created_at,
-            'updated_at' => (string) $this->updated_at
+            'updated_at' => (string) $this->updated_at,
         ];
     }
 }

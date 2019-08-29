@@ -207,7 +207,7 @@ class Page extends Model
      */
     public function parent()
     {
-        return $this->belongsTo(Page::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     /**
@@ -217,7 +217,7 @@ class Page extends Model
      */
     public function children()
     {
-        return $this->hasMany(Page::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     /**

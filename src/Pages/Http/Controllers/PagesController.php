@@ -2,8 +2,8 @@
 
 namespace OptimusCMS\Pages\Http\Controllers;
 
-use OptimusCMS\Pages\Template;
 use Illuminate\Http\Request;
+use OptimusCMS\Pages\Template;
 use OptimusCMS\Pages\Models\Page;
 use Illuminate\Routing\Controller;
 use OptimusCMS\Pages\TemplateRegistry;
@@ -162,14 +162,14 @@ class PagesController extends Controller
     {
         $request->validate([
             'pages' => 'required|array',
-            'pages.*' => 'exists:pages,id'
+            'pages.*' => 'exists:pages,id',
         ]);
 
         $order = 1;
 
         foreach ($request->input('pages') as $id) {
             Page::where('id', $id)->update([
-                'order' => $order
+                'order' => $order,
             ]);
 
             $order++;
@@ -209,14 +209,14 @@ class PagesController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'template' => 'required|in:' . collect($this->templates->all())
+            'template' => 'required|in:'.collect($this->templates->all())
                     ->map(function (Template $template) {
                         return $template->name();
                     })
                     ->implode(','),
             'parent_id' => 'exists:pages,id|nullable',
             'is_stand_alone' => 'present|boolean',
-            'is_published' => 'present|boolean'
+            'is_published' => 'present|boolean',
         ]);
     }
 }

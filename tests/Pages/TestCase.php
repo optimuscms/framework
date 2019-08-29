@@ -4,11 +4,8 @@ namespace OptimusCMS\Tests\Pages;
 
 use Mockery;
 use OptimusCMS\Pages\Template;
-use OptimusCMS\Users\Models\AdminUser;
 use OptimusCMS\Pages\TemplateRegistry;
-use OptimusCMS\Pages\PageServiceProvider;
-use OptimusCMS\Users\UserServiceProvider;
-use OptimusCMS\Media\MediaServiceProvider;
+use OptimusCMS\Users\Models\AdminUser;
 use OptimusCMS\Tests\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
@@ -19,7 +16,7 @@ class TestCase extends BaseTestCase
             'name' => 'Admin',
             'email' => 'admin@optimus.test',
             'username' => 'admin',
-            'password' => bcrypt('password')
+            'password' => bcrypt('password'),
         ]);
 
         $this->actingAs($user, 'admin');
@@ -60,15 +57,15 @@ class TestCase extends BaseTestCase
             'contents' => [
                 '*' => [
                     'key',
-                    'value'
-                ]
+                    'value',
+                ],
             ],
             'media' => [],
             'is_stand_alone',
             'is_published',
             'is_deletable',
             'created_at',
-            'updated_at'
+            'updated_at',
         ];
     }
 }

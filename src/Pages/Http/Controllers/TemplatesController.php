@@ -16,7 +16,7 @@ class TemplatesController extends Controller
     public function index(TemplateRegistry $templates)
     {
         return response()->json([
-            'data' => collect($templates->all())->map->toArray()
+            'data' => collect($templates->all())->map->toArray(),
         ]);
     }
 }

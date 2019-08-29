@@ -32,14 +32,14 @@ class CreateAdminUserTest extends TestCase
         $response
             ->assertStatus(201)
             ->assertJsonStructure([
-                'data' => $this->expectedJsonStructure()
+                'data' => $this->expectedJsonStructure(),
             ])
             ->assertJson([
                 'data' => [
                     'name' => $data['name'],
                     'email' => $data['email'],
-                    'username' => $data['username']
-                ]
+                    'username' => $data['username'],
+                ],
             ]);
 
         $this->assertNotNull($user = AdminUser::find(
@@ -63,7 +63,7 @@ class CreateAdminUserTest extends TestCase
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors($requiredFields = [
-                'name', 'email', 'username'
+                'name', 'email', 'username',
             ]);
         $errors = $response->decodeResponseJson('errors');
         foreach ($requiredFields as $field) {
@@ -85,13 +85,13 @@ class CreateAdminUserTest extends TestCase
         $response = $this->postJson(
             route('admin.api.users.store'),
             $data = $this->validData([
-                'email' => 'not an email'
+                'email' => 'not an email',
             ])
         );
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'email'
+                'email',
             ]);
         $this->assertContains(
             trans('validation.email', ['attribute' => 'email']),
@@ -101,7 +101,7 @@ class CreateAdminUserTest extends TestCase
 
     /**
      * Verify that the password must be 6 characters or longer,
-     * Supply a short password to test
+     * Supply a short password to test.
      *
      * There should be validation errors and unprocessed code returned.
      *
@@ -112,13 +112,13 @@ class CreateAdminUserTest extends TestCase
         $response = $this->postJson(
             route('admin.api.users.store'),
             $data = $this->validData([
-                'password' => 'short'
+                'password' => 'short',
             ])
         );
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'password'
+                'password',
             ]);
         $this->assertContains(
             trans('validation.min.string', ['attribute' => 'password', 'min' => 6]),
@@ -132,7 +132,7 @@ class CreateAdminUserTest extends TestCase
             'name' => 'New name',
             'email' => 'new@email.com',
             'username' => 'new_username',
-            'password' => 'new_password'
+            'password' => 'new_password',
         ], $overrides);
     }
 }

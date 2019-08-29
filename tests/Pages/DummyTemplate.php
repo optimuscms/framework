@@ -16,14 +16,14 @@ class DummyTemplate extends Template
     public function validate(Request $request)
     {
         $request->validate([
-            'content' => 'required'
+            'content' => 'required',
         ]);
     }
 
     public function save(Page $page, Request $request)
     {
         $page->addContents([
-            'content' => $request->input('content')
+            'content' => $request->input('content'),
         ]);
     }
 }

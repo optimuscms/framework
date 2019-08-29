@@ -2,9 +2,9 @@
 
 namespace Posts;
 
-use Illuminate\Database\Eloquent\Model;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use Illuminate\Database\Eloquent\Model;
 
 class PostTag extends Model
 {

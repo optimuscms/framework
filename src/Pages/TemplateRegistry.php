@@ -37,20 +37,20 @@ class TemplateRegistry
      * @param  string  $name
      * @return Template
      * @throws InvalidArgumentException
-     *
      */
     public function find(string $name)
     {
         $template = Arr::first(
             $this->all(), function (Template $template) use ($name) {
-            return $name === $template->name();
-        });
+                return $name === $template->name();
+            });
 
         if (! $template) {
             throw new InvalidArgumentException(
                 "A template with the name `{$name}` has not been registered."
             );
         }
+
         return $template;
     }
 

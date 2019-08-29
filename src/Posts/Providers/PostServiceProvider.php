@@ -12,11 +12,11 @@ class PostServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(
-            __DIR__ . '/../../database/migrations'
+            __DIR__.'/../../database/migrations'
         );
 
         $this->publishes([
-            __DIR__ . '/../../config/post.php' => config_path('post.php')
+            __DIR__.'/../../config/post.php' => config_path('post.php'),
         ], 'config');
 
         $this->mapAdminRoutes();
@@ -31,7 +31,7 @@ class PostServiceProvider extends ServiceProvider
                 Route::apiResource('posts', 'PostsController');
                 Route::apiResource('post-tags', 'TagsController');
                 Route::apiResource('post-comments', 'CommentsController')->except([
-                    'store', 'update'
+                    'store', 'update',
                 ]);
             });
     }
