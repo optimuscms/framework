@@ -3,9 +3,12 @@
 namespace OptimusCMS\Pages\Tests\Feature;
 
 use OptimusCMS\Tests\Pages\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class GetTemplatesTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function setUp(): void
     {
         parent::setUp();

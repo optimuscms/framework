@@ -2,7 +2,7 @@
 
 namespace OptimusCMS\Pages\Facades;
 
-use Optimus\Pages\TemplateRegistry;
+use OptimusCMS\Pages\TemplateRegistry;
 use Illuminate\Support\Facades\Facade;
 
 class Template extends Facade

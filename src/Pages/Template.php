@@ -27,7 +27,7 @@ abstract class Template
     /**
      * Validate the request data.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return void
      */
     abstract public function validate(Request $request);
@@ -35,8 +35,8 @@ abstract class Template
     /**
      * Save the request data to the page.
      *
-     * @param  \Optimus\Pages\Models\Page  $page
-     * @param  \Illuminate\Http\Request  $request
+     * @param Page $page
+     * @param Request $request
      * @return void
      */
     abstract public function save(Page $page, Request $request);
@@ -50,7 +50,7 @@ abstract class Template
     {
         return [
             'name' => $this->name(),
-            'label' => $this->label()
+            'label' => $this->label(),
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Optimus\Pages\Jobs;
+namespace OptimusCMS\Pages\Jobs;
 
 use Illuminate\Bus\Queueable;
 use OptimusCMS\Pages\Models\Page;

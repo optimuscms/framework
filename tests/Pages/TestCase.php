@@ -5,25 +5,10 @@ namespace OptimusCMS\Tests\Pages;
 use Mockery;
 use OptimusCMS\Pages\Template;
 use OptimusCMS\Pages\TemplateRegistry;
-use OptimusCMS\Users\Models\AdminUser;
 use OptimusCMS\Tests\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-    protected function signIn()
-    {
-        $user = AdminUser::create([
-            'name' => 'Admin',
-            'email' => 'admin@optimus.test',
-            'username' => 'admin',
-            'password' => bcrypt('password'),
-        ]);
-
-        $this->actingAs($user, 'admin');
-
-        return $user;
-    }
-
     protected function registerTemplate(Template $template)
     {
         $this->app[TemplateRegistry::class]->register($template);

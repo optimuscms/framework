@@ -13,7 +13,7 @@ class TemplateRegistry
     protected $templates = [];
 
     /**
-     * Create a new TemplateRegistry instance.
+     * Create a new registry instance.
      *
      * @param  array  $templates
      * @return void

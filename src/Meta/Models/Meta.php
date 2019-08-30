@@ -10,6 +10,13 @@ class Meta extends Model
 {
     use HasMedia;
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'meta';
+
     /** @var string */
     const OG_IMAGE_MEDIA_GROUP = 'og_image';
 

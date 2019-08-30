@@ -6,12 +6,12 @@ use Illuminate\Support\ServiceProvider;
 
 class PageServiceProvider extends ServiceProvider
 {
-    protected $controllerNamespace = 'Optimus\Pages\Http\Controllers';
+    protected $controllerNamespace = 'OptimusCMS\Pages\Http\Controllers';
 
     public function boot()
     {
         // Migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
 
         // Routes
         $this->registerAdminRoutes();

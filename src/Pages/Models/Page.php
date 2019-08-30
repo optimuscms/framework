@@ -6,15 +6,15 @@ use Optix\Media\HasMedia;
 use Illuminate\Http\Request;
 use OptimusCMS\Meta\HasMeta;
 use Spatie\Sluggable\HasSlug;
-// use Optix\Draftable\Draftable;
+use Optix\Draftable\Draftable;
 use Spatie\Sluggable\SlugOptions;
-use Optimus\Pages\TemplateRegistry;
+use OptimusCMS\Pages\TemplateRegistry;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
 class Page extends Model
 {
-    use // Draftable,
+    use Draftable,
         HasMedia,
         HasMeta,
         HasSlug;
