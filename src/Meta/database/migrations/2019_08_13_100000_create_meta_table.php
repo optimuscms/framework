@@ -12,11 +12,11 @@ class CreateMetaTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('metable_id')->index();
             $table->string('metable_type');
-            $table->string('title', 100)->nullable();
-            $table->string('description', 200)->nullable();
-            $table->string('og_title', 100)->nullable();
-            $table->string('og_description', 200)->nullable();
-            $table->text('custom_tags')->nullable();
+            $table->string('title')->nullable();
+            $table->string('description')->nullable();
+            $table->string('og_title')->nullable();
+            $table->string('og_description')->nullable();
+            $table->text('additional_tags')->nullable();
             $table->timestamps();
         });
     }
