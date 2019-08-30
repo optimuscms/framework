@@ -29,7 +29,9 @@ trait HasMeta
         $meta = $this->meta ?: new Meta();
 
         $ogImageId = Arr::pull($data, 'og_image_id');
-        $meta = $this->meta()->save($meta->fill($data));
+        $meta->fill($data);
+
+        $meta = $this->meta()->save($meta);
 
         if ($meta && $ogImageId) {
             $meta->attachMedia(
