@@ -5,7 +5,7 @@ namespace OptimusCMS\Pages\Jobs;
 use OptimusCMS\Pages\Models\Page;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class UpdatePagePath
+class UpdatePageUri
 {
     use Dispatchable;
 
@@ -14,7 +14,7 @@ class UpdatePagePath
     /**
      * Create a new job instance.
      *
-     * @param  Page  $page
+     * @param Page $page
      * @return void
      */
     public function __construct(Page $page)
@@ -33,7 +33,7 @@ class UpdatePagePath
         $this->page->save();
 
         if ($this->page->wasChanged('uri')) {
-            UpdateChildPagePaths::dispatch($this->page);
+            UpdateChildPageUris::dispatch($this->page);
         }
     }
 }

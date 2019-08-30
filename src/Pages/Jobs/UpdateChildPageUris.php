@@ -1,14 +1,15 @@
 <?php
 
-namespace OptimusCMS\Pages\Jobs;
+namespace Optimus\Pages\Jobs;
 
 use Illuminate\Bus\Queueable;
 use OptimusCMS\Pages\Models\Page;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class UpdateChildPagePaths
+class UpdateChildPageUris
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -17,7 +18,7 @@ class UpdateChildPagePaths
     /**
      * Create a new job instance.
      *
-     * @param  Page  $page
+     * @param Page $page
      * @return void
      */
     public function __construct(Page $page)

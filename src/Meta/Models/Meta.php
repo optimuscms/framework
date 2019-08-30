@@ -33,12 +33,12 @@ class Meta extends Model
     public static function rules()
     {
         return [
-            'title' => 'nullable|string|max:255',
-            'description' => 'nullable|string|max:255',
-            'og_title' => 'nullable|string|max:255',
-            'og_description' => 'nullable|string|max:255',
-            'og_image_id' => 'nullable|exists:media,id',
-            'additional_tags' => 'nullable|string',
+            'meta.title' => 'nullable|string|max:255',
+            'meta.description' => 'nullable|string|max:255',
+            'meta.og_title' => 'nullable|string|max:255',
+            'meta.og_description' => 'nullable|string|max:255',
+            'meta.og_image_id' => 'nullable|exists:media,id',
+            'meta.additional_tags' => 'nullable|string',
         ];
     }
 

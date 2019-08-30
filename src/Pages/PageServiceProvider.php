@@ -6,14 +6,12 @@ use Illuminate\Support\ServiceProvider;
 
 class PageServiceProvider extends ServiceProvider
 {
-    protected $controllerNamespace = 'OptimusCMS\Pages\Http\Controllers';
+    protected $controllerNamespace = 'Optimus\Pages\Http\Controllers';
 
     public function boot()
     {
         // Migrations
-        $this->loadMigrationsFrom(
-            __DIR__.'/database/migrations'
-        );
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         // Routes
         $this->registerAdminRoutes();
@@ -27,18 +25,18 @@ class PageServiceProvider extends ServiceProvider
     protected function registerAdminRoutes()
     {
         $this->app['router']
-            ->name('admin.api.')
-            ->prefix('admin/api')
-            ->namespace($this->controllerNamespace)
-            ->middleware('web', 'auth:admin')
-            ->group(function ($router) {
-                // Pages
-                $router->apiResource('pages', 'PagesController');
-                $router->patch('pages', 'PagesController@reorder');
+             ->name('admin.api.')
+             ->prefix('admin/api')
+             ->namespace($this->controllerNamespace)
+             ->middleware('web', 'auth:admin')
+             ->group(function ($router) {
+                 // Pages
+                 $router->apiResource('pages', 'PagesController');
+                 $router->patch('pages', 'PagesController@reorder');
 
-                // Templates
-                $router->apiResource('page-templates', 'TemplatesController')
-                    ->only(['index', 'show']);
-            });
+                 // Templates
+                 $router->apiResource('page-templates', 'TemplatesController')
+                        ->only(['index', 'show']);
+             });
     }
 }

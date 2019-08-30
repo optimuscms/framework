@@ -19,7 +19,7 @@ In Laravel 5.4 you must install this service provider:
 // config/app.php
 'providers' => [
     ...
-    OptimusCMS\Pages\PageServiceProvider::class,
+    Optimus\Pages\PageServiceProvider::class,
     ...
 ];
 ```
@@ -256,9 +256,9 @@ None
 #### Create a template
 
 ```php
-use OptimusCMS\Pages\Template;
+use Optimus\Pages\Template;
 use Illuminate\Http\Request;
-use OptimusCMS\Pages\Models\Page;
+use Optimus\Pages\Models\Page;
 
 class DefaultTemplate extends Template
 {
@@ -293,7 +293,7 @@ class DefaultTemplate extends Template
 #### Register and retrieve templates
 
 ```php
-use OptimusCMS\Pages\Facades\Template;
+use Optimus\Pages\Facades\Template;
 
 // Get all the registered templates...
 Template::all();

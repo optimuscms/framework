@@ -20,7 +20,7 @@ class CreatePagesTable extends Migration
             $table->string('uri')->nullable();
             $table->boolean('has_fixed_uri')->default(false);
             $table->unsignedInteger('parent_id')->index()->nullable();
-            $table->string('template_name');
+            $table->string('template');
             $table->boolean('has_fixed_template')->default(false);
             $table->boolean('is_stand_alone');
             $table->boolean('is_deletable')->default(true);
@@ -29,7 +29,7 @@ class CreatePagesTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('page_attributes', function (Blueprint $table) {
+        Schema::create('page_contents', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('page_id')->index();
             $table->string('key');
@@ -50,7 +50,7 @@ class CreatePagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('page_attributes');
+        Schema::dropIfExists('page_contents');
         Schema::dropIfExists('pages');
     }
 }

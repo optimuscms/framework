@@ -3,24 +3,26 @@
 namespace OptimusCMS\Pages\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use OptimusCMS\Pages\Template;
 use OptimusCMS\Pages\Models\Page;
 use Illuminate\Routing\Controller;
 use OptimusCMS\Pages\TemplateRegistry;
-use OptimusCMS\Pages\Jobs\UpdatePagePath;
+use OptimusCMS\Pages\Jobs\UpdatePageUri;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Resources\Json\JsonResource;
 use OptimusCMS\Pages\Http\Resources\PageResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class PagesController extends Controller
 {
-    /**
-     * @var \OptimusCMS\Pages\TemplateRegistry
-     */
+    /** @var TemplateRegistry */
     protected $templates;
 
     /**
-     * PagesController constructor.
+     * Create a new controller instance.
      *
-     * @param  \OptimusCMS\Pages\TemplateRegistry  $templates
+     * @param TemplateRegistry $templates
      * @return void
      */
     public function __construct(TemplateRegistry $templates)
@@ -31,8 +33,8 @@ class PagesController extends Controller
     /**
      * Display a list of pages.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Resources\Json\ResourceCollection
+     * @param Request $request
+     * @return ResourceCollection
      */
     public function index(Request $request)
     {
@@ -48,10 +50,10 @@ class PagesController extends Controller
     /**
      * Create a new page.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Resources\Json\JsonResource
+     * @param Request $request
+     * @return JsonResource
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(Request $request)
     {
@@ -75,7 +77,7 @@ class PagesController extends Controller
 
         $page->save();
 
-        UpdatePagePath::dispatch($page);
+        UpdatePageUri::dispatch($page);
 
         $template->save($page, $request);
 
@@ -89,8 +91,8 @@ class PagesController extends Controller
     /**
      * Display the specified page.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Resources\Json\JsonResource
+     * @param int $id
+     * @return JsonResource
      */
     public function show($id)
     {
@@ -102,11 +104,11 @@ class PagesController extends Controller
     /**
      * Update the specified page.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Resources\Json\JsonResource
+     * @param Request $request
+     * @param int $id
+     * @return JsonResource
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function update(Request $request, $id)
     {
@@ -133,7 +135,7 @@ class PagesController extends Controller
         $page->save();
 
         if (! $page->has_fixed_uri) {
-            UpdatePagePath::dispatch($page);
+            UpdatePageUri::dispatch($page);
         }
 
         $page->detachMedia();
@@ -153,23 +155,23 @@ class PagesController extends Controller
     /**
      * Reorder a list of pages.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function reorder(Request $request)
     {
         $request->validate([
             'pages' => 'required|array',
-            'pages.*' => 'exists:pages,id',
+            'pages.*' => 'exists:pages,id'
         ]);
 
         $order = 1;
 
         foreach ($request->input('pages') as $id) {
             Page::where('id', $id)->update([
-                'order' => $order,
+                'order' => $order
             ]);
 
             $order++;
@@ -182,7 +184,7 @@ class PagesController extends Controller
      * Delete the specified page.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
@@ -200,23 +202,23 @@ class PagesController extends Controller
     /**
      * Validate the request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return void
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     protected function validatePage(Request $request)
     {
         $request->validate([
             'title' => 'required',
-            'template' => 'required|in:'.collect($this->templates->all())
-                    ->map(function (Template $template) {
-                        return $template->name();
-                    })
-                    ->implode(','),
+            'template' => 'required|in:' . collect($this->templates->all())
+                ->map(function (Template $template) {
+                    return $template->name();
+                })
+                ->implode(','),
             'parent_id' => 'exists:pages,id|nullable',
             'is_stand_alone' => 'present|boolean',
-            'is_published' => 'present|boolean',
+            'is_published' => 'present|boolean'
         ]);
     }
 }
