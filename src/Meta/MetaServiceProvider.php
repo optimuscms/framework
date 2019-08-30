@@ -21,7 +21,8 @@ class MetaServiceProvider extends ServiceProvider
         );
 
         Conversion::register(
-            Meta::OG_IMAGE_MEDIA_CONVERSION, function (Image $image) {
+            Meta::OG_IMAGE_MEDIA_CONVERSION,
+            function (Image $image) {
                 return $image->fit(1200, 630);
             }
         );

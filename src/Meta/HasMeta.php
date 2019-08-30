@@ -2,37 +2,41 @@
 
 namespace OptimusCMS\Meta;
 
-use OptimusCMS\Media\Models\Media;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use OptimusCMS\Meta\Models\Meta;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
-/**
- * @property Meta $meta
- */
 trait HasMeta
 {
     /**
-     * Define the "meta" relationship.
+     * Get the meta relationship.
      *
      * @return MorphOne
      */
     public function meta()
     {
-        /* @var Model $this */
         return $this->morphOne(Meta::class, 'metable');
     }
 
+    /**
+     * Save meta to the model.
+     *
+     * @param array $data
+     * @return Meta|false
+     */
     public function saveMeta(array $data = [])
     {
-        if (! empty($data)) {
-            $this->load('meta');
-            $this->meta ? $this->meta()->update($data) : $this->meta()->create($data);
-            $this->load('meta');
-            // Attach OG image
-            if (! empty($data['og_image_id'])) {
-                $media = Media::findOrFail($data['og_image_id']);
-                $this->meta->attachMedia($media, Meta::OG_MEDIA_GROUP, [Meta::OG_MEDIA_CONVERSION]);
-            }
+        $meta = $this->meta ?: new Meta();
+
+        $ogImageId = Arr::pull($data, 'og_image_id');
+        $meta = $this->meta()->save($meta->fill($data));
+
+        if ($meta && $ogImageId) {
+            $meta->attachMedia(
+                $ogImageId, Meta::OG_IMAGE_MEDIA_GROUP
+            );
         }
+
+        return $meta;
     }
 }
