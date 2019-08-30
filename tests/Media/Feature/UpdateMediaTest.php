@@ -25,6 +25,8 @@ class UpdateMediaTest extends TestCase
 
         $this->media = factory(Media::class)->create([
             'name' => 'Old name',
+            'caption' => 'Old caption',
+            'alt_text' => 'Old alt text',
             'folder_id' => $folder->id,
         ]);
     }
@@ -34,9 +36,9 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id,
+                'id' => $this->media->id
             ]), $newData = [
-                'name' => 'New name',
+                'name' => 'New name'
             ]
         );
 
@@ -54,6 +56,54 @@ class UpdateMediaTest extends TestCase
     }
 
     /** @test */
+    public function it_can_change_the_caption_of_a_media_item()
+    {
+        $response = $this->patchJson(
+            route('admin.api.media.update', [
+                'id' => $this->media->id
+            ]), $newData = [
+                'caption' => 'New caption'
+            ]
+        );
+
+        $response
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => $this->expectedMediaJsonStructure(),
+            ])
+            ->assertJson([
+                'data' => [
+                    'caption' => $newData['caption'],
+                    'folder_id' => $this->media->folder_id,
+                ],
+            ]);
+    }
+
+    /** @test */
+    public function it_can_change_the_alt_text_of_a_media_item()
+    {
+        $response = $this->patchJson(
+            route('admin.api.media.update', [
+                'id' => $this->media->id
+            ]), $newData = [
+                'alt_text' => 'New alt text'
+            ]
+        );
+
+        $response
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => $this->expectedMediaJsonStructure(),
+            ])
+            ->assertJson([
+                'data' => [
+                    'alt_text' => $newData['alt_text'],
+                    'folder_id' => $this->media->folder_id,
+                ],
+            ]);
+    }
+
+    /** @test */
     public function it_can_move_a_media_item_into_another_folder()
     {
         $newFolder = factory(MediaFolder::class)->create([
@@ -62,9 +112,9 @@ class UpdateMediaTest extends TestCase
 
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id,
+                'id' => $this->media->id
             ]), $newData = [
-                'folder_id' => $newFolder->id,
+                'folder_id' => $newFolder->id
             ]
         );
 
@@ -86,9 +136,9 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id,
+                'id' => $this->media->id
             ]), $newData = [
-                'folder_id' => null,
+                'folder_id' => null
             ]
         );
 
@@ -110,9 +160,9 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id,
+                'id' => $this->media->id
             ]), [
-                'folder_id' => 9999,
+                'folder_id' => 9999
             ]
         );
 
@@ -128,9 +178,9 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id,
+                'id' => $this->media->id
             ]), [
-                'name' => '',
+                'name' => ''
             ]
         );
 

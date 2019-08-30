@@ -46,7 +46,6 @@ class GetFolderTest extends TestCase
     public function it_can_display_all_the_folders_in_a_specific_folder()
     {
         $parentFolder = factory(MediaFolder::class)->create();
-
         $childFolders = factory(MediaFolder::class, 2)->create([
             'parent_id' => $parentFolder->id,
         ]);
@@ -80,7 +79,7 @@ class GetFolderTest extends TestCase
 
         $response = $this->getJson(
             route('admin.api.media-folders.show', [
-                'id' => $folder->id,
+                'id' => $folder->id
             ])
         );
 

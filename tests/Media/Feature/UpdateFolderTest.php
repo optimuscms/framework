@@ -33,9 +33,9 @@ class UpdateFolderTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media-folders.update', [
-                'id' => $this->folder->id,
+                'id' => $this->folder->id
             ]), $newData = [
-                'name' => 'New name',
+                'name' => 'New name'
             ]
         );
 
@@ -61,9 +61,9 @@ class UpdateFolderTest extends TestCase
 
         $response = $this->patchJson(
             route('admin.api.media-folders.update', [
-                'id' => $this->folder->id,
+                'id' => $this->folder->id
             ]), $newData = [
-                'parent_id' => $newParent->id,
+                'parent_id' => $newParent->id
             ]
         );
 
@@ -85,9 +85,9 @@ class UpdateFolderTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media-folders.update', [
-                'id' => $this->folder->id,
+                'id' => $this->folder->id
             ]), $newData = [
-                'parent_id' => null,
+                'parent_id' => null
             ]
         );
 
@@ -108,9 +108,9 @@ class UpdateFolderTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media-folders.update', [
-                'id' => $this->folder->id,
+                'id' => $this->folder->id
             ]), [
-                'name' => '',
+                'name' => ''
             ]
         );
 
@@ -126,9 +126,9 @@ class UpdateFolderTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media-folders.update', [
-                'id' => $this->folder->id,
+                'id' => $this->folder->id
             ]), [
-                'parent_id' => 9999,
+                'parent_id' => 9999
             ]
         );
 

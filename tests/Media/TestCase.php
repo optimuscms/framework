@@ -2,18 +2,18 @@
 
 namespace OptimusCMS\Tests\Media;
 
+use OptimusCMS\Media\Models\Media;
 use OptimusCMS\Users\Models\AdminUser;
 use OptimusCMS\Tests\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-    protected function signIn()
+    public function getEnvironmentSetUp($app)
     {
-        $user = factory(AdminUser::class)->create();
+        parent::getEnvironmentSetUp($app);
 
-        $this->actingAs($user, 'admin');
-
-        return $user;
+        $app['config']->set('media.disk', 'public');
+        $app['config']->set('media.model', Media::class);
     }
 
     protected function expectedMediaJsonStructure()

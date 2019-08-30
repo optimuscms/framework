@@ -7,8 +7,8 @@ use OptimusCMS\Media\Models\Media;
 use OptimusCMS\Tests\Media\TestCase;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
-use OptimusCMS\Media\Models\MediaFolder;
 use Optix\Media\Jobs\PerformConversions;
+use OptimusCMS\Media\Models\MediaFolder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CreateMediaTest extends TestCase
@@ -69,12 +69,10 @@ class CreateMediaTest extends TestCase
 
         $document = UploadedFile::fake()->create('document.doc')->size(128);
 
-        $response = $this->postJson(
-            route('admin.api.media.store'), $data = [
-                'folder_id' => $folder->id,
-                'file' => $document,
-            ]
-        );
+        $response = $this->postJson(route('admin.api.media.store'), $data = [
+            'folder_id' => $folder->id,
+            'file' => $document,
+        ]);
 
         $response
             ->assertStatus(201)
@@ -136,11 +134,9 @@ class CreateMediaTest extends TestCase
 
         Queue::fake();
 
-        $this->postJson(
-            route('admin.api.media.store'), [
-                'file' => $document,
-            ]
-        );
+        $this->postJson(route('admin.api.media.store'), [
+            'file' => $document,
+        ]);
 
         // Assert conversion did not run...
         Queue::assertNotPushed(PerformConversions::class);
@@ -158,7 +154,9 @@ class CreateMediaTest extends TestCase
     /** @test */
     public function the_file_field_must_be_present()
     {
-        $response = $this->postJson(route('admin.api.media.store'));
+        $response = $this->postJson(
+            route('admin.api.media.store')
+        );
 
         $response
             ->assertStatus(422)
@@ -204,6 +202,8 @@ class CreateMediaTest extends TestCase
 
     protected function assertMediaExists($id)
     {
-        $this->assertNotNull(Media::find($id));
+        $this->assertTrue(
+            Media::where('id', $id)->exists()
+        );
     }
 }

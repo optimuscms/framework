@@ -1,9 +1,8 @@
 <?php
 
-namespace OptimusCMS\Tests\Media\Unit;
+namespace OptimusCMS\Media\Tests\Unit;
 
 use Mockery;
-use Illuminate\Http\Request;
 use OptimusCMS\Media\Models\Media;
 use OptimusCMS\Tests\Media\TestCase;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,15 +28,17 @@ class MediaTest extends TestCase
     }
 
     /** @test */
-    public function it_registers_the_filter_scope()
+    public function it_registers_the_apply_filters_scope()
     {
-        $request = Mockery::mock(Request::class);
-        $request->shouldReceive('filled')->with('folder')->once()->andReturn(true);
-        $request->shouldReceive('input')->with('folder')->andReturn($folderId = 1);
+        $filters = ['folder' => 1];
 
         $query = Mockery::mock(Builder::class);
-        $query->shouldReceive('where')->with('folder_id', $folderId)->once()->andReturnSelf();
 
-        $this->media->scopeFilter($query, $request);
+        $query->shouldReceive('where')
+            ->with('folder_id', $filters['folder'])
+            ->once()
+            ->andReturnSelf();
+
+        $this->media->scopeApplyFilters($query, $filters);
     }
 }

@@ -3,97 +3,68 @@
 namespace OptimusCMS\Media\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
+use Optix\Media\MediaUploader;
 use OptimusCMS\Media\Models\Media;
+use Illuminate\Routing\Controller;
+use Optix\Media\Jobs\PerformConversions;
 use OptimusCMS\Media\Http\Resources\MediaResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use OptimusCMS\Media\Http\Requests\StoreMediaRequest;
+use OptimusCMS\Media\Http\Requests\UpdateMediaRequest;
 
 class MediaController extends Controller
 {
-    /**
-     * Display a list of media items.
-     *
-     * @param Request $request
-     * @return ResourceCollection
-     */
     public function index(Request $request)
     {
-        $mediaItems = Media::with('folder')
-            ->applyFilters($request->all())
-            ->get();
+        $media = Media::applyFilters($request->all())->get();
 
-        return MediaResource::collection($mediaItems);
+        return MediaResource::collection($media);
     }
 
-    /**
-     * Upload a file and create a new media item.
-     *
-     * @param Request $request
-     * @return MediaResource
-     */
-    public function store(Request $request)
+    public function store(StoreMediaRequest $request)
     {
-        // Todo: Upload media via the MediaUploader class...
+        $media = MediaUploader::fromFile($request->file('file'))
+            ->withAttributes($request->only([
+                'folder_id',
+                'caption',
+                'alt_text',
+            ]))
+            ->upload();
 
-        $mediaItem = null;
+        if (Str::startsWith($media->mime_type, 'image')) {
+            PerformConversions::dispatch($media, [
+                'media-thumbnail',
+            ]);
+        }
 
-        return new MediaResource($mediaItem);
+        return (new MediaResource($media))->response()->setStatusCode(201);
     }
 
-    /**
-     * Display the specified media item.
-     *
-     * @param int $id
-     * @return MediaResource
-     */
     public function show($id)
     {
-        $mediaItem = Media::findOrFail($id);
+        $media = Media::findOrFail($id);
 
-        return new MediaResource($mediaItem);
+        return new MediaResource($media);
     }
 
-    /**
-     * Update the specified media item.
-     *
-     * @param Request $request
-     * @param int $id
-     * @return MediaResource
-     */
-    public function update(Request $request, $id)
+    public function update(UpdateMediaRequest $request, $id)
     {
-        $mediaItem = Media::findOrFail($id);
+        $media = Media::findOrFail($id);
 
-        //
+        $media->update($request->only([
+            'folder_id',
+            'caption',
+            'alt_text',
+            'name',
+        ]));
 
-        return new MediaResource($mediaItem);
+        return new MediaResource($media);
     }
 
-    /**
-     * Delete the specified media item.
-     *
-     * @param int $id
-     * @return Response
-     */
     public function destroy($id)
     {
         Media::findOrFail($id)->delete();
 
-        return response()->noContent();
-    }
-
-    /**
-     * Validate the request.
-     *
-     * @param Request $request
-     * @param Media|null $media
-     * @return void
-     */
-    protected function validateMediaItem(Request $request, Media $media = null)
-    {
-        $request->validate([
-            //
-        ]);
+        return response(null, 204);
     }
 }

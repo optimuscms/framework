@@ -2,51 +2,54 @@
 
 namespace OptimusCMS\Media;
 
+use Intervention\Image\Image;
+use OptimusCMS\Media\Models\Media;
+use Optix\Media\Facades\Conversion;
 use Illuminate\Support\ServiceProvider;
-
-// Todo: Doc block...
 
 class MediaServiceProvider extends ServiceProvider
 {
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->registerMigrations();
-        $this->registerConfig();
-        $this->registerRoutes();
-    }
+    protected $controllerNamespace = 'OptimusCMS\Media\Http\Controllers';
 
-    protected function registerMigrations()
+    public function boot()
     {
-        $this->loadMigrationsFrom(
-            __DIR__.'/database/migrations'
+        // Migrations
+        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
+
+        // Config
+        $this->publishes([
+            __DIR__.'/config/media.php' => config_path('media.php'),
+        ], 'config');
+
+        // Routes
+        $this->registerAdminRoutes();
+
+        // Conversions
+        Conversion::register(
+            Media::THUMBNAIL_CONVERSION,
+            function (Image $image) {
+                return $image->fit(400, 300);
+            }
         );
     }
 
-    protected function registerConfig()
+    public function register()
     {
         $this->mergeConfigFrom(
             __DIR__.'/config/media.php', 'media'
         );
     }
 
-    protected function registerRoutes()
+    protected function registerAdminRoutes()
     {
         $this->app['router']
              ->name('admin.api.')
              ->prefix('admin/api')
-             ->namespace('OptimusCMS\Media\Http\Controllers')
-             //->middleware('web', 'auth:admin')
+             ->middleware('web', 'auth:admin')
+             ->namespace($this->controllerNamespace)
              ->group(function ($router) {
-                 // Media
                  $router->apiResource('media', 'MediaController');
-
-                 // Folders
-                 $router->apiResource('media-folders', 'MediaFoldersController');
+                 $router->apiResource('media-folders', 'FoldersController');
              });
     }
 }

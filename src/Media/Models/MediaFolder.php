@@ -3,45 +3,22 @@
 namespace OptimusCMS\Media\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 
 class MediaFolder extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'name', 'parent_id',
     ];
 
-    /**
-     * Get the folder's parent.
-     *
-     * @return BelongsTo
-     */
-    public function parent()
+    public function scopeApplyFilters(Builder $query, array $filters)
     {
-        return $this->belongsTo(self::class, 'parent_id');
+        if (! empty($filters['parent'])) {
+            $parent = $filters['parent'];
+            $query->where('parent_id', $parent === 'root' ? null : $parent);
+        }
     }
 
-    /**
-     * Get all the folder's children.
-     *
-     * @return HasMany
-     */
-    public function children()
-    {
-        return $this->hasMany(self::class, 'parent_id');
-    }
-
-    /**
-     * Get all the media in the folder.
-     *
-     * @return HasMany
-     */
     public function media()
     {
         return $this->hasMany(Media::class, 'folder_id');

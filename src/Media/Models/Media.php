@@ -2,57 +2,25 @@
 
 namespace OptimusCMS\Media\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Optix\Media\Models\Media as BaseMedia;
 
-class Media extends Model
+class Media extends BaseMedia
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    const THUMBNAIL_CONVERSION = '400x300';
+
     protected $fillable = [
-        'folder_id', 'name', 'file_name', 'disk', 'mime_type', 'size',
+        'folder_id', 'name', 'caption', 'alt_text', 'file_name', 'disk', 'mime_type', 'size',
     ];
 
-    /**
-     * Apply filters to the query.
-     *
-     * @param Builder $query
-     * @param array $filters
-     * @return void
-     */
     public function scopeApplyFilters(Builder $query, array $filters)
     {
-        // Folder
         if (! empty($filters['folder'])) {
-            $query->inFolder($filters['folder']);
+            $folder = $filters['folder'];
+            $query->where('folder_id', $folder === 'root' ? null : $folder);
         }
     }
 
-    /**
-     * Retrieve all the media in the specified folder.
-     *
-     * @param Builder $query
-     * @param $folder
-     * @return void
-     */
-    public function scopeInFolder(Builder $query, $folder)
-    {
-        if ($folder instanceof MediaFolder) {
-            $folder = $folder->getKey();
-        }
-
-        $query->where('folder_id', $folder);
-    }
-
-    /**
-     * Get the media's folder.
-     *
-     * @return BelongsTo
-     */
     public function folder()
     {
         return $this->belongsTo(MediaFolder::class, 'folder_id');

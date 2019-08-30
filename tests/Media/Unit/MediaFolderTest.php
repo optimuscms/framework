@@ -3,7 +3,6 @@
 namespace OptimusCMS\Media\Tests\Unit;
 
 use Mockery;
-use Illuminate\Http\Request;
 use OptimusCMS\Tests\Media\TestCase;
 use OptimusCMS\Media\Models\MediaFolder;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,20 +23,23 @@ class MediaFolderTest extends TestCase
     public function it_registers_the_media_relationship()
     {
         $this->assertInstanceOf(
-            HasMany::class, $this->folder->media()
+            HasMany::class,
+            $this->folder->media()
         );
     }
 
     /** @test */
-    public function it_registers_the_filter_scope()
+    public function it_registers_the_apply_filters_scope()
     {
-        $request = Mockery::mock(Request::class);
-        $request->shouldReceive('filled')->with('parent')->once()->andReturn(true);
-        $request->shouldReceive('input')->with('parent')->andReturn($parentId = 1);
+        $filters = ['parent' => 1];
 
         $query = Mockery::mock(Builder::class);
-        $query->shouldReceive('where')->with('parent_id', $parentId)->once()->andReturnSelf();
 
-        $this->folder->scopeFilter($query, $request);
+        $query->shouldReceive('where')
+            ->with('parent_id', $filters['parent'])
+            ->once()
+            ->andReturnSelf();
+
+        $this->folder->scopeApplyFilters($query, $filters);
     }
 }

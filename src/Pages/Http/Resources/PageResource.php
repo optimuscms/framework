@@ -17,7 +17,7 @@ class PageResource extends Resource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
+            'id' => $this->getKey(),
             'title' => $this->title,
             'slug' => $this->slug,
             'uri' => $this->uri,

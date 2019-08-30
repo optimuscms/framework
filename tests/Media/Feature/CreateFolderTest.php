@@ -150,6 +150,8 @@ class CreateFolderTest extends TestCase
 
     protected function assertFolderExists($id)
     {
-        $this->assertNotNull(MediaFolder::find($id));
+        $this->assertTrue(
+            MediaFolder::where('id', $id)->exists()
+        );
     }
 }

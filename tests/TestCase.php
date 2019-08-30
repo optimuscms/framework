@@ -2,7 +2,10 @@
 
 namespace OptimusCMS\Tests;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+use OptimusCMS\Meta\MetaServiceProvider;
 use OptimusCMS\Pages\PageServiceProvider;
+use OptimusCMS\Users\Models\AdminUser;
 use OptimusCMS\Users\UserServiceProvider;
 use OptimusCMS\Media\MediaServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
@@ -20,6 +23,7 @@ class TestCase extends BaseTestCase
     {
         return [
             MediaServiceProvider::class,
+            MetaServiceProvider::class,
             PageServiceProvider::class,
             UserServiceProvider::class,
         ];
@@ -33,5 +37,14 @@ class TestCase extends BaseTestCase
             'database' => ':memory:',
             'prefix' => '',
         ]);
+    }
+
+    protected function signIn(Authenticatable $user = null)
+    {
+        $user = $user ?: factory(AdminUser::class)->create();
+
+        $this->actingAs($user, 'admin');
+
+        return $user;
     }
 }

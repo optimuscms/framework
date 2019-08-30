@@ -2,14 +2,14 @@
 
 namespace OptimusCMS\Media\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 
-class MediaFolderResource extends JsonResource
+class FolderResource extends Resource
 {
     public function toArray($request)
     {
         return [
-            'id' => $this->getKey(),
+            'id' => $this->id,
             'name' => $this->name,
             'parent_id' => $this->parent_id,
             'created_at' => (string) $this->created_at,
