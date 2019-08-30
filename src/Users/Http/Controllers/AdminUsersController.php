@@ -123,9 +123,9 @@ class AdminUsersController extends Controller
             'email' => 'required|email',
             'username' => [
                 'required',
-                Rule::unique('admin_users')->ignore($user)
+                Rule::unique('admin_users')->ignore($user),
             ],
-            'password' => ($user ? 'nullable' : 'required') . '|min:6',
+            'password' => ($user ? 'nullable' : 'required').'|min:6',
         ]);
     }
 }

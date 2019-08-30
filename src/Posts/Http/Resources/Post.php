@@ -17,7 +17,7 @@ class Post extends Resource
             'tags' => Tag::collection($this->tags),
             'published_at' => (string) $this->published_at,
             'created_at' => (string) $this->created_at,
-            'updated_at' => (string) $this->updated_at
+            'updated_at' => (string) $this->updated_at,
         ];
     }
 }

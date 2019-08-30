@@ -25,7 +25,7 @@ class UpdatePagesTest extends TestCase
             'template' => 'old-template',
             'parent_id' => factory(Page::class)->create(),
             'is_stand_alone' => true,
-            'published_at' => null
+            'published_at' => null,
         ]);
     }
 
@@ -34,7 +34,7 @@ class UpdatePagesTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.pages.update', [
-                'id' => $this->page->id
+                'id' => $this->page->id,
             ]),
             $newData = $this->validData()
         );
@@ -42,7 +42,7 @@ class UpdatePagesTest extends TestCase
         $response
             ->assertOk()
             ->assertJsonStructure([
-                'data' => $this->expectedPageJsonStructure()
+                'data' => $this->expectedPageJsonStructure(),
             ])
             ->assertJson([
                 'data' => [
@@ -51,11 +51,11 @@ class UpdatePagesTest extends TestCase
                     'parent_id' => $newData['parent_id'],
                     'contents' => [[
                         'key' => 'content',
-                        'value' => $newData['content']
+                        'value' => $newData['content'],
                     ]],
                     'is_stand_alone' => $newData['is_stand_alone'],
-                    'is_published' => $newData['is_published']
-                ]
+                    'is_published' => $newData['is_published'],
+                ],
             ]);
     }
 
@@ -69,7 +69,7 @@ class UpdatePagesTest extends TestCase
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'title', 'template', 'is_stand_alone', 'is_published'
+                'title', 'template', 'is_stand_alone', 'is_published',
             ]);
     }
 
@@ -84,7 +84,7 @@ class UpdatePagesTest extends TestCase
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'template'
+                'template',
             ]);
 
         $this->assertEquals(
@@ -104,7 +104,7 @@ class UpdatePagesTest extends TestCase
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'parent_id'
+                'parent_id',
             ]);
 
         $this->assertEquals(
@@ -124,7 +124,7 @@ class UpdatePagesTest extends TestCase
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'is_stand_alone'
+                'is_stand_alone',
             ]);
 
         $this->assertEquals(
@@ -144,7 +144,7 @@ class UpdatePagesTest extends TestCase
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'is_published'
+                'is_published',
             ]);
 
         $this->assertEquals(
@@ -163,7 +163,7 @@ class UpdatePagesTest extends TestCase
             'parent_id' => null,
             'content' => 'Content', // Required by the dummy template...
             'is_stand_alone' => false,
-            'is_published' => true
+            'is_published' => true,
         ], $overrides);
     }
 }

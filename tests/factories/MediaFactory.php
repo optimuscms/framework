@@ -13,6 +13,6 @@ $factory->define(Media::class, function (Faker $faker) {
         'file_name' => "file.{$faker->fileExtension}",
         'disk' => config('media.disk'),
         'mime_type' => $faker->mimeType,
-        'size' => $faker->randomNumber(4)
+        'size' => $faker->randomNumber(4),
     ];
 });

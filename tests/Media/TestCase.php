@@ -26,7 +26,7 @@ class TestCase extends BaseTestCase
             'mime_type',
             'size',
             'created_at',
-            'updated_at'
+            'updated_at',
         ];
     }
 
@@ -37,7 +37,7 @@ class TestCase extends BaseTestCase
             'name',
             'parent_id',
             'created_at',
-            'updated_at'
+            'updated_at',
         ];
     }
 }

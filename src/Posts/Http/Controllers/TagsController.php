@@ -2,8 +2,8 @@
 
 namespace OptimusCMS\Posts\Http\Controllers;
 
-use OptimusCMS\Posts\PostTag;
 use Illuminate\Http\Request;
+use OptimusCMS\Posts\PostTag;
 use Illuminate\Routing\Controller;
 use OptimusCMS\Posts\Http\Resources\Tag as TagResource;
 

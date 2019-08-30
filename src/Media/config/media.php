@@ -4,6 +4,6 @@ use OptimusCMS\Media\Models\Media;
 
 return [
 
-    'model' => Media::class
+    'model' => Media::class,
 
 ];

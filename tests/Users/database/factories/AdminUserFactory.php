@@ -5,6 +5,7 @@ use OptimusCMS\Users\Models\AdminUser;
 
 $factory->define(AdminUser::class, function (Faker $faker) {
     static $password;
+
     return [
         'name' => $faker->name,
         'username' => $faker->unique()->userName,

@@ -17,19 +17,19 @@ class DeleteFolderTest extends TestCase
 
         $folder = factory(MediaFolder::class)->create([
             'name' => 'Name',
-            'parent_id' => null
+            'parent_id' => null,
         ]);
 
         $response = $this->deleteJson(
             route('admin.api.media-folders.destroy', [
-                'id' => $folder->id
+                'id' => $folder->id,
             ])
         );
 
         $response->assertStatus(204);
 
         $this->assertDatabaseMissing($folder->getTable(), [
-            'id' => $folder->id
+            'id' => $folder->id,
         ]);
     }
 }

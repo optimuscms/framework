@@ -21,19 +21,19 @@ class DeletePagesTest extends TestCase
     public function it_can_delete_a_page()
     {
         $page = factory(Page::class)->create([
-            'is_deletable' => true
+            'is_deletable' => true,
         ]);
 
         $response = $this->deleteJson(
             route('admin.api.pages.destroy', [
-                $page->id
+                $page->id,
             ])
         );
 
         $response->assertStatus(204);
 
         $this->assertDatabaseMissing($page->getTable(), [
-            'id' => $page->id
+            'id' => $page->id,
         ]);
     }
 
@@ -41,19 +41,19 @@ class DeletePagesTest extends TestCase
     public function it_can_only_delete_deletable_pages()
     {
         $page = factory(Page::class)->create([
-            'is_deletable' => false
+            'is_deletable' => false,
         ]);
 
         $response = $this->deleteJson(
             route('admin.api.pages.destroy', [
-                'id' => $page->id
+                'id' => $page->id,
             ])
         );
 
         $response->assertStatus(403);
 
         $this->assertDatabaseHas($page->getTable(), [
-            'id' => $page->id
+            'id' => $page->id,
         ]);
     }
 }

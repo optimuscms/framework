@@ -14,7 +14,7 @@ class MediaFolder extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'parent_id'
+        'name', 'parent_id',
     ];
 
     /**

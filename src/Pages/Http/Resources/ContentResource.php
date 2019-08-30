@@ -19,7 +19,7 @@ class ContentResource extends Resource
             'key' => $this->key,
             'value' => $this->value,
             'created_at' => (string) $this->created_at,
-            'updated_at' => (string) $this->updated_at
+            'updated_at' => (string) $this->updated_at,
         ];
     }
 }

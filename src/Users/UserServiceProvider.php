@@ -25,12 +25,12 @@ class UserServiceProvider extends ServiceProvider
     {
         $this->app['config']->set('auth.guards.admin', [
             'driver' => 'session',
-            'provider' => 'admins'
+            'provider' => 'admins',
         ]);
 
         $this->app['config']->set('auth.providers.admins', [
             'driver' => 'eloquent',
-            'model' => AdminUser::class
+            'model' => AdminUser::class,
         ]);
     }
 

@@ -15,7 +15,7 @@ class Comment extends Resource
             'author_email' => $this->author_email,
             'author_website' => $this->author_website,
             'created_at' => (string) $this->created_at,
-            'updated_at' => (string) $this->updated_at
+            'updated_at' => (string) $this->updated_at,
         ];
     }
 }

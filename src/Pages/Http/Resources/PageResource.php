@@ -35,7 +35,7 @@ class PageResource extends Resource
             'is_published' => $this->isPublished(),
             'is_deletable' => $this->is_deletable,
             'created_at' => (string) $this->created_at,
-            'updated_at' => (string) $this->updated_at
+            'updated_at' => (string) $this->updated_at,
         ];
     }
 }

@@ -38,7 +38,7 @@ class AdminUserResourceTest extends TestCase
             'email' => $user->email,
             'username' => $user->username,
             'created_at' => (string) $user->created_at,
-            'updated_at' => (string) $user->updated_at
+            'updated_at' => (string) $user->updated_at,
         ], $resource->toArray($request));
     }
 }

@@ -16,7 +16,7 @@ class TestCase extends BaseTestCase
     {
         parent::setUp();
         $this->withFactories(
-            __DIR__ . '/database/factories'
+            __DIR__.'/database/factories'
         );
     }
 
@@ -34,7 +34,7 @@ class TestCase extends BaseTestCase
     }
 
     /**
-     * Tell the Tests to use the sqllite database and not the provided in .env
+     * Tell the Tests to use the sqllite database and not the provided in .env.
      *
      * @param $app
      */
@@ -44,7 +44,7 @@ class TestCase extends BaseTestCase
         $app['config']->set('database.connections.sqlite', [
             'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix' => ''
+            'prefix' => '',
         ]);
     }
 
@@ -58,6 +58,7 @@ class TestCase extends BaseTestCase
     {
         $user = $user ?: factory(AdminUser::class)->create();
         $this->actingAs($user, 'admin');
+
         return $user;
     }
 
@@ -74,7 +75,7 @@ class TestCase extends BaseTestCase
             'email',
             'username',
             'created_at',
-            'updated_at'
+            'updated_at',
         ];
     }
 }
