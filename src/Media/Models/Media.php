@@ -17,7 +17,14 @@ class Media extends BaseMedia
      * @var array
      */
     protected $fillable = [
-        'folder_id', 'name', 'alt_text', 'caption', 'file_name', 'disk', 'mime_type', 'size',
+        'folder_id',
+        'name',
+        'alt_text',
+        'caption',
+        'file_name',
+        'disk',
+        'mime_type',
+        'size',
     ];
 
     /**
@@ -29,6 +36,7 @@ class Media extends BaseMedia
      */
     public function scopeApplyFilters(Builder $query, array $filters)
     {
+        // Folder
         if (! empty($filters['folder'])) {
             $query->inFolder($filters['folder']);
         }

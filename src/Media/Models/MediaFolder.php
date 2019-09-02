@@ -14,7 +14,8 @@ class MediaFolder extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'parent_id',
+        'name',
+        'parent_id',
     ];
 
     /**
@@ -26,10 +27,55 @@ class MediaFolder extends Model
      */
     public function scopeApplyFilters(Builder $query, array $filters)
     {
+        // Parent
         if (! empty($filters['parent'])) {
-            $parent = $filters['parent'];
-            $query->where('parent_id', $parent === 'root' ? null : $parent);
+            $query->inFolder($filters['parent']);
         }
+    }
+
+    /**
+     * Only retrieve folders in the specified folder.
+     *
+     * @param Builder $query
+     * @param self|int $folder
+     * @return void
+     */
+    public function scopeInFolder(Builder $query, $folder)
+    {
+        if ($folder instanceof self) {
+            $folder = $folder->id;
+        }
+
+        $query->where(
+            'parent_id',
+            $folder === 'root' ? null : $folder
+        );
+    }
+
+    /**
+     * Determine if the folder is a descendant of the given folder.
+     *
+     * @param self|int $folder
+     * @return bool
+     */
+    public function isDescendantOf($folder)
+    {
+        if ($folder instanceof self) {
+            $folder = $folder->id;
+        }
+
+        if (! $this->parent_id) {
+            return false;
+        }
+
+        if ($this->parent_id === $folder) {
+            return true;
+        }
+
+        $parentFolder = $this->parent;
+
+        return $parentFolder
+            && $parentFolder->isDescendantOf($folder);
     }
 
     /**

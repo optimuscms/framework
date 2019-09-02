@@ -29,7 +29,11 @@ class Meta extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'description', 'og_title', 'og_description', 'additional_tags',
+        'title',
+        'description',
+        'og_title',
+        'og_description',
+        'additional_tags',
     ];
 
     /**

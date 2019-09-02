@@ -35,7 +35,7 @@ class Page extends Model
         'parent_id',
         'is_stand_alone',
         'is_deletable',
-        'order'
+        'order',
     ];
 
     public function scopeFilter(Builder $query, Request $request)
