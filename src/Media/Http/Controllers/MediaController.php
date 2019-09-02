@@ -2,7 +2,6 @@
 
 namespace OptimusCMS\Media\Http\Controllers;
 
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Optix\Media\MediaUploader;
@@ -11,9 +10,7 @@ use OptimusCMS\Media\Models\Media;
 use Illuminate\Routing\Controller;
 use Optix\Media\Jobs\PerformConversions;
 use OptimusCMS\Media\Http\Resources\MediaResource;
-use OptimusCMS\Media\Http\Requests\StoreMediaRequest;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use OptimusCMS\Media\Http\Requests\UpdateMediaRequest;
 
 class MediaController extends Controller
 {
@@ -33,11 +30,13 @@ class MediaController extends Controller
     /**
      * Create a new media item.
      *
-     * @param StoreMediaRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function store(StoreMediaRequest $request)
+    public function store(Request $request)
     {
+        $this->validateMedia($request);
+
         $media = MediaUploader::fromFile($request->file('file'))
             ->withAttributes($request->only([
                 'folder_id',
@@ -46,13 +45,17 @@ class MediaController extends Controller
             ]))
             ->upload();
 
-        if (Str::startsWith($media->mime_type, 'image')) {
+        // Create a thumbnail for the media manager
+        // if the media item is an image...
+        if ($media->isOfType('image')) {
             PerformConversions::dispatch($media, [
-                Media::THUMBNAIL_CONVERSION
+                Media::THUMBNAIL_CONVERSION,
             ]);
         }
 
-        return (new MediaResource($media))->response()->setStatusCode(201);
+        return (new MediaResource($media))
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -71,13 +74,15 @@ class MediaController extends Controller
     /**
      * Update the specified media item.
      *
-     * @param UpdateMediaRequest $request
+     * @param Request $request
      * @param int $id
      * @return MediaResource
      */
-    public function update(UpdateMediaRequest $request, $id)
+    public function update(Request $request, $id)
     {
         $media = Media::findOrFail($id);
+
+        $this->validateMedia($request, $media);
 
         $media->update($request->only([
             'folder_id',
@@ -100,5 +105,35 @@ class MediaController extends Controller
         Media::findOrFail($id)->delete();
 
         return response()->noContent();
+    }
+
+    /**
+     * Validate the request.
+     *
+     * @param Request $request
+     * @param Media|null $media
+     * @return void
+     */
+    protected function validateMedia(Request $request, Media $media = null)
+    {
+        if (! $media) {
+            // Retrieve the configured maximum file size, default
+            // to 5mb if a value has not been specified...
+            $maxFileSize = config('media.max_file_size', 5 * 1024);
+
+            $rules = [
+                'file' => 'required|file|max:'.$maxFileSize
+            ];
+        } else {
+            $rules = [
+                'name' => 'filled|string|max:255',
+                'alt_text' => 'nullable|string|max:255',
+                'caption' => 'nullable|string|max:255',
+            ];
+        }
+
+        $request->validate(array_merge($rules, [
+            'folder_id' => 'nullable|exists:media_folders,id',
+        ]));
     }
 }

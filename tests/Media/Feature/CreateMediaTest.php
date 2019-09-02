@@ -50,6 +50,8 @@ class CreateMediaTest extends TestCase
                 'data' => [
                     'folder_id' => $data['folder_id'],
                     'name' => 'image',
+                    'alt_text' => null,
+                    'caption' => null,
                     'file_name' => 'image.png',
                     'extension' => 'png',
                     'mime_type' => 'image/png',
@@ -114,6 +116,8 @@ class CreateMediaTest extends TestCase
                 'data' => [
                     'folder_id' => null,
                     'name' => 'audio',
+                    'alt_text' => null,
+                    'caption' => null,
                     'file_name' => 'audio.mp3',
                     'extension' => 'mp3',
                     'mime_type' => 'audio/mpeg',

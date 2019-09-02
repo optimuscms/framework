@@ -49,7 +49,7 @@ class MediaServiceProvider extends ServiceProvider
              ->namespace($this->controllerNamespace)
              ->group(function ($router) {
                  $router->apiResource('media', 'MediaController');
-                 $router->apiResource('media-folders', 'FoldersController');
+                 $router->apiResource('media-folders', 'MediaFoldersController');
              });
     }
 }

@@ -10,6 +10,8 @@ $factory->define(Media::class, function (Faker $faker) {
             return factory(MediaFolder::class)->create()->id;
         },
         'name' => $faker->word,
+        'alt_text' => $faker->sentence,
+        'caption' => $faker->sentence,
         'file_name' => "file.{$faker->fileExtension}",
         'disk' => config('media.disk'),
         'mime_type' => $faker->mimeType,

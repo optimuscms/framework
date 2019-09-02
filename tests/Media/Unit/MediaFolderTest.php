@@ -27,19 +27,4 @@ class MediaFolderTest extends TestCase
             $this->folder->media()
         );
     }
-
-    /** @test */
-    public function it_registers_the_apply_filters_scope()
-    {
-        $filters = ['parent' => 1];
-
-        $query = Mockery::mock(Builder::class);
-
-        $query->shouldReceive('where')
-            ->with('parent_id', $filters['parent'])
-            ->once()
-            ->andReturnSelf();
-
-        $this->folder->scopeApplyFilters($query, $filters);
-    }
 }

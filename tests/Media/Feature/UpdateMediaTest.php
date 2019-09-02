@@ -50,7 +50,6 @@ class UpdateMediaTest extends TestCase
             ->assertJson([
                 'data' => [
                     'name' => $newData['name'],
-                    'folder_id' => $this->media->folder_id,
                 ],
             ]);
     }
@@ -74,7 +73,6 @@ class UpdateMediaTest extends TestCase
             ->assertJson([
                 'data' => [
                     'caption' => $newData['caption'],
-                    'folder_id' => $this->media->folder_id,
                 ],
             ]);
     }
@@ -98,7 +96,6 @@ class UpdateMediaTest extends TestCase
             ->assertJson([
                 'data' => [
                     'alt_text' => $newData['alt_text'],
-                    'folder_id' => $this->media->folder_id,
                 ],
             ]);
     }
@@ -125,7 +122,6 @@ class UpdateMediaTest extends TestCase
             ])
             ->assertJson([
                 'data' => [
-                    'name' => $this->media->name,
                     'folder_id' => $newData['folder_id'],
                 ],
             ]);
@@ -149,7 +145,6 @@ class UpdateMediaTest extends TestCase
             ])
             ->assertJson([
                 'data' => [
-                    'name' => $this->media->name,
                     'folder_id' => $newData['folder_id'],
                 ],
             ]);

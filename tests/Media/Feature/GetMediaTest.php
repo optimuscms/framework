@@ -98,6 +98,8 @@ class GetMediaTest extends TestCase
                     'id' => $media->id,
                     'folder_id' => $media->folder_id,
                     'name' => $media->name,
+                    'alt_text' => $media->alt_text,
+                    'caption' => $media->caption,
                     'file_name' => $media->file_name,
                     'mime_type' => $media->mime_type,
                     'size' => $media->size,

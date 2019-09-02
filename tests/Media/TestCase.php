@@ -22,6 +22,8 @@ class TestCase extends BaseTestCase
             'id',
             'folder_id',
             'name',
+            'alt_text',
+            'caption',
             'file_name',
             'mime_type',
             'size',

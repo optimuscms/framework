@@ -4,7 +4,7 @@ namespace OptimusCMS\Media\Http\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 
-class FolderResource extends Resource
+class MediaFolderResource extends Resource
 {
     public function toArray($request)
     {
