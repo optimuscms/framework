@@ -2,6 +2,7 @@
 
 namespace OptimusCMS\Media\Http\Resources;
 
+use OptimusCMS\Media\Models\Media;
 use Illuminate\Http\Resources\Json\Resource;
 
 class MediaResource extends Resource
@@ -17,7 +18,7 @@ class MediaResource extends Resource
             'alt_text' => $this->alt_text,
             'extension' => $this->extension,
             'url' => $this->getUrl(),
-            'thumbnail_url' => $this->getUrl('media-thumbnail'),
+            'thumbnail_url' => $this->getUrl(Media::THUMBNAIL_CONVERSION),
             'mime_type' => $this->mime_type,
             'size' => $this->size,
             'group' => $this->whenPivotLoaded('mediables', function () {
