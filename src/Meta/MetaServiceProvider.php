@@ -16,10 +16,12 @@ class MetaServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Migrations
         $this->loadMigrationsFrom(
             __DIR__.'/database/migrations'
         );
 
+        // Conversions
         Conversion::register(
             Meta::OG_IMAGE_MEDIA_CONVERSION,
             function (Image $image) {

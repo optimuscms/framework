@@ -2,7 +2,6 @@
 
 namespace OptimusCMS\Meta;
 
-use Illuminate\Support\Arr;
 use OptimusCMS\Meta\Models\Meta;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
@@ -26,19 +25,26 @@ trait HasMeta
      */
     public function saveMeta(array $data = [])
     {
-        $meta = $this->meta ?: new Meta();
+        return tap(
+            $this->meta()->updateOrCreate([], $data),
+            function (Meta $meta) use ($data) {
+                if (! array_key_exists('og_image_id', $data)) {
+                    return;
+                }
 
-        $ogImageId = Arr::pull($data, 'og_image_id');
-        $meta->fill($data);
+                if (! $meta->wasRecentlyCreated) {
+                    $meta->clearMediaGroup(Meta::OG_IMAGE_MEDIA_GROUP);
+                }
 
-        $meta = $this->meta()->save($meta);
-
-        if ($meta && $ogImageId) {
-            $meta->attachMedia(
-                $ogImageId, Meta::OG_IMAGE_MEDIA_GROUP
-            );
-        }
-
-        return $meta;
+                // Attach an og image to the model if it's
+                // present in the data...
+                if ($ogImageId = $data['og_image_id']) {
+                    $meta->attachMedia(
+                        $ogImageId,
+                        Meta::OG_IMAGE_MEDIA_GROUP
+                    );
+                }
+            }
+        );
     }
 }

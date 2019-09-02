@@ -6,6 +6,7 @@ use Intervention\Image\Image;
 use OptimusCMS\Media\Models\Media;
 use Optix\Media\Facades\Conversion;
 use Illuminate\Support\ServiceProvider;
+use Optix\Media\MediaServiceProvider as OptixMediaServiceProvider;
 
 class MediaServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,8 @@ class MediaServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__.'/config/media.php', 'media'
         );
+
+        $this->app->register(OptixMediaServiceProvider::class);
     }
 
     protected function registerAdminRoutes()
