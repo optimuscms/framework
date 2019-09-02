@@ -104,7 +104,24 @@ class MediaFoldersController extends Controller
     {
         $request->validate([
             'name' => ($folder ? 'filled' : 'required').'|string|max:255',
-            'parent_id' => 'nullable|exists:media_folders,id',
+            'parent_id' => [
+                'nullable',
+                function ($attribute, $value, $fail) use ($folder) {
+                    $parentFolder = MediaFolder::find($value);
+
+                    // Verify that the parent folder exists and is not
+                    // a descendant of the folder being updated...
+                    if (! $parentFolder || (
+                        $parentFolder
+                        && $folder
+                        && $parentFolder->isDescendantOf($folder)
+                    )) {
+                        $fail(__('validation.exists', [
+                            'attribute' => 'parent'
+                        ]));
+                    }
+                }
+            ]
         ]);
     }
 }
