@@ -14,24 +14,24 @@ class CreatePagesTable extends Migration
     public function up()
     {
         Schema::create('pages', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('title');
             $table->string('slug')->nullable();
-            $table->string('uri')->nullable();
-            $table->boolean('has_fixed_uri')->default(false);
-            $table->unsignedInteger('parent_id')->index()->nullable();
-            $table->string('template');
+            $table->string('path')->nullable();
+            $table->boolean('has_fixed_path')->default(false);
+            $table->unsignedBigInteger('parent_id')->index()->nullable();
+            $table->string('template_name');
             $table->boolean('has_fixed_template')->default(false);
             $table->boolean('is_stand_alone');
             $table->boolean('is_deletable')->default(true);
-            $table->unsignedInteger('order');
+            $table->unsignedBigInteger('order');
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
 
         Schema::create('page_contents', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('page_id')->index();
+            $table->unsignedBigInteger('page_id')->index();
             $table->string('key');
             $table->text('value')->nullable();
             $table->timestamps();

@@ -2,83 +2,146 @@
 
 namespace OptimusCMS\Pages;
 
-use Illuminate\Support\Arr;
 use InvalidArgumentException;
+use Illuminate\Container\Container;
+use OptimusCMS\Pages\Contracts\Template as TemplateContract;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 class TemplateRegistry
 {
-    /**
-     * @var Template[]
-     */
-    protected $templates = [];
+    /** @var Container */
+    protected $app;
+
+    /** @var array */
+    protected $templateClasses = [];
 
     /**
      * Create a new registry instance.
      *
-     * @param  array  $templates
+     * @param Container $app
+     * @param array $templateClasses
      * @return void
      */
-    public function __construct(array $templates = [])
+    public function __construct(Container $app, array $templateClasses = [])
     {
-        $this->registerMany($templates);
+        $this->app = $app;
+
+        $this->registerMany($templateClasses);
     }
 
     /**
-     * Get all the registered templates.
+     * Register the given template class.
      *
-     * @return Template[]
+     * @param string $templateClass
+     * @return void
      */
-    public function all()
+    public function register(string $templateClass)
     {
-        return $this->templates;
-    }
-
-    /**
-     * Get the template with the given name.
-     *
-     * @throws InvalidArgumentException
-     *
-     * @param string $name
-     * @return Template
-     */
-    public function find(string $name)
-    {
-        $template = Arr::first(
-            $this->all(), function (Template $template) use ($name) {
-                return $name === $template->name();
-            }
-        );
-
-        if (! $template) {
+        // Throw an error if the given string is not a class, or if it does not
+        // implement the template interface...
+        if (! is_a($templateClass, $templateContract = TemplateContract::class)) {
             throw new InvalidArgumentException(
-                "A template with the name `{$name}` has not been registered."
+                "The [{$templateClass}] class must exist and implement the [{$templateContract}] interface."
             );
         }
 
-        return $template;
-    }
+        // Throw an error if the required properties are
+        // not set on the template class...
+        foreach (['name', 'label'] as $requiredProperty) {
+            if (! (
+                property_exists($templateClass, $requiredProperty)
+                && is_string($templateClass::$$requiredProperty)
+            )) {
+                throw new InvalidArgumentException(
+                    "The [{$templateClass}] must have a valid {$requiredProperty} property."
+                );
+            }
+        }
 
-    /**
-     * Register a template class.
-     *
-     * @param Template $template
-     * @return void
-     */
-    public function register(Template $template)
-    {
-        $this->templates[] = $template;
+        $this->templateClasses[$templateClass::$name] = $templateClass;
     }
 
     /**
      * Register multiple template classes.
      *
-     * @param array $templates
+     * @param array $templateClasses
      * @return void
      */
-    public function registerMany(array $templates)
+    public function registerMany(array $templateClasses)
     {
-        foreach ($templates as $template) {
-            $this->register($template);
+        foreach ($templateClasses as $templateClass) {
+            $this->register($templateClass);
         }
+    }
+
+    /**
+     * Retrieve all of the registered template class names.
+     *
+     * @return array
+     */
+    public function all()
+    {
+        return array_values($this->templateClasses);
+    }
+
+    /**
+     * Retrieve all of the registered template classes.
+     *
+     * @return array
+     */
+    public function loadAll()
+    {
+        return array_map(
+            function ($templateClass) {
+                return $this->app->make($templateClass);
+            },
+            $this->all()
+        );
+    }
+
+    /**
+     * Retrieve the specified template class name.
+     *
+     * @param string $name
+     * @return string
+     *
+     * @throws InvalidArgumentException
+     */
+    public function get(string $name)
+    {
+        if (! $this->exists($name)) {
+            throw new InvalidArgumentException(
+                "A template with the name [{$name}] has not been registered."
+            );
+        }
+
+        return $this->templateClasses[$name];
+    }
+
+    /**
+     * Retrieve the specified template class.
+     *
+     * @param string $name
+     * @return TemplateContract
+     *
+     * @throws InvalidArgumentException
+     * @throws BindingResolutionException
+     */
+    public function load(string $name)
+    {
+        $templateClass = $this->get($name);
+
+        return $this->app->make($templateClass);
+    }
+
+    /**
+     * Determine if a template class with the given name exists.
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function exists(string $name)
+    {
+        return isset($this->templateClasses[$name]);
     }
 }

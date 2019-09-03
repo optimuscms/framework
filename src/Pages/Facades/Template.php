@@ -3,16 +3,15 @@
 namespace OptimusCMS\Pages\Facades;
 
 use OptimusCMS\Pages\TemplateRegistry;
-use Illuminate\Support\Facades\Facade;
 
-class Template extends Facade
+class Template
 {
     /**
      * Get the registered name of the component.
      *
      * @return string
      */
-    protected static function getFacadeAccessor()
+    public function getFacadeAccessor()
     {
         return TemplateRegistry::class;
     }
