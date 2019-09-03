@@ -2,6 +2,7 @@
 
 namespace OptimusCMS\Tests\Meta;
 
+use Mockery;
 use OptimusCMS\Meta\Models\Meta;
 use OptimusCMS\Media\Models\Media;
 use Illuminate\Support\Facades\Queue;
@@ -26,7 +27,7 @@ class HasMetaTest extends TestCase
     }
 
     /** @test */
-    public function it_can_add_meta_to_a_model()
+    public function it_can_add_meta_data_to_a_model()
     {
         $meta = $this->testSubject->saveMeta(
             $data = $this->validData()
@@ -50,7 +51,7 @@ class HasMetaTest extends TestCase
     }
 
     /** @test */
-    public function it_can_update_existing_meta()
+    public function it_can_update_the_existing_meta_data_on_a_model()
     {
         $originalMeta = $this->testSubject->saveMeta($this->validData());
 
@@ -79,6 +80,44 @@ class HasMetaTest extends TestCase
         $this->assertEquals($data['og_image_id'], $media->id);
 
         $this->assertOgImageWasManipulated($media);
+    }
+
+    /** @test */
+    public function it_can_retrieve_meta_data_from_the_model()
+    {
+        $meta = Mockery::mock(Meta::class)->makePartial();
+
+        $meta->setAttribute('title', $title = 'Meta title');
+        $meta->setAttribute('description', $description = 'Meta description');
+        $meta->setAttribute('og_title', $ogTitle = 'OG title');
+        $meta->setAttribute('og_description', $ogDescription = 'OG description');
+
+        $ogImage = 'https://www.optixsolutions.co.uk/og-image.png';
+
+        $meta->shouldReceive('getFirstMediaUrl')
+             ->with(
+                 Meta::OG_IMAGE_MEDIA_GROUP,
+                 Meta::OG_IMAGE_MEDIA_CONVERSION
+             )
+             ->once()
+             ->andReturn($ogImage);
+
+        $this->testSubject->setRelation('meta', $meta);
+
+        // It can retrieve defined meta data...
+        $this->assertEquals($title, $this->testSubject->getMeta('title'));
+        $this->assertEquals($description, $this->testSubject->getMeta('description'));
+        $this->assertEquals($ogTitle, $this->testSubject->getMeta('og_title'));
+        $this->assertEquals($ogDescription, $this->testSubject->getMeta('og_description'));
+        $this->assertEquals($ogImage, $this->testSubject->getMeta('og_image'));
+
+        // It will return the default value for undefined meta...
+        $this->assertEquals(null, $this->testSubject->getMeta('undefined'));
+        $this->assertEquals('default', $this->testSubject->getMeta('undefined', 'default'));
+
+        // It will return the default value when meta is defined but falsy...
+        $this->testSubject->meta->setAttribute('title', null);
+        $this->assertEquals('default', $this->testSubject->getMeta('title', 'default'));
     }
 
     protected function assertOgImageWasManipulated(Media $media)
