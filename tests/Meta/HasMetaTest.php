@@ -33,13 +33,13 @@ class HasMetaTest extends TestCase
             $data = $this->validData()
         );
 
-        // Assert meta record was created...
+        // Assert that the meta record was created...
         $this->assertEquals($data['title'], $meta->title);
         $this->assertEquals($data['description'], $meta->description);
         $this->assertEquals($data['og_title'], $meta->og_title);
         $this->assertEquals($data['og_description'], $meta->og_description);
 
-        // Assert media item was attached...
+        // Assert that the media item was attached...
         $this->assertInstanceOf(
             Media::class,
             $media = $meta->getFirstMedia(Meta::OG_IMAGE_MEDIA_GROUP)
@@ -60,7 +60,7 @@ class HasMetaTest extends TestCase
             'description' => 'Updated meta description',
             'og_title' => 'Updated OG title',
             'og_description' => 'Updated OG description',
-            'og_image_id' => factory(Media::class)->create()->id,
+            'og_image_id' => $this->makeOgImageMedia()->id,
         ]);
 
         // Assert that the existing meta record was updated...
@@ -71,7 +71,7 @@ class HasMetaTest extends TestCase
         $this->assertEquals($data['og_title'], $updatedMeta->og_title);
         $this->assertEquals($data['og_description'], $updatedMeta->og_description);
 
-        // Assert media item was updated...
+        // Assert that the media item was updated...
         $this->assertInstanceOf(
             Media::class,
             $media = $updatedMeta->getFirstMedia(Meta::OG_IMAGE_MEDIA_GROUP)
@@ -111,11 +111,11 @@ class HasMetaTest extends TestCase
         $this->assertEquals($ogDescription, $this->testSubject->getMeta('og_description'));
         $this->assertEquals($ogImage, $this->testSubject->getMeta('og_image'));
 
-        // It will return the default value for undefined meta...
+        // It will return the default value for undefined meta data...
         $this->assertEquals(null, $this->testSubject->getMeta('undefined'));
         $this->assertEquals('default', $this->testSubject->getMeta('undefined', 'default'));
 
-        // It will return the default value when meta is defined but falsy...
+        // It will return the default value when meta data is defined but falsy...
         $this->testSubject->meta->setAttribute('title', null);
         $this->assertEquals('default', $this->testSubject->getMeta('title', 'default'));
     }
@@ -140,7 +140,7 @@ class HasMetaTest extends TestCase
             'description' => 'Meta description',
             'og_title' => 'OG title',
             'og_description' => 'OG description',
-            'og_image_id' =>  factory(Media::class)->create()->id,
+            'og_image_id' =>  $this->makeOgImageMedia()->id,
         ], $overrides);
     }
 }
