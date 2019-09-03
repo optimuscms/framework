@@ -37,6 +37,19 @@ class Meta extends Model
     ];
 
     /**
+     * Get the og image url.
+     *
+     * @return string
+     */
+    public function getOgImageAttribute()
+    {
+        return $this->getFirstMediaUrl(
+            Meta::OG_IMAGE_MEDIA_GROUP,
+            Meta::OG_IMAGE_MEDIA_CONVERSION
+        );
+    }
+
+    /**
      * Get the validation rules.
      *
      * @return array

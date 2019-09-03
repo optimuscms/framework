@@ -8,13 +8,21 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 trait HasMeta
 {
     /**
-     * Get the meta relationship.
+     * Get the meta value with the given key.
      *
-     * @return MorphOne
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
      */
-    public function meta()
+    public function getMeta($key, $default = null)
     {
-        return $this->morphOne(Meta::class, 'metable');
+        $meta = $this->meta;
+
+        if ($meta && $value = $meta->getAttribute($key)) {
+            return $value;
+        }
+
+        return $default;
     }
 
     /**
@@ -46,5 +54,15 @@ trait HasMeta
                 }
             }
         );
+    }
+
+    /**
+     * Get the meta relationship.
+     *
+     * @return MorphOne
+     */
+    public function meta()
+    {
+        return $this->morphOne(Meta::class, 'metable');
     }
 }
