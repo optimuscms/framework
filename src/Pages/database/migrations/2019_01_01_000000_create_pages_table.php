@@ -22,7 +22,7 @@ class CreatePagesTable extends Migration
             $table->unsignedBigInteger('parent_id')->index()->nullable();
             $table->string('template_name');
             $table->boolean('has_fixed_template')->default(false);
-            $table->boolean('is_stand_alone');
+            $table->boolean('is_standalone');
             $table->boolean('is_deletable')->default(true);
             $table->unsignedBigInteger('order');
             $table->timestamp('published_at')->nullable();

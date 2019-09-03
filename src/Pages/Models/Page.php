@@ -29,9 +29,9 @@ class Page extends Model
      */
     protected $casts = [
         'has_fixed_template' => 'bool',
-        'has_fixed_uri' => 'bool',
+        'has_fixed_path' => 'bool',
+        'is_standalone' => 'bool',
         'is_deletable' => 'bool',
-        'is_stand_alone' => 'bool'
     ];
 
     /**

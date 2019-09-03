@@ -1,0 +1,31 @@
+<?php
+
+namespace OptimusCMS\Pages\Http\Resources;
+
+use Illuminate\Http\Resources\Json\JsonResource;
+use OptimusCMS\Meta\Http\Resources\MetaResource;
+
+class PageResource extends JsonResource
+{
+    public function toArray($request)
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'path' => $this->path,
+            'has_fixed_path' => $this->has_fixed_path,
+            'parent_id' => $this->parent_id,
+            'template' => [
+                'name' => $this->template_name,
+                'data' => $this->template()->toArray($this->resource)
+            ],
+            'has_fixed_template' => $this->has_fixed_fixed,
+            'is_standalone' => $this->is_standalone,
+            'is_deletable' => $this->is_deleteable,
+            'meta' => new MetaResource($this->meta),
+            'created_at' => (string) $this->created_at,
+            'updated_at' => (string) $this->updated_at,
+        ];
+    }
+}

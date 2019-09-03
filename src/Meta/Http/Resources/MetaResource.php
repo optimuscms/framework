@@ -15,9 +15,7 @@ class MetaResource extends JsonResource
             'description' => $this->description,
             'og_title' => $this->og_title,
             'og_description' => $this->og_description,
-            'og_image' => new MediaResource(
-                $this->getFirstMedia(Meta::OG_IMAGE_MEDIA_GROUP)
-            ),
+            'og_image' => $this->og_image,
             'additional_tags' => $this->additional_tags,
         ];
     }
