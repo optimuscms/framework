@@ -35,7 +35,7 @@ class PageServiceProvider extends ServiceProvider
                  $router->put('{id}/move', 'PagesController@move');
 
                  // Templates
-                 $router->apiResource('page-templates', 'TemplatesController')
+                 $router->apiResource('page-templates', 'PageTemplatesController')
                         ->only(['index', 'show']);
              });
     }
