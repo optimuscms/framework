@@ -10,10 +10,10 @@
     ],
     "require": {
         "laravel/framework": "^5.8|^6.0",
-        "optix/media": "^0.2.3",
         "optix/draftable": "^1.0",
-        "spatie/eloquent-sortable": "^3.6",
-        "spatie/laravel-sluggable": "^2.1"
+        "optix/media": "^0.2.3",
+        "spatie/eloquent-sortable": "^3.7",
+        "spatie/laravel-sluggable": "^2.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.3",
@@ -22,7 +22,7 @@
     "autoload": {
         "psr-4": {
             "OptimusCMS\\": "src/"
-        }
+        }   
     },
     "autoload-dev": {
         "psr-4": {

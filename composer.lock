@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9eaf2449648fdd6704c5129c99023f5a",
+    "content-hash": "34da39e161d7b0278ad8375f30f391f5",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -1420,25 +1420,25 @@
         },
         {
             "name": "spatie/laravel-sluggable",
-            "version": "2.1.8",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-sluggable.git",
-                "reference": "45b67cdcd78c2ab283d99a08501121f1805cffff"
+                "reference": "492a3b2a392f90a78725c3f07001f2074d704713"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-sluggable/zipball/45b67cdcd78c2ab283d99a08501121f1805cffff",
-                "reference": "45b67cdcd78c2ab283d99a08501121f1805cffff",
+                "url": "https://api.github.com/repos/spatie/laravel-sluggable/zipball/492a3b2a392f90a78725c3f07001f2074d704713",
+                "reference": "492a3b2a392f90a78725c3f07001f2074d704713",
                 "shasum": ""
             },
             "require": {
-                "illuminate/database": "~5.6.0|~5.7.0|~5.8.0",
-                "illuminate/support": "~5.6.0|~5.7.0|~5.8.0",
-                "php": ">=7.1.3"
+                "illuminate/database": "~5.6.0|~5.7.0|~5.8.0|~6.0.0",
+                "illuminate/support": "~5.6.0|~5.7.0|~5.8.0|~6.0.0",
+                "php": "^7.2"
             },
             "require-dev": {
-                "orchestra/testbench": "~3.6.0|~3.7.0|~3.8.0"
+                "orchestra/testbench": "~3.6.0|~3.7.0|~3.8.0|~4.0.0"
             },
             "type": "library",
             "autoload": {
@@ -1453,9 +1453,9 @@
             "authors": [
                 {
                     "name": "Freek Van der Herten",
-                    "role": "Developer",
                     "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be"
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
                 }
             ],
             "description": "Generate slugs when saving Eloquent models",
@@ -1464,7 +1464,7 @@
                 "laravel-sluggable",
                 "spatie"
             ],
-            "time": "2019-06-08T20:54:14+00:00"
+            "time": "2019-09-04T09:23:20+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
