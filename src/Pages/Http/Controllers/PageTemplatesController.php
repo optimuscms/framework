@@ -27,9 +27,7 @@ class PageTemplatesController extends Controller
      */
     public function index()
     {
-        $templates = new Collection(
-            $this->templateRegistry->all()
-        );
+        $templates = new Collection($this->templateRegistry->all());
 
         return PageTemplateResource::collection($templates);
     }

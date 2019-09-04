@@ -38,7 +38,7 @@ class TemplateRegistry
     {
         // Throw an error if the given string is not a class, or if it does not
         // implement the template interface...
-        if (! is_a($templateClass, $templateContract = TemplateContract::class)) {
+        if (! is_subclass_of($templateClass, $templateContract = TemplateContract::class)) {
             throw new InvalidArgumentException(
                 "The [{$templateClass}] class must exist and implement the [{$templateContract}] interface."
             );
