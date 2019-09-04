@@ -2,17 +2,11 @@
 
 namespace OptimusCMS\Pages\Jobs;
 
-use Illuminate\Bus\Queueable;
 use OptimusCMS\Pages\Models\Page;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 
-class UpdateChildPageUris
+class UpdateChildPagePaths
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+    /** @var Page $page */
     protected $page;
 
     /**
@@ -33,22 +27,22 @@ class UpdateChildPageUris
      */
     public function handle()
     {
-        $this->updateChildPageUris($this->page);
+        $this->updateChildPagePaths($this->page);
     }
 
-    protected function updateChildPageUris(Page $parent)
+    protected function updateChildPagePaths(Page $parent)
     {
         $children = $parent->children()
-            ->where('has_fixed_uri', false)
+            ->where('has_fixed_path', false)
             ->get();
 
         $children->each(function (Page $page) use ($parent) {
             $page->setRelation('parent', $parent);
 
-            $page->uri = $page->generateUri();
+            $page->path = $page->generatePath();
             $page->save();
 
-            $this->updateChildPages($page);
+            $this->updateChildPagePaths($page);
         });
     }
 }

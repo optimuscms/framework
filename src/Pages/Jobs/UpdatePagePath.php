@@ -5,10 +5,11 @@ namespace OptimusCMS\Pages\Jobs;
 use OptimusCMS\Pages\Models\Page;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class UpdatePageUri
+class UpdatePagePath
 {
     use Dispatchable;
 
+    /** @var Page */
     protected $page;
 
     /**
@@ -29,11 +30,11 @@ class UpdatePageUri
      */
     public function handle()
     {
-        $this->page->uri = $this->page->generateUri();
+        $this->page->path = $this->page->generatePath();
         $this->page->save();
 
-        if ($this->page->wasChanged('uri')) {
-            UpdateChildPageUris::dispatch($this->page);
+        if ($this->page->wasChanged('path')) {
+            UpdateChildPagePaths::dispatch($this->page);
         }
     }
 }

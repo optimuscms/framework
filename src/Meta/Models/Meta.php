@@ -57,6 +57,7 @@ class Meta extends Model
     public static function rules()
     {
         return [
+            'meta' => 'array',
             'meta.title' => 'nullable|string|max:255',
             'meta.description' => 'nullable|string|max:255',
             'meta.og_title' => 'nullable|string|max:255',

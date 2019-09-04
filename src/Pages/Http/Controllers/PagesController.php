@@ -4,30 +4,29 @@ namespace OptimusCMS\Pages\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use OptimusCMS\Pages\Template;
+use OptimusCMS\Meta\Models\Meta;
 use OptimusCMS\Pages\Models\Page;
 use Illuminate\Routing\Controller;
 use OptimusCMS\Pages\TemplateRegistry;
-use OptimusCMS\Pages\Jobs\UpdatePageUri;
+use OptimusCMS\Pages\Jobs\UpdatePagePath;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Http\Resources\Json\JsonResource;
 use OptimusCMS\Pages\Http\Resources\PageResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class PagesController extends Controller
 {
     /** @var TemplateRegistry */
-    protected $templates;
+    protected $templateRegistry;
 
     /**
      * Create a new controller instance.
      *
-     * @param TemplateRegistry $templates
+     * @param TemplateRegistry $templateRegistry
      * @return void
      */
-    public function __construct(TemplateRegistry $templates)
+    public function __construct(TemplateRegistry $templateRegistry)
     {
-        $this->templates = $templates;
+        $this->templateRegistry = $templateRegistry;
     }
 
     /**
@@ -39,9 +38,10 @@ class PagesController extends Controller
     public function index(Request $request)
     {
         $pages = Page::withDrafts()
+            ->applyFilters($request->all())
             ->withCount('children')
-            ->filter($request)
-            ->orderBy('order')
+            ->with('contents')
+            ->ordered()
             ->get();
 
         return PageResource::collection($pages);
@@ -51,7 +51,7 @@ class PagesController extends Controller
      * Create a new page.
      *
      * @param Request $request
-     * @return JsonResource
+     * @return PageResource
      *
      * @throws ValidationException
      */
@@ -59,27 +59,32 @@ class PagesController extends Controller
     {
         $this->validatePage($request);
 
-        $template = $this->templates->find(
-            $request->input('template')
+        $template = $this->templateRegistry->load(
+            $templateName = $request->input('template.name')
         );
 
-        $template->validate($request);
+        // Validate the template data...
+        $template->validate(
+            $templateData = $request->input('template.data')
+        );
 
         $page = new Page();
 
         $page->title = $request->input('title');
         $page->slug = $request->input('slug');
-        $page->template = $template->name();
+        $page->template_name = $templateName;
         $page->parent_id = $request->input('parent_id');
-        $page->is_stand_alone = $request->input('is_stand_alone');
+        $page->is_standalone = $request->input('is_standalone');
         $page->is_deletable = true;
-        $page->order = Page::max('order') + 1;
 
         $page->save();
 
-        UpdatePageUri::dispatch($page);
+        $page->saveMeta($request->input('meta'));
 
-        $template->save($page, $request);
+        UpdatePagePath::dispatch($page);
+
+        // Save the template data to the page...
+        $template->save($page, $templateData);
 
         if ($request->input('is_published')) {
             $page->publish();
@@ -92,11 +97,11 @@ class PagesController extends Controller
      * Display the specified page.
      *
      * @param int $id
-     * @return JsonResource
+     * @return PageResource
      */
     public function show($id)
     {
-        $page = Page::withDrafts()->findOrFail($id);
+        $page = Page::findOrFail($id);
 
         return new PageResource($page);
     }
@@ -106,42 +111,53 @@ class PagesController extends Controller
      *
      * @param Request $request
      * @param int $id
-     * @return JsonResource
+     * @return PageResource
      *
      * @throws ValidationException
      */
     public function update(Request $request, $id)
     {
-        $page = Page::withDrafts()->findOrFail($id);
+        $page = Page::findOrFail($id);
 
         $this->validatePage($request);
 
-        $template = $this->templates->find(
-            ! $page->has_fixed_template
-                ? $request->input('template')
-                : $page->template
+        // If the page template is fixed, load the page's
+        // current template - otherwise load the template
+        // specified in the request data...
+        $template = $this->templateRegistry->load(
+            $templateName = ! $page->has_fixed_template
+                ? $request->input('template.name')
+                : $page->template_name
         );
 
-        $template->validate($request);
+        // Validate the template data...
+        $template->validate(
+            $templateData = $request->input('template.data')
+        );
 
         $page->title = $request->input('title');
-        $page->slug = ! $page->has_fixed_uri
+
+        // Only change the slug if the page's
+        // path is not fixed...
+        $page->slug = ! $page->has_fixed_path
             ? $request->input('slug')
             : $page->slug;
-        $page->template = $template->name();
+
+        $page->template = $templateName;
         $page->parent_id = $request->input('parent_id');
-        $page->is_stand_alone = $request->input('is_stand_alone');
+        $page->is_standalone = $request->input('is_standalone');
 
         $page->save();
 
-        if (! $page->has_fixed_uri) {
-            UpdatePageUri::dispatch($page);
+        $page->saveMeta($request->input('meta'));
+
+        if ($page->wasChanged('slug')) {
+            UpdatePagePath::dispatch($page);
         }
 
-        $page->detachMedia();
-        $page->deleteContents();
-
-        $template->save($page, $request);
+        // Update the page's template data...
+        $template->reset($page);
+        $template->save($page, $templateData);
 
         if ($page->isDraft() && $request->input('is_published')) {
             $page->publish();
@@ -153,50 +169,44 @@ class PagesController extends Controller
     }
 
     /**
-     * Reorder a list of pages.
+     * Reorder the specified page.
      *
      * @param Request $request
+     * @param int $id
      * @return Response
-     *
-     * @throws ValidationException
      */
-    public function reorder(Request $request)
+    public function move(Request $request, $id)
     {
+        $page = Page::findOrFail($id);
+
         $request->validate([
-            'pages' => 'required|array',
-            'pages.*' => 'exists:pages,id'
+            'direction' => 'required|in:up,down',
         ]);
 
-        $order = 1;
+        $request->input('direction') === 'down'
+            ? $page->moveOrderDown()
+            : $page->moveOrderUp();
 
-        foreach ($request->input('pages') as $id) {
-            Page::where('id', $id)->update([
-                'order' => $order
-            ]);
-
-            $order++;
-        }
-
-        return response(null, 204);
+        return response()->noContent();
     }
 
     /**
      * Delete the specified page.
      *
-     * @param  int  $id
+     * @param int $id
      * @return Response
      */
     public function destroy($id)
     {
-        $page = Page::withDrafts()->findOrFail($id);
+        $page = Page::findOrFail($id);
 
         if (! $page->is_deletable) {
-            abort(403);
+            abort(Response::HTTP_FORBIDDEN);
         }
 
         $page->delete();
 
-        return response(null, 204);
+        return response()->noContent();
     }
 
     /**
@@ -209,16 +219,22 @@ class PagesController extends Controller
      */
     protected function validatePage(Request $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'template' => 'required|in:' . collect($this->templates->all())
-                ->map(function (Template $template) {
-                    return $template->name();
-                })
-                ->implode(','),
-            'parent_id' => 'exists:pages,id|nullable',
-            'is_stand_alone' => 'present|boolean',
-            'is_published' => 'present|boolean'
-        ]);
+        $request->validate(array_merge([
+            'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255',
+            'template.name' => [
+                'required', function ($attribute, $value, $fail) {
+                    // Verify that the template has been registered...
+                    if (! $this->templateRegistry->exists($value)) {
+                        $fail(__('validation.exists', [
+                            'attribute' => 'template'
+                        ]));
+                    }
+                }
+            ],
+            'parent_id' => 'nullable|exists:pages,id',
+            'is_standalone' => 'present|boolean',
+            'is_published' => 'present|boolean',
+        ], Meta::rules()));
     }
 }

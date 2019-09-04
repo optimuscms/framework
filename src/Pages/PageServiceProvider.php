@@ -32,7 +32,7 @@ class PageServiceProvider extends ServiceProvider
              ->group(function ($router) {
                  // Pages
                  $router->apiResource('pages', 'PagesController');
-                 $router->patch('pages', 'PagesController@reorder');
+                 $router->put('{id}/move', 'PagesController@move');
 
                  // Templates
                  $router->apiResource('page-templates', 'TemplatesController')

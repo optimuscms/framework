@@ -2,40 +2,33 @@
 
 namespace OptimusCMS\Pages\Http\Resources;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
-use OptimusCMS\Media\Http\Resources\MediaResource;
+use Illuminate\Http\Resources\Json\JsonResource;
+use OptimusCMS\Meta\Http\Resources\MetaResource;
 
-class PageResource extends Resource
+class PageResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param Request $request
-     * @return array
-     */
     public function toArray($request)
     {
         return [
-            'id' => $this->getKey(),
+            'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
-            'uri' => $this->uri,
-            'has_fixed_uri' => $this->has_fixed_uri,
+            'path' => $this->path,
+            'has_fixed_path' => $this->has_fixed_path,
             'parent_id' => $this->parent_id,
-            'template' => $this->template,
-            'has_fixed_template' => $this->has_fixed_template,
-            'contents' => ContentResource::collection($this->contents),
-            'media' => MediaResource::collection($this->media),
-            'children_count' => $this->when(
-                ! is_null($this->children_count),
-                $this->children_count
-            ),
-            'is_stand_alone' => $this->is_stand_alone,
-            'is_published' => $this->isPublished(),
-            'is_deletable' => $this->is_deletable,
+            'template' => [
+                'name' => $this->template_name,
+                'data' => value(function () {
+                    $page = $this->resource;
+                    return $page->template()->toArray($page);
+                }),
+                'is_fixed' => $this->has_fixed_template,
+            ],
+            'is_standalone' => $this->is_standalone,
+            'is_deletable' => $this->is_deleteable,
+            'meta' => new MetaResource($this->meta),
             'created_at' => (string) $this->created_at,
-            'updated_at' => (string) $this->updated_at
+            'updated_at' => (string) $this->updated_at,
         ];
     }
 }
