@@ -18,9 +18,12 @@ class PageResource extends JsonResource
             'parent_id' => $this->parent_id,
             'template' => [
                 'name' => $this->template_name,
-                'data' => $this->template()->toArray($this->resource)
+                'data' => value(function () {
+                    $page = $this->resource;
+                    return $page->template()->toArray($page);
+                }),
+                'is_fixed' => $this->has_fixed_template,
             ],
-            'has_fixed_template' => $this->has_fixed_fixed,
             'is_standalone' => $this->is_standalone,
             'is_deletable' => $this->is_deleteable,
             'meta' => new MetaResource($this->meta),

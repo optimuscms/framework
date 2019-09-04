@@ -5,7 +5,6 @@ namespace OptimusCMS\Pages;
 use InvalidArgumentException;
 use Illuminate\Container\Container;
 use OptimusCMS\Pages\Contracts\Template as TemplateContract;
-use Illuminate\Contracts\Container\BindingResolutionException;
 
 class TemplateRegistry
 {
@@ -49,7 +48,7 @@ class TemplateRegistry
         // not set on the template class...
         foreach (['name', 'label'] as $requiredProperty) {
             if (! (
-                property_exists($templateClass, $requiredProperty)
+                isset($templateClass::$$requiredProperty)
                 && is_string($templateClass::$$requiredProperty)
             )) {
                 throw new InvalidArgumentException(
@@ -125,7 +124,6 @@ class TemplateRegistry
      * @return TemplateContract
      *
      * @throws InvalidArgumentException
-     * @throws BindingResolutionException
      */
     public function load(string $name)
     {

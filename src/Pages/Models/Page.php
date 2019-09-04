@@ -10,6 +10,7 @@ use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
 use OptimusCMS\Pages\Contracts\Template;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\EloquentSortable\SortableTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,9 +19,10 @@ use OptimusCMS\Pages\Facades\Template as TemplateFacade;
 class Page extends Model
 {
     use Draftable,
-        HasMeta,
         HasMedia,
-        HasSlug;
+        HasMeta,
+        HasSlug,
+        SortableTrait;
 
     /**
      * The attributes that should be cast to native types.
@@ -56,6 +58,15 @@ class Page extends Model
         'is_stand_alone',
         'is_deletable',
         'order',
+    ];
+
+    /**
+     * The page's sortable options.
+     *
+     * @var array
+     */
+    protected $sortable = [
+        'order_column_name' => 'order',
     ];
 
     /**
@@ -98,6 +109,17 @@ class Page extends Model
     public function scopeDeletable(Builder $query)
     {
         $query->where('is_deletable', true);
+    }
+
+    /**
+     * Only change the order of pages with the same parent.
+     *
+     * @return Builder
+     */
+    public function buildSortQuery()
+    {
+        return $this->newQuery()
+            ->where('parent_id', $this->parent_id);
     }
 
     /**
@@ -178,7 +200,7 @@ class Page extends Model
         $content->key = $key;
         $content->value = $value;
 
-        $this->contents()->save($content);
+        return $this->contents()->save($content);
     }
 
     /**
