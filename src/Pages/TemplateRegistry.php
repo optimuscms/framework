@@ -92,7 +92,7 @@ class TemplateRegistry
     {
         return array_map(
             function ($templateClass) {
-                return $this->app->make($templateClass);
+                return $this->app->get($templateClass);
             },
             $this->all()
         );
@@ -129,7 +129,7 @@ class TemplateRegistry
     {
         $templateClass = $this->get($name);
 
-        return $this->app->make($templateClass);
+        return $this->app->get($templateClass);
     }
 
     /**

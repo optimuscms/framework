@@ -169,7 +169,7 @@ class Page extends Model
      */
     protected function otherRecordExistsWithSlug(string $slug): bool
     {
-        return static::where($this->slugOptions->slugField, $slug)
+        return $this->newQuery()->where($this->slugOptions->slugField, $slug)
             ->where($this->getKeyName(), '!=', $this->getKey() ?? '0')
             ->where('parent_id', $this->parent_id)
             ->withoutGlobalScopes()
