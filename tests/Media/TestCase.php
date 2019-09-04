@@ -3,7 +3,6 @@
 namespace OptimusCMS\Tests\Media;
 
 use OptimusCMS\Media\Models\Media;
-use OptimusCMS\Users\Models\AdminUser;
 use OptimusCMS\Tests\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase

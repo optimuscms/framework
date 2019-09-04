@@ -135,7 +135,7 @@ class HasMetaTest extends TestCase
 
     protected function validData(array $overrides = [])
     {
-       return array_merge([
+        return array_merge([
             'title' => 'Meta title',
             'description' => 'Meta description',
             'og_title' => 'OG title',

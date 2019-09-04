@@ -36,9 +36,9 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id
+                'id' => $this->media->id,
             ]), $newData = [
-                'name' => 'New name'
+                'name' => 'New name',
             ]
         );
 
@@ -59,9 +59,9 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id
+                'id' => $this->media->id,
             ]), $newData = [
-                'caption' => 'New caption'
+                'caption' => 'New caption',
             ]
         );
 
@@ -82,9 +82,9 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id
+                'id' => $this->media->id,
             ]), $newData = [
-                'alt_text' => 'New alt text'
+                'alt_text' => 'New alt text',
             ]
         );
 
@@ -109,9 +109,9 @@ class UpdateMediaTest extends TestCase
 
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id
+                'id' => $this->media->id,
             ]), $newData = [
-                'folder_id' => $newFolder->id
+                'folder_id' => $newFolder->id,
             ]
         );
 
@@ -132,9 +132,9 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id
+                'id' => $this->media->id,
             ]), $newData = [
-                'folder_id' => null
+                'folder_id' => null,
             ]
         );
 
@@ -155,9 +155,9 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id
+                'id' => $this->media->id,
             ]), [
-                'folder_id' => 9999
+                'folder_id' => 9999,
             ]
         );
 
@@ -173,9 +173,9 @@ class UpdateMediaTest extends TestCase
     {
         $response = $this->patchJson(
             route('admin.api.media.update', [
-                'id' => $this->media->id
+                'id' => $this->media->id,
             ]), [
-                'name' => ''
+                'name' => '',
             ]
         );
 

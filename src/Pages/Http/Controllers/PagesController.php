@@ -227,10 +227,10 @@ class PagesController extends Controller
                     // Verify that the template has been registered...
                     if (! $this->templateRegistry->exists($value)) {
                         $fail(__('validation.exists', [
-                            'attribute' => 'template'
+                            'attribute' => 'template',
                         ]));
                     }
-                }
+                },
             ],
             'template.data' => 'array',
             'parent_id' => 'nullable|exists:pages,id',

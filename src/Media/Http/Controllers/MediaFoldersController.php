@@ -117,11 +117,11 @@ class MediaFoldersController extends Controller
                         && $parentFolder->isDescendantOf($folder)
                     )) {
                         $fail(__('validation.exists', [
-                            'attribute' => 'parent'
+                            'attribute' => 'parent',
                         ]));
                     }
-                }
-            ]
+                },
+            ],
         ]);
     }
 }

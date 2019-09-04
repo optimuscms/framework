@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Optix\Media\MediaUploader;
 use Illuminate\Http\JsonResponse;
-use OptimusCMS\Media\Models\Media;
 use Illuminate\Routing\Controller;
+use OptimusCMS\Media\Models\Media;
 use Optix\Media\Jobs\PerformConversions;
 use OptimusCMS\Media\Http\Resources\MediaResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -122,7 +122,7 @@ class MediaController extends Controller
             $maxFileSize = config('media.max_file_size', 5 * 1024);
 
             $rules = [
-                'file' => 'required|file|max:'.$maxFileSize
+                'file' => 'required|file|max:'.$maxFileSize,
             ];
         } else {
             $rules = [

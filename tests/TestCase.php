@@ -2,12 +2,12 @@
 
 namespace OptimusCMS\Tests;
 
-use Illuminate\Contracts\Auth\Authenticatable;
+use OptimusCMS\Users\Models\AdminUser;
 use OptimusCMS\Meta\MetaServiceProvider;
 use OptimusCMS\Pages\PageServiceProvider;
-use OptimusCMS\Users\Models\AdminUser;
 use OptimusCMS\Users\UserServiceProvider;
 use OptimusCMS\Media\MediaServiceProvider;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase

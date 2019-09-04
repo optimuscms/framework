@@ -79,7 +79,7 @@ class GetFolderTest extends TestCase
 
         $response = $this->getJson(
             route('admin.api.media-folders.show', [
-                'id' => $folder->id
+                'id' => $folder->id,
             ])
         );
 
