@@ -65,7 +65,7 @@ class PagesController extends Controller
 
         // Validate the template data...
         $template->validate(
-            $templateData = $request->input('template.data')
+            $templateData = $request->input('template.data', [])
         );
 
         $page = new Page();
@@ -132,7 +132,7 @@ class PagesController extends Controller
 
         // Validate the template data...
         $template->validate(
-            $templateData = $request->input('template.data')
+            $templateData = $request->input('template.data', [])
         );
 
         $page->title = $request->input('title');
@@ -232,6 +232,7 @@ class PagesController extends Controller
                     }
                 }
             ],
+            'template.data' => 'array',
             'parent_id' => 'nullable|exists:pages,id',
             'is_standalone' => 'present|boolean',
             'is_published' => 'present|boolean',
