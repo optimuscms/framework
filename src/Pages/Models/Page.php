@@ -42,7 +42,7 @@ class Page extends Model
      * @var array
      */
     protected $dates = [
-        'published_at'
+        'published_at',
     ];
 
     /**
@@ -272,7 +272,7 @@ class Page extends Model
      */
     public function parent()
     {
-        return $this->belongsTo(Page::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     /**
@@ -282,7 +282,7 @@ class Page extends Model
      */
     public function children()
     {
-        return $this->hasMany(Page::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     /**

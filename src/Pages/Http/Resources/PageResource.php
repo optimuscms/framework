@@ -20,6 +20,7 @@ class PageResource extends JsonResource
                 'name' => $this->template_name,
                 'data' => value(function () {
                     $page = $this->resource;
+
                     return $page->template()->toArray($page);
                 }),
                 'is_fixed' => $this->has_fixed_template,

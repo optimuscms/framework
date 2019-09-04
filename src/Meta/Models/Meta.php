@@ -44,8 +44,8 @@ class Meta extends Model
     public function getOgImageAttribute()
     {
         return $this->getFirstMediaUrl(
-            Meta::OG_IMAGE_MEDIA_GROUP,
-            Meta::OG_IMAGE_MEDIA_CONVERSION
+            self::OG_IMAGE_MEDIA_GROUP,
+            self::OG_IMAGE_MEDIA_CONVERSION
         );
     }
 

@@ -7,8 +7,8 @@ use OptimusCMS\Media\Models\Media;
 use OptimusCMS\Tests\Media\TestCase;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
-use Optix\Media\Jobs\PerformConversions;
 use OptimusCMS\Media\Models\MediaFolder;
+use Optix\Media\Jobs\PerformConversions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CreateMediaTest extends TestCase
