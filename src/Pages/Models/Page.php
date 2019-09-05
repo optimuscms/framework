@@ -98,7 +98,10 @@ class Page extends Model implements Sortable
             $parent = $parent->id;
         }
 
-        $query->where('parent_id', $parent);
+        $query->where(
+            'parent_id',
+            $parent === 'root' ? null : $parent
+        );
     }
 
     /**
@@ -212,15 +215,15 @@ class Page extends Model implements Sortable
      */
     public function addContents(array $contents)
     {
-        $contents = $this->newCollection();
+        $models = $this->newCollection();
 
         foreach ($contents as $key => $value) {
-            $contents->push(
+            $models->push(
                 $this->addContent($key, $value)
             );
         }
 
-        return $contents;
+        return $models;
     }
 
     /**
