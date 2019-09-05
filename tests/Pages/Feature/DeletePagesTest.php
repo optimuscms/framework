@@ -25,9 +25,7 @@ class DeletePagesTest extends TestCase
         ]);
 
         $response = $this->deleteJson(
-            route('admin.api.pages.destroy', [
-                $page->id,
-            ])
+            route('admin.api.pages.destroy', $page->id)
         );
 
         $response->assertStatus(204);
@@ -45,9 +43,7 @@ class DeletePagesTest extends TestCase
         ]);
 
         $response = $this->deleteJson(
-            route('admin.api.pages.destroy', [
-                'id' => $page->id,
-            ])
+            route('admin.api.pages.destroy', $page->id)
         );
 
         $response->assertStatus(403);

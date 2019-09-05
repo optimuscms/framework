@@ -3,10 +3,21 @@
 namespace OptimusCMS\Tests\Pages;
 
 use OptimusCMS\Tests\TestCase as BaseTestCase;
+use Illuminate\Database\Eloquent\FactoryBuilder;
 use OptimusCMS\Pages\Facades\Template as TemplateFacade;
 
 class TestCase extends BaseTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        FactoryBuilder::macro('withoutEvents', function () {
+            $this->class::flushEventListeners();
+            return $this;
+        });
+    }
+
     protected function registerTemplate(string $templateClass)
     {
         return TemplateFacade::register($templateClass);

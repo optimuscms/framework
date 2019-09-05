@@ -4,6 +4,7 @@ namespace OptimusCMS\Tests\Pages\Feature;
 
 use OptimusCMS\Pages\Models\Page;
 use OptimusCMS\Tests\Pages\TestCase;
+use OptimusCMS\Tests\Pages\DummyTemplate;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class GetPagesTest extends TestCase
@@ -15,14 +16,16 @@ class GetPagesTest extends TestCase
         parent::setUp();
 
         $this->signIn();
+
+        $this->registerTemplate(DummyTemplate::class);
     }
 
     /** @test */
     public function it_can_display_all_pages_in_the_correct_order()
     {
-        $secondPage = factory(Page::class)->create(['order' => 2]);
-        $firstPage = factory(Page::class)->create(['order' => 1]);
-        $thirdPage = factory(Page::class)->create(['order' => 3]);
+        $secondPage = factory(Page::class)->withoutEvents()->create(['order' => 2]);
+        $firstPage = factory(Page::class)->withoutEvents()->create(['order' => 1]);
+        $thirdPage = factory(Page::class)->withoutEvents()->create(['order' => 3]);
 
         $response = $this->getJson(
             route('admin.api.pages.index')
@@ -32,7 +35,7 @@ class GetPagesTest extends TestCase
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
-                    '*' => $this->expectedJsonStructure(),
+                    '*' => $this->expectedPageJsonStructure(),
                 ],
             ])
             ->assertJson([
@@ -61,7 +64,7 @@ class GetPagesTest extends TestCase
             ->assertJsonCount(2, 'data')
             ->assertJsonStructure([
                 'data' => [
-                    '*' => $this->expectedJsonStructure(),
+                    '*' => $this->expectedPageJsonStructure(),
                 ],
             ]);
 
@@ -77,59 +80,38 @@ class GetPagesTest extends TestCase
     {
         $page = factory(Page::class)->create()->fresh();
 
-        $response = $this->getJson(route('admin.api.pages.show', [
-            'id' => $page->id,
-        ]));
+        $page->addContent('heading', $heading = 'Heading!');
+
+        $response = $this->getJson(
+            route('admin.api.pages.show', $page->id)
+        );
 
         $response
             ->assertOk()
             ->assertJsonStructure([
-                'data' => $this->expectedJsonStructure(),
+                'data' => $this->expectedPageJsonStructure(),
             ])
             ->assertJson([
                 'data' =>[
                     'id' => $page->id,
                     'title' => $page->title,
                     'slug' => $page->slug,
-                    'uri' => $page->uri,
-                    'has_fixed_uri' => $page->has_fixed_uri,
+                    'path' => $page->path,
+                    'has_fixed_path' => $page->has_fixed_path,
                     'parent_id' => $page->parent_id,
-                    'template' => $page->template,
-                    'has_fixed_template' => $page->has_fixed_template,
-                    'contents' => [],
-                    'media' => [],
-                    'is_stand_alone' => $page->is_stand_alone,
+                    'template' => [
+                        'name' => $page->template_name,
+                        'data' => [
+                            'heading' => $heading,
+                        ],
+                        'is_fixed' => $page->has_fixed_template,
+                    ],
+                    'is_standalone' => $page->is_standalone,
                     'is_published' => $page->isPublished(),
                     'is_deletable' => $page->is_deletable,
                     'created_at' => (string) $page->created_at,
                     'updated_at' => (string) $page->updated_at,
                 ],
             ]);
-    }
-
-    protected function expectedJsonStructure()
-    {
-        return [
-            'id',
-            'title',
-            'slug',
-            'uri',
-            'has_fixed_uri',
-            'parent_id',
-            'template',
-            'has_fixed_template',
-            'contents' => [
-                '*' => [
-                    'key',
-                    'value',
-                ],
-            ],
-            'media' => [],
-            'is_stand_alone',
-            'is_published',
-            'is_deletable',
-            'created_at',
-            'updated_at',
-        ];
     }
 }
