@@ -3,6 +3,7 @@
 namespace OptimusCMS\Tests\Pages\Feature;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use OptimusCMS\Pages\Models\Page;
 use OptimusCMS\Tests\Pages\TestCase;
 use OptimusCMS\Tests\Pages\DummyTemplate;
@@ -35,15 +36,18 @@ class CreatePagesTest extends TestCase
             ->assertJson([
                 'data' => [
                     'title' => $data['title'],
-                    'template' => $data['template'],
+                    'slug' => $slug = Str::slug($data['title']),
+                    'path' => $slug,
+                    'has_fixed_path' => false,
+                    'template' => [
+                        'name' => $data['template']['name'],
+                        'data' => $data['template']['data'],
+                        'is_fixed' => false,
+                    ],
                     'parent_id' => $data['parent_id'],
-                    'contents' => [[
-                        'key' => 'content',
-                        'value' => $data['content'],
-                    ]],
-                    'is_stand_alone' => $data['is_stand_alone'],
-                    'is_published' => $data['is_published'],
+                    'is_standalone' => $data['is_standalone'],
                     'is_deletable' => true,
+                    'is_published' => $data['is_published'],
                 ],
             ]);
     }
@@ -58,7 +62,7 @@ class CreatePagesTest extends TestCase
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'title', 'template', 'is_stand_alone', 'is_published',
+                'title', 'template.name', 'is_standalone', 'is_published',
             ]);
     }
 
@@ -68,20 +72,17 @@ class CreatePagesTest extends TestCase
         $response = $this->postJson(
             route('admin.api.pages.store'),
             $this->validData([
-                'template' => 'unregistered',
+                'template' => [
+                    'name' => 'unregistered',
+                ],
             ])
         );
 
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'template',
+                'template.name',
             ]);
-
-        $this->assertEquals(
-            trans('validation.in', ['attribute' => 'template']),
-            Arr::first($response->decodeResponseJson('errors.template'))
-        );
     }
 
     /** @test */
@@ -99,33 +100,23 @@ class CreatePagesTest extends TestCase
             ->assertJsonValidationErrors([
                 'parent_id',
             ]);
-
-        $this->assertEquals(
-            trans('validation.exists', ['attribute' => 'parent id']),
-            Arr::first($response->decodeResponseJson('errors.parent_id'))
-        );
     }
 
     /** @test */
-    public function the_is_stand_alone_field_must_be_a_boolean()
+    public function the_is_standalone_field_must_be_a_boolean()
     {
         $response = $this->postJson(
             route('admin.api.pages.store'),
             $this->validData([
-                'is_stand_alone' => 'string',
+                'is_standalone' => 'string',
             ])
         );
 
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors([
-                'is_stand_alone',
+                'is_standalone',
             ]);
-
-        $this->assertEquals(
-            trans('validation.boolean', ['attribute' => 'is stand alone']),
-            Arr::first($response->decodeResponseJson('errors.is_stand_alone'))
-        );
     }
 
     /** @test */
@@ -143,23 +134,25 @@ class CreatePagesTest extends TestCase
             ->assertJsonValidationErrors([
                 'is_published',
             ]);
-
-        $this->assertEquals(
-            trans('validation.boolean', ['attribute' => 'is published']),
-            Arr::first($response->decodeResponseJson('errors.is_published'))
-        );
     }
 
     protected function validData(array $overrides = [])
     {
-        $this->registerTemplate($template = new DummyTemplate);
+        $this->registerTemplate(
+            $templateClass = DummyTemplate::class
+        );
 
         return array_merge([
             'title' => 'Title',
-            'template' => $template->name(),
+            'template' => [
+                'name' => $templateClass::name(),
+                'data' => [
+                    // Required by the dummy template...
+                    'heading' => 'Heading',
+                ],
+            ],
             'parent_id' => factory(Page::class)->create()->id,
-            'content' => 'Content', // Required by the dummy template...
-            'is_stand_alone' => false,
+            'is_standalone' => false,
             'is_published' => true,
         ], $overrides);
     }

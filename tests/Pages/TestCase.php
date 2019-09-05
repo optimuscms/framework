@@ -2,30 +2,19 @@
 
 namespace OptimusCMS\Tests\Pages;
 
-use Mockery;
-use OptimusCMS\Pages\Template;
-use OptimusCMS\Pages\TemplateRegistry;
 use OptimusCMS\Tests\TestCase as BaseTestCase;
+use OptimusCMS\Pages\Facades\Template as TemplateFacade;
 
 class TestCase extends BaseTestCase
 {
-    protected function registerTemplate(Template $template)
+    protected function registerTemplate(string $templateClass)
     {
-        $this->app[TemplateRegistry::class]->register($template);
+        return TemplateFacade::register($templateClass);
     }
 
-    protected function registerTemplates(array $templates)
+    protected function registerTemplates(array $templateClasses)
     {
-        $this->app[TemplateRegistry::class]->registerMany($templates);
-    }
-
-    protected function mockTemplate(string $name)
-    {
-        $template = Mockery::mock(Template::class);
-
-        $template->shouldReceive('name')->andReturn($name);
-
-        return $template;
+        return TemplateFacade::registerMany($templateClasses);
     }
 
     public function expectedPageJsonStructure()
@@ -34,19 +23,15 @@ class TestCase extends BaseTestCase
             'id',
             'title',
             'slug',
-            'uri',
-            'has_fixed_uri',
+            'path',
+            'has_fixed_path',
             'parent_id',
-            'template',
-            'has_fixed_template',
-            'contents' => [
-                '*' => [
-                    'key',
-                    'value',
-                ],
+            'template' => [
+                'name',
+                'data' => [],
+                'is_fixed',
             ],
-            'media' => [],
-            'is_stand_alone',
+            'is_standalone',
             'is_published',
             'is_deletable',
             'created_at',

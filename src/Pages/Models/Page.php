@@ -7,6 +7,7 @@ use OptimusCMS\Meta\HasMeta;
 use Spatie\Sluggable\HasSlug;
 use Optix\Draftable\Draftable;
 use Spatie\Sluggable\SlugOptions;
+use Spatie\EloquentSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
 use OptimusCMS\Pages\Contracts\Template;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use OptimusCMS\Pages\Facades\Template as TemplateFacade;
 
-class Page extends Model
+class Page extends Model implements Sortable
 {
     use Draftable,
         HasMedia,
@@ -235,7 +236,7 @@ class Page extends Model
             return $default;
         }
 
-        $content = $this->contents->where('key', $key);
+        $content = $this->contents->firstWhere('key', $key);
 
         return $content->value;
     }

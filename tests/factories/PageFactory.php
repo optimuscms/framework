@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Faker\Generator as Faker;
 use OptimusCMS\Pages\Models\Page;
 
@@ -7,9 +8,9 @@ $factory->define(Page::class, function (Faker $faker) {
     return [
         'title' => $faker->sentence,
         'parent_id' => null,
-        'template' => 'default',
-        'is_stand_alone' => false,
-        'published_at' => now(),
+        'template_name' => 'dummy',
+        'is_standalone' => false,
+        'published_at' => Carbon::now(),
         'order' => Page::max('order') + 1,
     ];
 });

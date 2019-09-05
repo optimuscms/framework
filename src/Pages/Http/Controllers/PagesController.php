@@ -74,7 +74,9 @@ class PagesController extends Controller
 
         $page->title = $request->input('title');
         $page->slug = $request->input('slug');
+        $page->has_fixed_path = false;
         $page->template_name = $templateName;
+        $page->has_fixed_template = false;
         $page->parent_id = $request->input('parent_id');
         $page->is_standalone = $request->input('is_standalone');
         $page->is_deletable = true;
@@ -146,7 +148,7 @@ class PagesController extends Controller
             ? $request->input('slug')
             : $page->slug;
 
-        $page->template = $templateName;
+        $page->template_name = $templateName;
         $page->parent_id = $request->input('parent_id');
         $page->is_standalone = $request->input('is_standalone');
 
@@ -154,7 +156,7 @@ class PagesController extends Controller
 
         $page->saveMeta($request->input('meta', []));
 
-        if ($page->wasChanged('slug')) {
+        if (! $page->has_fixed_path) {
             UpdatePagePath::dispatch($page);
         }
 
