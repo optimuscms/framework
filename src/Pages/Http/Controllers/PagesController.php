@@ -12,6 +12,7 @@ use OptimusCMS\Pages\Jobs\UpdatePagePath;
 use Illuminate\Validation\ValidationException;
 use OptimusCMS\Pages\Http\Resources\PageResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use OptimusCMS\Pages\Exceptions\TemplateNotFoundException;
 
 class PagesController extends Controller
 {
@@ -54,6 +55,7 @@ class PagesController extends Controller
      * @return PageResource
      *
      * @throws ValidationException
+     * @throws TemplateNotFoundException
      */
     public function store(Request $request)
     {
@@ -79,7 +81,7 @@ class PagesController extends Controller
 
         $page->save();
 
-        $page->saveMeta($request->input('meta'));
+        $page->saveMeta($request->input('meta', []));
 
         UpdatePagePath::dispatch($page);
 
@@ -114,6 +116,7 @@ class PagesController extends Controller
      * @return PageResource
      *
      * @throws ValidationException
+     * @throws TemplateNotFoundException
      */
     public function update(Request $request, $id)
     {
@@ -149,7 +152,7 @@ class PagesController extends Controller
 
         $page->save();
 
-        $page->saveMeta($request->input('meta'));
+        $page->saveMeta($request->input('meta', []));
 
         if ($page->wasChanged('slug')) {
             UpdatePagePath::dispatch($page);

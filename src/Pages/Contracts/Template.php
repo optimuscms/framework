@@ -9,6 +9,20 @@ use Illuminate\Validation\ValidationException;
 interface Template
 {
     /**
+     * Get the template's name.
+     *
+     * @return string
+     */
+    public static function name(): string;
+
+    /**
+     * Get the template's label.
+     *
+     * @return string
+     */
+    public static function label(): string;
+
+    /**
      * Validate the template data.
      *
      * @param array $data
@@ -49,5 +63,5 @@ interface Template
      * @param Page $page
      * @return array
      */
-    public function toArray(Page $page);
+    public function toArray(Page $page): array;
 }

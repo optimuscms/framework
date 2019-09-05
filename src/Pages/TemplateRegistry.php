@@ -2,8 +2,9 @@
 
 namespace OptimusCMS\Pages;
 
-use InvalidArgumentException;
 use Illuminate\Container\Container;
+use OptimusCMS\Pages\Exceptions\InvalidTemplateException;
+use OptimusCMS\Pages\Exceptions\TemplateNotFoundException;
 use OptimusCMS\Pages\Contracts\Template as TemplateContract;
 
 class TemplateRegistry
@@ -20,6 +21,8 @@ class TemplateRegistry
      * @param Container $app
      * @param array $templateClasses
      * @return void
+     *
+     * @throws InvalidTemplateException
      */
     public function __construct(Container $app, array $templateClasses = [])
     {
@@ -33,31 +36,35 @@ class TemplateRegistry
      *
      * @param string $templateClass
      * @return void
+     *
+     * @throws InvalidTemplateException
      */
     public function register(string $templateClass)
     {
-        // Throw an error if the given string is not a class, or if it does not
-        // implement the template interface...
-        if (! is_subclass_of($templateClass, $templateContract = TemplateContract::class)) {
-            throw new InvalidArgumentException(
-                "The [{$templateClass}] class must exist and implement the [{$templateContract}] interface."
+        // Throw an error if the $templateClass argument is not a defined class...
+        if (! class_exists($templateClass)) {
+            throw new InvalidTemplateException(
+                "The \$templateClass argument must be a defined class, you gave [{$templateClass}]."
             );
         }
 
-        // Throw an error if the required properties are
-        // not set on the template class...
-        foreach (['name', 'label'] as $requiredProperty) {
-            if (! (
-                isset($templateClass::$$requiredProperty)
-                && is_string($templateClass::$$requiredProperty)
-            )) {
-                throw new InvalidArgumentException(
-                    "The [{$templateClass}] must have a valid {$requiredProperty} property."
-                );
-            }
+        // Throw an error if the given class does not implement the template interface...
+        if (! is_subclass_of(
+            $templateClass, $templateContract = TemplateContract::class
+        )) {
+            throw new InvalidTemplateException(
+                "The given [{$templateClass}] class does not implement the [{$templateContract}] interface."
+            );
         }
 
-        $this->templateClasses[$templateClass::$name] = $templateClass;
+        // Throw an error if the template's name is not defined...
+        if (! $templateName = $templateClass::name()) {
+            throw new InvalidTemplateException(
+                "The name of the given [{$templateClass}] class is not defined."
+            );
+        }
+
+        $this->templateClasses[$templateName] = $templateClass;
     }
 
     /**
@@ -65,6 +72,8 @@ class TemplateRegistry
      *
      * @param array $templateClasses
      * @return void
+     *
+     * @throws InvalidTemplateException
      */
     public function registerMany(array $templateClasses)
     {
@@ -104,12 +113,12 @@ class TemplateRegistry
      * @param string $name
      * @return string
      *
-     * @throws InvalidArgumentException
+     * @throws TemplateNotFoundException
      */
     public function get(string $name)
     {
         if (! $this->exists($name)) {
-            throw new InvalidArgumentException(
+            throw new TemplateNotFoundException(
                 "A template with the name [{$name}] has not been registered."
             );
         }
@@ -123,7 +132,7 @@ class TemplateRegistry
      * @param string $name
      * @return TemplateContract
      *
-     * @throws InvalidArgumentException
+     * @throws TemplateNotFoundException
      */
     public function load(string $name)
     {
