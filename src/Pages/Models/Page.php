@@ -137,7 +137,7 @@ class Page extends Model implements Sortable
 
         $parent = $this->parent;
 
-        if ($parent && $prefix = $parent->uri) {
+        if ($parent && $prefix = $parent->path) {
             $prefix .= '/';
         }
 
