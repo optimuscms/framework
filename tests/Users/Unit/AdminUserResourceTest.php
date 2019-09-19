@@ -33,6 +33,7 @@ class AdminUserResourceTest extends TestCase
             'name' => $user->name,
             'email' => $user->email,
             'username' => $user->username,
+            'gravatar_url' => $user->gravatar_url,
             'created_at' => (string) $user->created_at,
             'updated_at' => (string) $user->updated_at,
         ], $resource->toArray($request));

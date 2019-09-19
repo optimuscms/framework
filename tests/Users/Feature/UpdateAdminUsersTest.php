@@ -32,9 +32,7 @@ class UpdateAdminUsersTest extends TestCase
     public function it_can_update_an_admin_user()
     {
         $response = $this->patchJson(
-            route('admin.api.users.update', [
-                'id' => $this->user->id,
-            ]),
+            route('admin.api.users.update', $this->user->id),
             $newData = $this->validData()
         );
 
@@ -60,11 +58,10 @@ class UpdateAdminUsersTest extends TestCase
     /** @test */
     public function it_will_not_update_passwords_unless_the_field_is_present()
     {
-        $response = $this->patchJson(route('admin.api.users.update', [
-            'id' => $this->user->id,
-        ]), $newData = Arr::except(
-            $this->validData(), 'password'
-        ));
+        $response = $this->patchJson(
+            route('admin.api.users.update', $this->user->id),
+            $newData = Arr::except($this->validData(), 'password')
+        );
 
         $response
             ->assertOk()
@@ -86,9 +83,7 @@ class UpdateAdminUsersTest extends TestCase
     public function there_are_required_fields()
     {
         $response = $this->patchJson(
-            route('admin.api.users.update', [
-                'id' => $this->user->id,
-            ])
+            route('admin.api.users.update', $this->user->id)
         );
 
         $response
@@ -101,11 +96,12 @@ class UpdateAdminUsersTest extends TestCase
     /** @test */
     public function the_email_field_must_be_a_valid_email_address()
     {
-        $response = $this->patchJson(route('admin.api.users.update', [
-            'id' => $this->user->id,
-        ]), $newData = $this->validData([
-            'email' => 'not an email',
-        ]));
+        $response = $this->patchJson(
+            route('admin.api.users.update', $this->user->id),
+            $newData = $this->validData([
+                'email' => 'not an email',
+            ])
+        );
 
         $response
             ->assertStatus(422)
@@ -117,11 +113,12 @@ class UpdateAdminUsersTest extends TestCase
     /** @test */
     public function the_password_field_must_be_at_least_6_characters()
     {
-        $response = $this->patchJson(route('admin.api.users.update', [
-            'id' => $this->user->id,
-        ]), $newData = $this->validData([
-            'password' => 'short',
-        ]));
+        $response = $this->patchJson(
+            route('admin.api.users.update', $this->user->id),
+            $newData = $this->validData([
+                'password' => 'short',
+            ])
+        );
 
         $response
             ->assertStatus(422)

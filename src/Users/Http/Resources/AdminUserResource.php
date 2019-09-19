@@ -13,6 +13,7 @@ class AdminUserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'username' => $this->username,
+            'gravatar_url' => $this->gravatar_url,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
         ];

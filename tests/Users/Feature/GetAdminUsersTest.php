@@ -39,9 +39,7 @@ class GetAdminUsersTest extends TestCase
         $this->signIn($user);
 
         $response = $this->getJson(
-            route('admin.api.users.show', [
-                'id' => $user->id,
-            ])
+            route('admin.api.users.show', $user->id)
         );
 
         $response

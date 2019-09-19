@@ -29,4 +29,16 @@ class AdminUser extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    /**
+     * Get the user's gravatar url.
+     *
+     * @return string
+     */
+    public function getGravatarUrlAttribute()
+    {
+        return vsprintf('https://www.gravatar.com/avatar/%s', [
+            md5(strtolower(trim($this->email)))
+        ]);
+    }
 }

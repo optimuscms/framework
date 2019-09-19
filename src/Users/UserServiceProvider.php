@@ -39,7 +39,7 @@ class UserServiceProvider extends ServiceProvider
         $this->app['router']
              ->name('admin.api.')
              ->prefix('admin/api')
-            ->middleware('web', 'auth:admin')
+             ->middleware('web', 'auth:admin')
              ->namespace($this->controllerNamespace)
              ->group(function ($router) {
                  $router->apiResource('users', 'AdminUsersController');

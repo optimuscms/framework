@@ -63,6 +63,6 @@ trait HasMeta
      */
     public function meta()
     {
-        return $this->morphOne(Meta::class, 'metable');
+        return $this->morphOne(Meta::class, 'metable')->withDefault();
     }
 }

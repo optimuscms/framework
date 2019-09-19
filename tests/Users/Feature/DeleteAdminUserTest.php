@@ -15,9 +15,7 @@ class DeleteAdminUserTest extends TestCase
         $user = $this->signIn();
 
         $response = $this->deleteJson(
-            route('admin.api.users.destroy', [
-                'id' => $user->id,
-            ])
+            route('admin.api.users.destroy', $user->id)
         );
 
         $response->assertStatus(204);
