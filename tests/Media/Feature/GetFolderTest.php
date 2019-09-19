@@ -78,9 +78,7 @@ class GetFolderTest extends TestCase
         $folder = factory(MediaFolder::class)->create();
 
         $response = $this->getJson(
-            route('admin.api.media-folders.show', [
-                'id' => $folder->id,
-            ])
+            route('admin.api.media-folders.show', $folder->id)
         );
 
         $response

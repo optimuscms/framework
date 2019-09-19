@@ -35,9 +35,8 @@ class UpdateMediaTest extends TestCase
     public function it_can_change_the_name_of_a_media_item()
     {
         $response = $this->patchJson(
-            route('admin.api.media.update', [
-                'id' => $this->media->id,
-            ]), $newData = [
+            route('admin.api.media.update', $this->media->id),
+            $newData = [
                 'name' => 'New name',
             ]
         );
@@ -58,9 +57,8 @@ class UpdateMediaTest extends TestCase
     public function it_can_change_the_caption_of_a_media_item()
     {
         $response = $this->patchJson(
-            route('admin.api.media.update', [
-                'id' => $this->media->id,
-            ]), $newData = [
+            route('admin.api.media.update', $this->media->id),
+            $newData = [
                 'caption' => 'New caption',
             ]
         );
@@ -81,9 +79,8 @@ class UpdateMediaTest extends TestCase
     public function it_can_change_the_alt_text_of_a_media_item()
     {
         $response = $this->patchJson(
-            route('admin.api.media.update', [
-                'id' => $this->media->id,
-            ]), $newData = [
+            route('admin.api.media.update', $this->media->id),
+            $newData = [
                 'alt_text' => 'New alt text',
             ]
         );
@@ -108,9 +105,8 @@ class UpdateMediaTest extends TestCase
         ]);
 
         $response = $this->patchJson(
-            route('admin.api.media.update', [
-                'id' => $this->media->id,
-            ]), $newData = [
+            route('admin.api.media.update', $this->media->id),
+            $newData = [
                 'folder_id' => $newFolder->id,
             ]
         );
@@ -131,9 +127,8 @@ class UpdateMediaTest extends TestCase
     public function it_can_move_a_media_item_into_the_root_folder()
     {
         $response = $this->patchJson(
-            route('admin.api.media.update', [
-                'id' => $this->media->id,
-            ]), $newData = [
+            route('admin.api.media.update', $this->media->id),
+            $newData = [
                 'folder_id' => null,
             ]
         );
@@ -154,9 +149,7 @@ class UpdateMediaTest extends TestCase
     public function the_folder_id_must_be_an_existing_folder_id_if_not_null()
     {
         $response = $this->patchJson(
-            route('admin.api.media.update', [
-                'id' => $this->media->id,
-            ]), [
+            route('admin.api.media.update', $this->media->id), [
                 'folder_id' => 9999,
             ]
         );
@@ -172,9 +165,7 @@ class UpdateMediaTest extends TestCase
     public function the_name_field_must_not_be_empty_when_present()
     {
         $response = $this->patchJson(
-            route('admin.api.media.update', [
-                'id' => $this->media->id,
-            ]), [
+            route('admin.api.media.update', $this->media->id), [
                 'name' => '',
             ]
         );

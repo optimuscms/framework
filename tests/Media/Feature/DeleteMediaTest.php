@@ -21,9 +21,7 @@ class DeleteMediaTest extends TestCase
         ]);
 
         $response = $this->deleteJson(
-            route('admin.api.media.destroy', [
-                'id' => $media->id,
-            ])
+            route('admin.api.media.destroy', $media->id)
         );
 
         $response->assertStatus(204);

@@ -83,9 +83,7 @@ class GetMediaTest extends TestCase
         $media = factory(Media::class)->create();
 
         $response = $this->getJson(
-            route('admin.api.media.show', [
-                'id' => $media->id,
-            ])
+            route('admin.api.media.show', $media->id)
         );
 
         $response
