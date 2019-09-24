@@ -16,6 +16,10 @@ class PageResource extends JsonResource
             'path' => $this->path,
             'has_fixed_path' => $this->has_fixed_path,
             'parent_id' => $this->parent_id,
+            'children_count' => $this->when(
+                ! is_null($this->children_count),
+                $this->children_count
+            ),
             'template' => [
                 'name' => $this->template_name,
                 'data' => value(function () {
