@@ -48,7 +48,7 @@ class MediaController extends Controller
         // Create a thumbnail for the media manager
         // if the media item is an image...
         if ($media->isOfType('image')) {
-            PerformConversions::dispatch($media, [
+            PerformConversions::dispatchNow($media, [
                 Media::THUMBNAIL_CONVERSION,
             ]);
         }
