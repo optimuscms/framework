@@ -105,7 +105,7 @@ class PagesController extends Controller
      */
     public function show($id)
     {
-        $page = Page::findOrFail($id);
+        $page = Page::withDrafts()->findOrFail($id);
 
         return new PageResource($page);
     }
@@ -122,7 +122,7 @@ class PagesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $page = Page::findOrFail($id);
+        $page = Page::withDrafts()->findOrFail($id);
 
         $this->validatePage($request);
 
@@ -182,7 +182,7 @@ class PagesController extends Controller
      */
     public function move(Request $request, $id)
     {
-        $page = Page::findOrFail($id);
+        $page = Page::withDrafts()->findOrFail($id);
 
         $request->validate([
             'direction' => 'required|in:up,down',
@@ -203,7 +203,7 @@ class PagesController extends Controller
      */
     public function destroy($id)
     {
-        $page = Page::findOrFail($id);
+        $page = Page::withDrafts()->findOrFail($id);
 
         if (! $page->is_deletable) {
             abort(Response::HTTP_FORBIDDEN);
