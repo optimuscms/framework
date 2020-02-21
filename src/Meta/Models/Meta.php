@@ -2,9 +2,9 @@
 
 namespace OptimusCMS\Meta\Models;
 
-use Optix\Media\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Optix\Media\HasMedia;
 
 class Meta extends Model
 {

@@ -2,8 +2,8 @@
 
 namespace OptimusCMS\Meta;
 
-use OptimusCMS\Meta\Models\Meta;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use OptimusCMS\Meta\Models\Meta;
 
 trait HasMeta
 {

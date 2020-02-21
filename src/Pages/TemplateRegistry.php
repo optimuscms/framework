@@ -3,9 +3,9 @@
 namespace OptimusCMS\Pages;
 
 use Illuminate\Container\Container;
+use OptimusCMS\Pages\Contracts\Template as TemplateContract;
 use OptimusCMS\Pages\Exceptions\InvalidTemplateException;
 use OptimusCMS\Pages\Exceptions\TemplateNotFoundException;
-use OptimusCMS\Pages\Contracts\Template as TemplateContract;
 
 class TemplateRegistry
 {

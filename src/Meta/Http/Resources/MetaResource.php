@@ -2,9 +2,9 @@
 
 namespace OptimusCMS\Meta\Http\Resources;
 
-use OptimusCMS\Meta\Models\Meta;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OptimusCMS\Media\Http\Resources\MediaResource;
+use OptimusCMS\Meta\Models\Meta;
 
 class MetaResource extends JsonResource
 {

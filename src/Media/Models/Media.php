@@ -3,8 +3,8 @@
 namespace OptimusCMS\Media\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Optix\Media\Models\Media as BaseMedia;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Optix\Media\Models\Media as BaseMedia;
 
 class Media extends BaseMedia
 {

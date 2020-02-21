@@ -2,10 +2,10 @@
 
 namespace OptimusCMS\Meta;
 
+use Illuminate\Support\ServiceProvider;
 use Intervention\Image\Image;
 use OptimusCMS\Meta\Models\Meta;
 use Optix\Media\Facades\Conversion;
-use Illuminate\Support\ServiceProvider;
 
 class MetaServiceProvider extends ServiceProvider
 {

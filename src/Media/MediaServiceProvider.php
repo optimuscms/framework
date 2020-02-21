@@ -2,10 +2,10 @@
 
 namespace OptimusCMS\Media;
 
+use Illuminate\Support\ServiceProvider;
 use Intervention\Image\Image;
 use OptimusCMS\Media\Models\Media;
 use Optix\Media\Facades\Conversion;
-use Illuminate\Support\ServiceProvider;
 use Optix\Media\MediaServiceProvider as OptixMediaServiceProvider;
 
 class MediaServiceProvider extends ServiceProvider

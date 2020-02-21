@@ -2,8 +2,8 @@
 
 namespace OptimusCMS\Pages\Jobs;
 
-use OptimusCMS\Pages\Models\Page;
 use Illuminate\Foundation\Bus\Dispatchable;
+use OptimusCMS\Pages\Models\Page;
 
 class UpdatePagePath
 {

@@ -2,8 +2,8 @@
 
 namespace OptimusCMS\Users\Models;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class AdminUser extends Authenticatable
 {
@@ -38,7 +38,7 @@ class AdminUser extends Authenticatable
     public function getGravatarUrlAttribute()
     {
         return vsprintf('https://www.gravatar.com/avatar/%s', [
-            md5(strtolower(trim($this->email)))
+            md5(strtolower(trim($this->email))),
         ]);
     }
 }

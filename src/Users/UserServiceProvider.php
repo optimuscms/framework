@@ -2,8 +2,8 @@
 
 namespace OptimusCMS\Users;
 
-use OptimusCMS\Users\Models\AdminUser;
 use Illuminate\Support\ServiceProvider;
+use OptimusCMS\Users\Models\AdminUser;
 
 class UserServiceProvider extends ServiceProvider
 {

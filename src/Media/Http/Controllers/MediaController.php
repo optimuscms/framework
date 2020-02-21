@@ -2,15 +2,15 @@
 
 namespace OptimusCMS\Media\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Optix\Media\MediaUploader;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use OptimusCMS\Media\Http\Resources\MediaResource;
 use OptimusCMS\Media\Models\Media;
 use Optix\Media\Jobs\PerformConversions;
-use OptimusCMS\Media\Http\Resources\MediaResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Optix\Media\MediaUploader;
 
 class MediaController extends Controller
 {
