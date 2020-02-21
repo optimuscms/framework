@@ -2,8 +2,8 @@
 
 namespace OptimusCMS\Media\Http\Resources;
 
-use OptimusCMS\Media\Models\Media;
 use Illuminate\Http\Resources\Json\Resource;
+use OptimusCMS\Media\Models\Media;
 
 class MediaResource extends Resource
 {

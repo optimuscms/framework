@@ -3,12 +3,12 @@
 namespace OptimusCMS\Pages\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
-use OptimusCMS\Pages\TemplateRegistry;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use OptimusCMS\Pages\Http\Resources\PageTemplateResource;
+use OptimusCMS\Pages\TemplateRegistry;
 
 class PageTemplatesController extends Controller
 {

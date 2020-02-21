@@ -3,16 +3,16 @@
 namespace OptimusCMS\Pages\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use OptimusCMS\Meta\Models\Meta;
-use OptimusCMS\Pages\Models\Page;
-use Illuminate\Routing\Controller;
-use OptimusCMS\Pages\TemplateRegistry;
-use OptimusCMS\Pages\Jobs\UpdatePagePath;
-use Illuminate\Validation\ValidationException;
-use OptimusCMS\Pages\Http\Resources\PageResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
+use Illuminate\Validation\ValidationException;
+use OptimusCMS\Meta\Models\Meta;
 use OptimusCMS\Pages\Exceptions\TemplateNotFoundException;
+use OptimusCMS\Pages\Http\Resources\PageResource;
+use OptimusCMS\Pages\Jobs\UpdatePagePath;
+use OptimusCMS\Pages\Models\Page;
+use OptimusCMS\Pages\TemplateRegistry;
 
 class PagesController extends Controller
 {

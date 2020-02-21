@@ -3,8 +3,8 @@
 namespace OptimusCMS\Pages\Contracts;
 
 use Illuminate\Http\Response;
-use OptimusCMS\Pages\Models\Page;
 use Illuminate\Validation\ValidationException;
+use OptimusCMS\Pages\Models\Page;
 
 interface Template
 {

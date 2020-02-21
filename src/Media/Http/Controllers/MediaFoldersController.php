@@ -3,12 +3,12 @@
 namespace OptimusCMS\Media\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use OptimusCMS\Media\Http\Resources\MediaFolderResource;
 use OptimusCMS\Media\Models\Media;
 use OptimusCMS\Media\Models\MediaFolder;
-use Illuminate\Http\Resources\Json\ResourceCollection;
-use OptimusCMS\Media\Http\Resources\MediaFolderResource;
 
 class MediaFoldersController extends Controller
 {

@@ -2,20 +2,20 @@
 
 namespace OptimusCMS\Pages\Models;
 
-use Optix\Media\HasMedia;
-use OptimusCMS\Meta\HasMeta;
-use Spatie\Sluggable\HasSlug;
-use Optix\Draftable\Draftable;
-use Spatie\Sluggable\SlugOptions;
-use Spatie\EloquentSortable\Sortable;
-use Illuminate\Database\Eloquent\Model;
-use OptimusCMS\Pages\Contracts\Template;
 use Illuminate\Database\Eloquent\Builder;
-use Spatie\EloquentSortable\SortableTrait;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use OptimusCMS\Meta\HasMeta;
+use OptimusCMS\Pages\Contracts\Template;
 use OptimusCMS\Pages\Facades\Template as TemplateFacade;
+use Optix\Draftable\Draftable;
+use Optix\Media\HasMedia;
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableTrait;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Page extends Model implements Sortable
 {

@@ -3,14 +3,14 @@
 namespace OptimusCMS\Users\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Validation\Rule;
-use Illuminate\Routing\Controller;
-use OptimusCMS\Users\Models\AdminUser;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use OptimusCMS\Users\Http\Resources\AdminUserResource;
+use OptimusCMS\Users\Models\AdminUser;
 
 class AdminUsersController extends Controller
 {
