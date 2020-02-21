@@ -56,7 +56,7 @@ class Page extends Model implements Sortable
         'slug',
         'template_name',
         'parent_id',
-        'is_stand_alone',
+        'is_standalone',
         'is_deletable',
         'order',
     ];
