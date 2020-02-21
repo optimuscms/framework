@@ -12,30 +12,11 @@ use OptimusCMS\Pages\Exceptions\TemplateNotFoundException;
 use OptimusCMS\Pages\Http\Resources\PageResource;
 use OptimusCMS\Pages\Jobs\UpdatePagePath;
 use OptimusCMS\Pages\Models\Page;
+use OptimusCMS\Pages\PageTemplates;
 use OptimusCMS\Pages\TemplateRegistry;
 
 class PagesController extends Controller
 {
-    /** @var TemplateRegistry */
-    protected $templateRegistry;
-
-    /**
-     * Create a new controller instance.
-     *
-     * @param TemplateRegistry $templateRegistry
-     * @return void
-     */
-    public function __construct(TemplateRegistry $templateRegistry)
-    {
-        $this->templateRegistry = $templateRegistry;
-    }
-
-    /**
-     * Display a list of pages.
-     *
-     * @param Request $request
-     * @return ResourceCollection
-     */
     public function index(Request $request)
     {
         $pages = Page::withDrafts()
@@ -48,46 +29,47 @@ class PagesController extends Controller
         return PageResource::collection($pages);
     }
 
-    /**
-     * Create a new page.
-     *
-     * @param Request $request
-     * @return PageResource
-     *
-     * @throws ValidationException
-     * @throws TemplateNotFoundException
-     */
     public function store(Request $request)
     {
         $this->validatePage($request);
 
-        $template = $this->templateRegistry->load(
-            $templateName = $request->input('template.name')
+        // page
+        //   title
+        //   slug
+        //   parent_id
+        //   template_id
+        //   template_data
+        //   is_standalone
+        //   is_published
+
+        $template = PageTemplates::load(
+            $templateId = $request->input('template_id')
         );
 
-        // Validate the template data...
         $template->validate(
-            $templateData = $request->input('template.data', [])
+            $templateData = $request->input('template_data')
         );
 
-        $page = new Page();
+        $page = new Page([
+            'title' => $request->input('title'),
+            'slug' => $request->input('slug'),
+            'template_id' => $templateId,
+            'parent_id' => $request->input('parent_id'),
+            'is_standalone' => $request->input('is_standalone'),
+        ]);
 
-        $page->title = $request->input('title');
-        $page->slug = $request->input('slug');
         $page->has_fixed_path = false;
-        $page->template_name = $templateName;
         $page->has_fixed_template = false;
-        $page->parent_id = $request->input('parent_id');
-        $page->is_standalone = $request->input('is_standalone');
         $page->is_deletable = true;
 
         $page->save();
 
-        $page->saveMeta($request->input('meta', []));
+        $page->saveMeta(
+            $request->input('meta', [])
+        );
 
         UpdatePagePath::dispatch($page);
 
-        // Save the template data to the page...
         $template->save($page, $templateData);
 
         if ($request->input('is_published')) {
@@ -97,12 +79,6 @@ class PagesController extends Controller
         return new PageResource($page);
     }
 
-    /**
-     * Display the specified page.
-     *
-     * @param int $id
-     * @return PageResource
-     */
     public function show($id)
     {
         $page = Page::withDrafts()->findOrFail($id);
@@ -110,16 +86,6 @@ class PagesController extends Controller
         return new PageResource($page);
     }
 
-    /**
-     * Update the specified page.
-     *
-     * @param Request $request
-     * @param int $id
-     * @return PageResource
-     *
-     * @throws ValidationException
-     * @throws TemplateNotFoundException
-     */
     public function update(Request $request, $id)
     {
         $page = Page::withDrafts()->findOrFail($id);
@@ -132,7 +98,7 @@ class PagesController extends Controller
         $template = $this->templateRegistry->load(
             $templateName = ! $page->has_fixed_template
                 ? $request->input('template.name')
-                : $page->template_name
+                : $page->template_identifier
         );
 
         // Validate the template data...
@@ -173,13 +139,6 @@ class PagesController extends Controller
         return new PageResource($page);
     }
 
-    /**
-     * Reorder the specified page.
-     *
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
     public function move(Request $request, $id)
     {
         $page = Page::withDrafts()->findOrFail($id);
@@ -195,12 +154,6 @@ class PagesController extends Controller
         return response()->noContent();
     }
 
-    /**
-     * Delete the specified page.
-     *
-     * @param int $id
-     * @return Response
-     */
     public function destroy($id)
     {
         $page = Page::withDrafts()->findOrFail($id);
@@ -214,14 +167,6 @@ class PagesController extends Controller
         return response()->noContent();
     }
 
-    /**
-     * Validate the request.
-     *
-     * @param Request $request
-     * @return void
-     *
-     * @throws ValidationException
-     */
     protected function validatePage(Request $request)
     {
         $request->validate(array_merge([

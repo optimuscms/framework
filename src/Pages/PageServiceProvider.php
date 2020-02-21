@@ -17,11 +17,6 @@ class PageServiceProvider extends ServiceProvider
         $this->registerAdminRoutes();
     }
 
-    public function register()
-    {
-        $this->app->singleton(TemplateRegistry::class);
-    }
-
     protected function registerAdminRoutes()
     {
         $this->app['router']
@@ -31,12 +26,22 @@ class PageServiceProvider extends ServiceProvider
              ->middleware('web', 'auth:admin')
              ->group(function ($router) {
                  // Pages
-                 $router->apiResource('pages', 'PagesController');
-                 $router->put('pages/{id}/move', 'PagesController@move');
+                 $router->prefix('pages')->group(function ($router) {
+                     $router->get('/', 'PagesController@index');
+                     $router->post('/', 'PagesController@store');
+                     $router->get('{pageId}', 'PagesController@show');
+                     $router->patch('{pageId}', 'PagesController@update');
+                     $router->delete('{pageId}', 'PagesController@destroy');
 
-                 // Templates
-                 $router->apiResource('page-templates', 'PageTemplatesController')
-                        ->only(['index', 'show']);
+                     // Sort
+                     $router->post('{pageId}/sort', 'PagesController@sort');
+                 });
+
+                 // Page templates
+                 $router->prefix('page-templates')->group(function ($router) {
+                     $router->get('/', 'PageTemplatesController@index');
+                     $router->show('{templateId}', 'PageTemplatesController@show');
+                 });
              });
     }
 }

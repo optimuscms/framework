@@ -25,11 +25,6 @@ class Page extends Model implements Sortable
         HasSlug,
         SortableTrait;
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'has_fixed_template' => 'bool',
         'has_fixed_path' => 'bool',
@@ -37,46 +32,18 @@ class Page extends Model implements Sortable
         'is_deletable' => 'bool',
     ];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
     protected $dates = [
         'published_at',
     ];
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
-        'title',
-        'slug',
-        'template_name',
-        'parent_id',
-        'is_standalone',
-        'is_deletable',
-        'order',
+        'title', 'slug', 'template_id', 'parent_id', 'is_standalone',
     ];
 
-    /**
-     * The page's sortable options.
-     *
-     * @var array
-     */
     protected $sortable = [
         'order_column_name' => 'order',
     ];
 
-    /**
-     * Apply filters to the query.
-     *
-     * @param Builder $query
-     * @param array $filters
-     * @return void
-     */
     public function scopeApplyFilters(Builder $query, array $filters)
     {
         // Parent
@@ -85,13 +52,6 @@ class Page extends Model implements Sortable
         }
     }
 
-    /**
-     * Only retrieve pages that are direct descendants of the given page.
-     *
-     * @param Builder $query
-     * @param self|int $parent
-     * @return void
-     */
     public function scopeWhereChildOf(Builder $query, $parent)
     {
         if ($parent instanceof self) {
@@ -104,33 +64,18 @@ class Page extends Model implements Sortable
         );
     }
 
-    /**
-     * Only retrieve pages that are deletable.
-     *
-     * @param Builder $query
-     * @param void
-     */
     public function scopeDeletable(Builder $query)
     {
         $query->where('is_deletable', true);
     }
 
-    /**
-     * Only change the order of pages with the same parent.
-     *
-     * @return Builder
-     */
     public function buildSortQuery()
     {
-        return $this->newQuery()
-            ->where('parent_id', $this->parent_id);
+        return $this->newQuery()->where(
+            'parent_id', $this->parent_id
+        );
     }
 
-    /**
-     * Generate a path for the page.
-     *
-     * @return string
-     */
     public function generatePath()
     {
         $prefix = '';
@@ -144,11 +89,6 @@ class Page extends Model implements Sortable
         return $prefix.$this->slug;
     }
 
-    /**
-     * Get the page's slug options.
-     *
-     * @return SlugOptions
-     */
     public function getSlugOptions(): SlugOptions
     {
         $options = SlugOptions::create()
@@ -164,13 +104,6 @@ class Page extends Model implements Sortable
         return $options;
     }
 
-    /**
-     * Determine if another record exists with the
-     * given slug and the same parent.
-     *
-     * @param string $slug
-     * @return bool
-     */
     protected function otherRecordExistsWithSlug(string $slug): bool
     {
         return $this->newQuery()->where($this->slugOptions->slugField, $slug)
@@ -180,23 +113,11 @@ class Page extends Model implements Sortable
             ->exists();
     }
 
-    /**
-     * Get the page's template class.
-     *
-     * @return Template
-     */
     public function template()
     {
         return TemplateFacade::load($this->template_name);
     }
 
-    /**
-     * Create a new page content record.
-     *
-     * @param string $key
-     * @param string $value
-     * @return PageContent
-     */
     public function addContent($key, $value)
     {
         $content = new PageContent();
@@ -207,12 +128,6 @@ class Page extends Model implements Sortable
         return $this->contents()->save($content);
     }
 
-    /**
-     * Add contents to the page.
-     *
-     * @param array $contents
-     * @return Collection
-     */
     public function addContents(array $contents)
     {
         $models = $this->newCollection();
@@ -226,13 +141,6 @@ class Page extends Model implements Sortable
         return $models;
     }
 
-    /**
-     * Get the page content value with the given key.
-     *
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
-     */
     public function getContent($key, $default = null)
     {
         if (! $this->hasContent($key)) {
@@ -244,12 +152,6 @@ class Page extends Model implements Sortable
         return $content->value;
     }
 
-    /**
-     * Determine if the page has content with the given key.
-     *
-     * @param string $key
-     * @return bool
-     */
     public function hasContent($key)
     {
         return $this->contents->contains(
@@ -259,41 +161,21 @@ class Page extends Model implements Sortable
         );
     }
 
-    /**
-     * Clear all contents from the page.
-     *
-     * @return mixed
-     */
     public function clearContents()
     {
         return $this->contents()->delete();
     }
 
-    /**
-     * Get the parent relationship.
-     *
-     * @return BelongsTo
-     */
     public function parent()
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
 
-    /**
-     * Get the children relationship.
-     *
-     * @return HasMany
-     */
     public function children()
     {
         return $this->hasMany(self::class, 'parent_id');
     }
 
-    /**
-     * Get the contents relationship.
-     *
-     * @return HasMany
-     */
     public function contents()
     {
         return $this->hasMany(PageContent::class, 'page_id');
