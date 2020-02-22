@@ -33,8 +33,8 @@ class PageServiceProvider extends ServiceProvider
                      $router->patch('{pageId}', 'PagesController@update');
                      $router->delete('{pageId}', 'PagesController@destroy');
 
-                     // Sort
-                     $router->post('{pageId}/sort', 'PagesController@sort');
+                     // Move
+                     $router->post('{pageId}/move', 'PagesController@move');
                  });
 
                  // Page templates

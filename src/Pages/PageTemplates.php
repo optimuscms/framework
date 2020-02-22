@@ -3,29 +3,27 @@
 namespace OptimusCMS\Pages;
 
 use InvalidArgumentException;
-use OptimusCMS\Pages\Contracts\Template;
+use OptimusCMS\Pages\Contracts\TemplateHandler;
 
 class PageTemplates
 {
     protected static $templates = [];
 
-    public static function register($templates): void
+    public static function register($templates)
     {
         if (is_array($templates)) {
-            self::registerMany($templates);
-            return;
+            return self::registerMany($templates);
         }
 
         if (
             is_string($templates)
-            || $templates instanceof Template
+            || $templates instanceof TemplateHandler
         ) {
-            self::registerOne($templates);
-            return;
+            return self::registerOne($templates);
         }
 
         throw new InvalidArgumentException(
-            // Todo: Message...
+            'The given page template type is invalid.'
         );
     }
 
@@ -38,18 +36,18 @@ class PageTemplates
 
     public static function registerOne($template)
     {
-        if ($template instanceof Template) {
-            $template = $template::class;
+        if ($template instanceof TemplateHandler) {
+            $template = get_class($template);
         } elseif (
             ! is_string($template)
-            || ! is_subclass_of($template, Template::class, true)
+            || ! is_subclass_of($template, TemplateHandler::class, true)
         ) {
             throw new InvalidArgumentException(
-                // Todo: Message...
+                'The given page template type is invalid.'
             );
         }
 
-        self::$templates[$template::identifier()] = $template;
+        self::$templates[$template::id()] = $template;
     }
 
     public static function all()
@@ -68,31 +66,29 @@ class PageTemplates
         return $templates;
     }
 
-    public static function get(string $identifier)
+    public static function get(string $id)
     {
-        if (! self::exists($identifier)) {
+        if (! self::exists($id)) {
             throw new InvalidArgumentException(
-                "A template with the identifier [{$identifier}] does not exist."
+                "A page template with the id [{$id}] has not been registered."
             );
         }
 
-        return self::$templates[$identifier];
+        return self::$templates[$id];
     }
 
-    public static function load($identifier)
+    public static function load($id)
     {
-        return self::resolveFromContainer(
-            self::get($identifier)
-        );
+        return self::resolveFromContainer(self::get($id));
+    }
+
+    public static function exists(string $id)
+    {
+        return isset(self::$templates[$id]);
     }
 
     protected static function resolveFromContainer(string $template)
     {
         return app()->get($template);
-    }
-
-    public static function exists(string $identifier)
-    {
-        return isset(self::$templates[$identifier]);
     }
 }

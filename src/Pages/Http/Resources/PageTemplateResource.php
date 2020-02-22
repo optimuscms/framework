@@ -9,7 +9,7 @@ class PageTemplateResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'identifier' => $this->resource::identifier(),
+            'id' => $this->resource::id(),
             'name' => $this->resource::name(),
         ];
     }

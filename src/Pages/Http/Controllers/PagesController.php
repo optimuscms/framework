@@ -15,6 +15,15 @@ use OptimusCMS\Pages\Models\Page;
 use OptimusCMS\Pages\PageTemplates;
 use OptimusCMS\Pages\TemplateRegistry;
 
+// page
+//   title
+//   slug
+//   parent_id
+//   template_id
+//   template_data
+//   is_standalone
+//   is_published
+
 class PagesController extends Controller
 {
     public function index(Request $request)
@@ -33,21 +42,12 @@ class PagesController extends Controller
     {
         $this->validatePage($request);
 
-        // page
-        //   title
-        //   slug
-        //   parent_id
-        //   template_id
-        //   template_data
-        //   is_standalone
-        //   is_published
-
-        $template = PageTemplates::load(
+        $templateHandler = PageTemplates::load(
             $templateId = $request->input('template_id')
         );
 
-        $template->validate(
-            $templateData = $request->input('template_data')
+        $templateHandler->validate(
+            $templateData = $request->input('template_data', [])
         );
 
         $page = new Page([
@@ -64,13 +64,13 @@ class PagesController extends Controller
 
         $page->save();
 
+        $templateHandler->save($page, $templateData);
+
         $page->saveMeta(
             $request->input('meta', [])
         );
 
-        UpdatePagePath::dispatch($page);
-
-        $template->save($page, $templateData);
+        UpdatePagePath::dispatch($page)->onQueue('sync');
 
         if ($request->input('is_published')) {
             $page->publish();
@@ -79,56 +79,51 @@ class PagesController extends Controller
         return new PageResource($page);
     }
 
-    public function show($id)
+    public function show($pageId)
     {
-        $page = Page::withDrafts()->findOrFail($id);
+        $page = Page::withDrafts()->findOrFail($pageId);
 
         return new PageResource($page);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $pageId)
     {
-        $page = Page::withDrafts()->findOrFail($id);
+        $page = Page::withDrafts()->findOrFail($pageId);
 
         $this->validatePage($request);
 
-        // If the page template is fixed, load the page's
-        // current template - otherwise load the template
-        // specified in the request data...
-        $template = $this->templateRegistry->load(
-            $templateName = ! $page->has_fixed_template
-                ? $request->input('template.name')
-                : $page->template_identifier
+        $templateId = ! $page->has_fixed_template
+            ? $request->input('template_id')
+            : $page->template_id;
+
+        $templateHandler = PageTemplates::load($templateId);
+
+        $templateHandler->validate(
+            $templateData = $request->input('template_data', [])
         );
 
-        // Validate the template data...
-        $template->validate(
-            $templateData = $request->input('template.data', [])
-        );
-
-        $page->title = $request->input('title');
-
-        // Only change the slug if the page's
-        // path is not fixed...
-        $page->slug = ! $page->has_fixed_path
+        $slug = ! $page->has_fixed_path
             ? $request->input('slug')
             : $page->slug;
 
-        $page->template_name = $templateName;
-        $page->parent_id = $request->input('parent_id');
-        $page->is_standalone = $request->input('is_standalone');
+        $page->update([
+            'title' => $request->input('title'),
+            'slug' => $slug,
+            'template_id' => $templateId,
+            'parent_id' => $request->input('parent_id'),
+            'is_standalone' => $request->input('is_standalone'),
+        ]);
 
-        $page->save();
+        $templateHandler->reset($page);
+        $templateHandler->save($page, $templateData);
 
-        $page->saveMeta($request->input('meta', []));
+        $page->saveMeta(
+            $request->input('meta', [])
+        );
 
         if (! $page->has_fixed_path) {
-            UpdatePagePath::dispatch($page);
+            UpdatePagePath::dispatch($page)->onQueue('sync');
         }
-
-        // Update the page's template data...
-        $template->reset($page);
-        $template->save($page, $templateData);
 
         if ($page->isDraft() && $request->input('is_published')) {
             $page->publish();
@@ -139,9 +134,9 @@ class PagesController extends Controller
         return new PageResource($page);
     }
 
-    public function move(Request $request, $id)
+    public function move(Request $request, $pageId)
     {
-        $page = Page::withDrafts()->findOrFail($id);
+        $page = Page::withDrafts()->findOrFail($pageId);
 
         $request->validate([
             'direction' => 'required|in:up,down',
@@ -172,18 +167,20 @@ class PagesController extends Controller
         $request->validate(array_merge([
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255',
-            'template.name' => [
+            'template_id' => [
                 'required', function ($attribute, $value, $fail) {
-                    // Verify that the template has been registered...
-                    if (! $this->templateRegistry->exists($value)) {
+                    if (! PageTemplates::exists($value)) {
                         $fail(__('validation.exists', [
-                            'attribute' => 'template',
+                            'attribute' => 'template id',
                         ]));
                     }
                 },
             ],
-            'template.data' => 'array',
-            'parent_id' => 'nullable|exists:pages,id',
+            'template_data' => 'array',
+            'parent_id' => [
+                'required', 'exists:pages,id',
+                // Todo: Not ancestor of self
+            ],
             'is_standalone' => 'present|boolean',
             'is_published' => 'present|boolean',
         ], Meta::rules()));

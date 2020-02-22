@@ -3,47 +3,29 @@
 namespace OptimusCMS\Pages\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use OptimusCMS\Pages\Http\Resources\PageTemplateResource;
-use OptimusCMS\Pages\TemplateRegistry;
+use OptimusCMS\Pages\PageTemplates;
 
 class PageTemplatesController extends Controller
 {
-    /** @var TemplateRegistry */
-    protected $templateRegistry;
-
-    public function __construct(TemplateRegistry $templateRegistry)
-    {
-        $this->templateRegistry = $templateRegistry;
-    }
-
-    /**
-     * Display a list of page templates.
-     *
-     * @return ResourceCollection
-     */
     public function index()
     {
-        $templates = new Collection($this->templateRegistry->all());
+        $templates = new Collection(PageTemplates::all());
 
         return PageTemplateResource::collection($templates);
     }
 
-    /**
-     * Display the specified page template.
-     *
-     * @param string $name
-     * @return PageTemplateResource
-     */
-    public function show($name)
+    public function show($templateId)
     {
         try {
-            $template = $this->templateRegistry->get($name);
+            $template = PageTemplates::get($templateId);
         } catch (Exception $exception) {
             abort(Response::HTTP_NOT_FOUND);
+
+            // Todo: Abort with error message.
         }
 
         return new PageTemplateResource($template);

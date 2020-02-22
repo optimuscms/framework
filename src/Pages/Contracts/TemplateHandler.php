@@ -2,15 +2,13 @@
 
 namespace OptimusCMS\Pages\Contracts;
 
-use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
 use OptimusCMS\Pages\Models\Page;
 
-interface Template
+interface TemplateHandler
 {
-    public static function getId(): string;
+    public static function id(): string;
 
-    public static function getName(): string;
+    public static function name(): string;
 
     public function validate(array $data);
 

@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use OptimusCMS\Meta\HasMeta;
-use OptimusCMS\Pages\Contracts\Template;
+use OptimusCMS\Pages\Contracts\TemplateHandler;
 use OptimusCMS\Pages\Facades\Template as TemplateFacade;
+use OptimusCMS\Pages\PageTemplates;
 use Optix\Draftable\Draftable;
 use Optix\Media\HasMedia;
 use Spatie\EloquentSortable\Sortable;
@@ -113,9 +114,9 @@ class Page extends Model implements Sortable
             ->exists();
     }
 
-    public function template()
+    public function templateHandler()
     {
-        return TemplateFacade::load($this->template_name);
+        return PageTemplates::load($this->template_id);
     }
 
     public function addContent($key, $value)

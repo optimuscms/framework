@@ -20,7 +20,7 @@ class CreatePagesTable extends Migration
             $table->string('path')->nullable();
             $table->boolean('has_fixed_path')->default(false);
             $table->unsignedBigInteger('parent_id')->index()->nullable();
-            $table->string('template_name');
+            $table->string('template_id');
             $table->boolean('has_fixed_template')->default(false);
             $table->boolean('is_standalone');
             $table->boolean('is_deletable')->default(true);
