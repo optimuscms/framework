@@ -3,17 +3,15 @@
 namespace OptimusCMS\Pages\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Validation\ValidationException;
 use OptimusCMS\Meta\Models\Meta;
-use OptimusCMS\Pages\Exceptions\TemplateNotFoundException;
 use OptimusCMS\Pages\Http\Resources\PageResource;
 use OptimusCMS\Pages\Jobs\UpdatePagePath;
 use OptimusCMS\Pages\Models\Page;
 use OptimusCMS\Pages\PageTemplates;
-use OptimusCMS\Pages\TemplateRegistry;
+use OptimusCMS\Pages\Rules\NotAncestorOfPage;
+use OptimusCMS\Pages\Rules\ValidPageTemplate;
 
 // page
 //   title
@@ -90,7 +88,7 @@ class PagesController extends Controller
     {
         $page = Page::withDrafts()->findOrFail($pageId);
 
-        $this->validatePage($request);
+        $this->validatePage($request, $page);
 
         $templateId = ! $page->has_fixed_template
             ? $request->input('template_id')
@@ -162,25 +160,26 @@ class PagesController extends Controller
         return response()->noContent();
     }
 
-    protected function validatePage(Request $request)
+    protected function validatePage(Request $request, Page $page = null)
     {
         $request->validate(array_merge([
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255',
             'template_id' => [
-                'required', function ($attribute, $value, $fail) {
-                    if (! PageTemplates::exists($value)) {
-                        $fail(__('validation.exists', [
-                            'attribute' => 'template id',
-                        ]));
-                    }
-                },
+                'required', new ValidPageTemplate(),
             ],
             'template_data' => 'array',
-            'parent_id' => [
-                'required', 'exists:pages,id',
-                // Todo: Not ancestor of self
-            ],
+            'parent_id' => value(function () use ($page) {
+                $rules = [
+                    'required', 'exists:pages,id',
+                ];
+
+                if ($page) {
+                    $rules[] = new NotAncestorOfPage($page);
+                }
+
+                return $rules;
+            }),
             'is_standalone' => 'present|boolean',
             'is_published' => 'present|boolean',
         ], Meta::rules()));

@@ -3,13 +3,8 @@
 namespace OptimusCMS\Pages\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use OptimusCMS\Meta\HasMeta;
-use OptimusCMS\Pages\Contracts\TemplateHandler;
-use OptimusCMS\Pages\Facades\Template as TemplateFacade;
 use OptimusCMS\Pages\PageTemplates;
 use Optix\Draftable\Draftable;
 use Optix\Media\HasMedia;
