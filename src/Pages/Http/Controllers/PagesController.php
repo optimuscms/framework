@@ -103,7 +103,7 @@ class PagesController extends Controller
             'is_standalone' => $request->input('is_standalone'),
         ]);
 
-        $templateHandler->resetData($page);
+        $templateHandler->deleteData($page);
         $templateHandler->saveData($page, $templateData);
 
         $page->saveMeta(

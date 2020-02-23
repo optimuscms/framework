@@ -16,7 +16,7 @@ interface PageTemplate
 
     public function saveData(Page $page, array $data);
 
-    public function resetData(Page $page);
+    public function deleteData(Page $page);
 
     public function getData(Page $page): array;
 

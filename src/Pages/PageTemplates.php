@@ -47,10 +47,10 @@ class PageTemplates
             );
         }
 
-        self::$templates[$template::id()] = $template;
+        self::$templates[$template::getId()] = $template;
     }
 
-    public static function all()
+    public static function getAll()
     {
         return array_values(self::$templates);
     }
@@ -59,7 +59,7 @@ class PageTemplates
     {
         $templates = [];
 
-        foreach (self::all() as $template) {
+        foreach (self::getAll() as $template) {
             $templates[] = self::resolveFromContainer($template);
         }
 

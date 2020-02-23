@@ -11,7 +11,7 @@ class PageTemplatesController extends Controller
 {
     public function index()
     {
-        $templates = collect(PageTemplates::all());
+        $templates = collect(PageTemplates::getAll());
 
         return PageTemplateResource::collection($templates);
     }

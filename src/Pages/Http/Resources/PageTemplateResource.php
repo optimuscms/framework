@@ -3,6 +3,7 @@
 namespace OptimusCMS\Pages\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use stdClass;
 
 class PageTemplateResource extends JsonResource
 {
@@ -14,7 +15,7 @@ class PageTemplateResource extends JsonResource
             'id' => $template::getId(),
             'name' => $template::getName(),
             'meta' => empty($meta = $template::getMeta())
-                ? new \stdClass()
+                ? new stdClass()
                 : $meta,
         ];
     }
