@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Rule;
 use OptimusCMS\Pages\Models\Page;
 
 // Todo: Rename
-class NotAncestorOfPage implements Rule
+class NotSameOrAncestorOfPage implements Rule
 {
     protected $page;
 

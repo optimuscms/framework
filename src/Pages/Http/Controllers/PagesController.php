@@ -10,17 +10,8 @@ use OptimusCMS\Pages\Http\Resources\PageResource;
 use OptimusCMS\Pages\Jobs\UpdatePagePath;
 use OptimusCMS\Pages\Models\Page;
 use OptimusCMS\Pages\PageTemplates;
-use OptimusCMS\Pages\Rules\NotAncestorOfPage;
+use OptimusCMS\Pages\Rules\NotSameOrAncestorOfPage;
 use OptimusCMS\Pages\Rules\ValidPageTemplate;
-
-// page
-//   title
-//   slug
-//   parent_id
-//   template_id
-//   template_data
-//   is_standalone
-//   is_published
 
 class PagesController extends Controller
 {
@@ -152,7 +143,10 @@ class PagesController extends Controller
         $page = Page::withDrafts()->findOrFail($id);
 
         if (! $page->is_deletable) {
-            abort(Response::HTTP_FORBIDDEN);
+            abort(
+                Response::HTTP_FORBIDDEN,
+                'This page cannot be deleted.'
+            );
         }
 
         $page->delete();
@@ -175,7 +169,7 @@ class PagesController extends Controller
                 ];
 
                 if ($page) {
-                    $rules[] = new NotAncestorOfPage($page);
+                    $rules[] = new NotSameOrAncestorOfPage($page);
                 }
 
                 return $rules;
