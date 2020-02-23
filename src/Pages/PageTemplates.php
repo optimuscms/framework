@@ -3,7 +3,7 @@
 namespace OptimusCMS\Pages;
 
 use InvalidArgumentException;
-use OptimusCMS\Pages\Contracts\TemplateHandler;
+use OptimusCMS\Pages\Contracts\PageTemplate;
 
 class PageTemplates
 {
@@ -17,7 +17,7 @@ class PageTemplates
 
         if (
             is_string($templates)
-            || $templates instanceof TemplateHandler
+            || $templates instanceof PageTemplate
         ) {
             return self::registerOne($templates);
         }
@@ -36,11 +36,11 @@ class PageTemplates
 
     public static function registerOne($template)
     {
-        if ($template instanceof TemplateHandler) {
+        if ($template instanceof PageTemplate) {
             $template = get_class($template);
         } elseif (
             ! is_string($template)
-            || ! is_subclass_of($template, TemplateHandler::class, true)
+            || ! is_subclass_of($template, PageTemplate::class, true)
         ) {
             throw new InvalidArgumentException(
                 'The given page template type is invalid.'

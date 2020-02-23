@@ -23,7 +23,8 @@ class PageResource extends JsonResource
                 $page->children_count
             ),
             'template_id' => $page->template_id,
-            'template_data' => $page->templateHandler()->data($page),
+            // Todo: Get template name...
+            'template_data' => $page->templateHandler()->getData($page),
             'has_fixed_template' => $page->has_fixed_template,
             'is_standalone' => $page->is_standalone,
             'is_deletable' => $page->is_deletable,

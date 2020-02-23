@@ -11,8 +11,11 @@ class PageTemplateResource extends JsonResource
         $template = $this->resource;
 
         return [
-            'id' => $template::id(),
-            'name' => $template::name(),
+            'id' => $template::getId(),
+            'name' => $template::getName(),
+            'meta' => empty($meta = $template::getMeta())
+                ? new \stdClass()
+                : $meta,
         ];
     }
 }

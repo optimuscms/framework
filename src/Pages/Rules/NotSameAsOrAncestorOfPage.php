@@ -16,10 +16,13 @@ class NotSameAsOrAncestorOfPage implements Rule
 
     public function passes($attribute, $value)
     {
-        if (
-            is_null($this->page)
-            || is_null($parentPage = Page::find($value))
-        ) {
+        if (is_null($this->page)) {
+            return true;
+        }
+
+        $parentPage = Page::withDrafts()->find($value);
+
+        if (is_null($parentPage)) {
             return true;
         }
 
