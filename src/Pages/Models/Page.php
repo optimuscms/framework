@@ -44,32 +44,25 @@ class Page extends Model implements Sortable
     {
         // Parent
         if (! empty($filters['parent'])) {
-            $query->whereChildOf($filters['parent']);
+            $parentId = $filters['parent'];
+
+            if ($parentId === 'root') {
+                $parentId = null;
+            }
+
+            $query->where('parent_id', $parentId);
         }
     }
 
-    public function scopeWhereChildOf(Builder $query, $parent)
+    public function scopeStandalone(Builder $query)
     {
-        if ($parent instanceof self) {
-            $parent = $parent->id;
-        }
-
-        $query->where(
-            'parent_id',
-            $parent === 'root' ? null : $parent
-        );
-    }
-
-    public function scopeDeletable(Builder $query)
-    {
-        $query->where('is_deletable', true);
+        $query->where('is_standalone', true);
     }
 
     public function buildSortQuery()
     {
-        return $this->newQuery()->where(
-            'parent_id', $this->parent_id
-        );
+        return $this->newQuery()
+            ->where('parent_id', $this->parent_id);
     }
 
     public function generatePath()
@@ -91,8 +84,6 @@ class Page extends Model implements Sortable
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug');
 
-        // Prevent the slug from being updated if the
-        // page has a fixed path...
         if ($this->has_fixed_path) {
             $options->doNotGenerateSlugsOnUpdate();
         }
@@ -102,10 +93,10 @@ class Page extends Model implements Sortable
 
     protected function otherRecordExistsWithSlug(string $slug): bool
     {
-        return $this->newQuery()->where($this->slugOptions->slugField, $slug)
+        return $this->newQueryWithoutScopes()
+            ->where($this->slugOptions->slugField, $slug)
             ->where($this->getKeyName(), '!=', $this->getKey() ?? '0')
             ->where('parent_id', $this->parent_id)
-            ->withoutGlobalScopes()
             ->exists();
     }
 
@@ -116,10 +107,10 @@ class Page extends Model implements Sortable
 
     public function addContent($key, $value)
     {
-        $content = new PageContent();
-
-        $content->key = $key;
-        $content->value = $value;
+        $content = new PageContent([
+            'key' => $key,
+            'value' => $value,
+        ]);
 
         return $this->contents()->save($content);
     }
@@ -129,9 +120,7 @@ class Page extends Model implements Sortable
         $models = $this->newCollection();
 
         foreach ($contents as $key => $value) {
-            $models->push(
-                $this->addContent($key, $value)
-            );
+            $models->add($this->addContent($key, $value));
         }
 
         return $models;
@@ -139,22 +128,24 @@ class Page extends Model implements Sortable
 
     public function getContent($key, $default = null)
     {
-        if (! $this->hasContent($key)) {
-            return $default;
+        foreach ($this->contents as $content) {
+            if ($content->key === $key) {
+                return $content->value;
+            }
         }
 
-        $content = $this->contents->firstWhere('key', $key);
-
-        return $content->value;
+        return $default;
     }
 
     public function hasContent($key)
     {
-        return $this->contents->contains(
-            function (PageContent $content) use ($key) {
-                return $content->key === $key;
+        foreach ($this->contents as $content) {
+            if ($content->key === $key) {
+                return true;
             }
-        );
+        }
+
+        return false;
     }
 
     public function clearContents()

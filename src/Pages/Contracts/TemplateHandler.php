@@ -18,5 +18,5 @@ interface TemplateHandler
 
     public function render(Page $page);
 
-    public function toArray(Page $page): array; // Todo: Rename?
+    public function data(Page $page): array;
 }

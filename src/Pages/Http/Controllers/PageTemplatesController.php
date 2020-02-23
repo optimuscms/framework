@@ -2,7 +2,6 @@
 
 namespace OptimusCMS\Pages\Http\Controllers;
 
-use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use OptimusCMS\Pages\Http\Resources\PageTemplateResource;
@@ -19,14 +18,11 @@ class PageTemplatesController extends Controller
 
     public function show($templateId)
     {
-        try {
-            $template = PageTemplates::get($templateId);
-        } catch (Exception $exception) {
-            abort(
-                Response::HTTP_NOT_FOUND
-                // Todo: Abort with error message
-            );
+        if (! PageTemplates::exists($templateId)) {
+            abort(Response::HTTP_NOT_FOUND);
         }
+
+        $template = PageTemplates::get($templateId);
 
         return new PageTemplateResource($template);
     }

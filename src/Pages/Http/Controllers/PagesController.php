@@ -10,7 +10,7 @@ use OptimusCMS\Pages\Http\Resources\PageResource;
 use OptimusCMS\Pages\Jobs\UpdatePagePath;
 use OptimusCMS\Pages\Models\Page;
 use OptimusCMS\Pages\PageTemplates;
-use OptimusCMS\Pages\Rules\NotSameOrAncestorOfPage;
+use OptimusCMS\Pages\Rules\NotSameAsOrAncestorOfPage;
 use OptimusCMS\Pages\Rules\ValidPageTemplate;
 
 class PagesController extends Controller
@@ -163,17 +163,10 @@ class PagesController extends Controller
                 'required', new ValidPageTemplate(),
             ],
             'template_data' => 'array',
-            'parent_id' => value(function () use ($page) {
-                $rules = [
-                    'required', 'exists:pages,id',
-                ];
-
-                if ($page) {
-                    $rules[] = new NotSameOrAncestorOfPage($page);
-                }
-
-                return $rules;
-            }),
+            'parent_id' => [
+                'nullable', 'exists:pages,id',
+                new NotSameAsOrAncestorOfPage($page),
+            ],
             'is_standalone' => 'present|boolean',
             'is_published' => 'present|boolean',
         ], Meta::rules()));

@@ -8,9 +8,11 @@ class PageTemplateResource extends JsonResource
 {
     public function toArray($request)
     {
+        $template = $this->resource;
+
         return [
-            'id' => $this->resource::id(),
-            'name' => $this->resource::name(),
+            'id' => $template::id(),
+            'name' => $template::name(),
         ];
     }
 }
