@@ -27,14 +27,14 @@ class PageTemplates
         );
     }
 
-    public static function registerMany(array $templates)
+    protected static function registerMany(array $templates)
     {
         foreach ($templates as $template) {
             self::registerOne($template);
         }
     }
 
-    public static function registerOne($template)
+    protected static function registerOne($template)
     {
         if ($template instanceof PageTemplate) {
             $template = get_class($template);

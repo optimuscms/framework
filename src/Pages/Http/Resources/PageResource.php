@@ -11,6 +11,8 @@ class PageResource extends JsonResource
     {
         $page = $this->resource;
 
+        $template = $page->templateHandler();
+
         return [
             'id' => $page->id,
             'title' => $page->title,
@@ -22,9 +24,9 @@ class PageResource extends JsonResource
                 ! is_null($page->children_count),
                 $page->children_count
             ),
-            'template_id' => $page->template_id,
-            // Todo: Get template name...
-            'template_data' => $page->templateHandler()->getData($page),
+            'template_id' => $template::getId(),
+            'template_name' => $template::getName(),
+            'template_data' => $template->getData($page),
             'has_fixed_template' => $page->has_fixed_template,
             'is_standalone' => $page->is_standalone,
             'is_deletable' => $page->is_deletable,

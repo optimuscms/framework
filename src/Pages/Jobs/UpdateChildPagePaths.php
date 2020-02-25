@@ -22,19 +22,19 @@ class UpdateChildPagePaths
         $this->updateChildPagePaths($this->page);
     }
 
-    protected function updateChildPagePaths(Page $parent)
+    protected function updateChildPagePaths(Page $parentPage)
     {
-        $children = $parent->children()
+        $childPages = $parentPage->children()
             ->where('has_fixed_path', false)
             ->get();
 
-        $children->each(function (Page $page) use ($parent) {
-            $page->setRelation('parent', $parent);
+        foreach ($childPages as $childPage) {
+            $childPage->setRelation('parent', $parentPage);
 
-            $page->path = $page->generatePath();
-            $page->save();
+            $childPage->path = $childPage->generatePath();
+            $childPage->save();
 
-            $this->updateChildPagePaths($page);
-        });
+            $this->updateChildPagePaths($childPage);
+        }
     }
 }

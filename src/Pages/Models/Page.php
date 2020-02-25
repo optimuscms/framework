@@ -40,42 +40,11 @@ class Page extends Model implements Sortable
         'order_column_name' => 'order',
     ];
 
-    public function scopeApplyFilters(Builder $query, array $filters)
-    {
-        // Parent
-        if (! empty($filters['parent'])) {
-            $parentId = $filters['parent'];
-
-            if ($parentId === 'root') {
-                $parentId = null;
-            }
-
-            $query->where('parent_id', $parentId);
-        }
-    }
-
-    public function scopeStandalone(Builder $query)
-    {
-        $query->where('is_standalone', true);
-    }
-
     public function buildSortQuery()
     {
-        return $this->newQuery()
-            ->where('parent_id', $this->parent_id);
-    }
-
-    public function generatePath()
-    {
-        $prefix = '';
-
-        $parent = $this->parent;
-
-        if ($parent && $prefix = $parent->path) {
-            $prefix .= '/';
-        }
-
-        return $prefix.$this->slug;
+        return $this->newQuery()->where(
+            'parent_id', $this->parent_id
+        );
     }
 
     public function getSlugOptions(): SlugOptions
@@ -98,6 +67,37 @@ class Page extends Model implements Sortable
             ->where($this->getKeyName(), '!=', $this->getKey() ?? '0')
             ->where('parent_id', $this->parent_id)
             ->exists();
+    }
+
+    public function scopeApplyFilters(Builder $query, array $filters)
+    {
+        // Parent
+        if (isset($filters['parent'])) {
+            $parentId = $filters['parent'];
+
+            if ($parentId === 'root') {
+                $parentId = null;
+            }
+
+            $query->where('parent_id', $parentId);
+        }
+    }
+
+    public function generatePath()
+    {
+        if ($this->has_fixed_path) {
+            return $this->path;
+        }
+
+        $prefix = '';
+
+        $parent = $this->parent;
+
+        if ($parent && $prefix = $parent->path) {
+            $prefix .= '/';
+        }
+
+        return $prefix.$this->slug;
     }
 
     public function templateHandler()
