@@ -12,13 +12,13 @@ interface PageTemplate
 
     public static function getMeta(): array;
 
-    public function validateData(array $data);
+    public static function validateData(array $data);
 
-    public function saveData(Page $page, array $data);
+    public static function saveData(Page $page, array $data);
 
-    public function deleteData(Page $page);
+    public static function resetData(Page $page);
 
-    public function getData(Page $page): array;
+    public static function getData(Page $page): array;
 
-    public function render(Page $page);
+    public static function render(Page $page);
 }

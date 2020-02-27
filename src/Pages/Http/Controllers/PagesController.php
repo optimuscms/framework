@@ -31,11 +31,11 @@ class PagesController extends Controller
     {
         $this->validatePage($request);
 
-        $templateHandler = PageTemplates::load(
+        $templateClass = PageTemplates::get(
             $templateId = $request->input('template_id')
         );
 
-        $templateHandler->validateData(
+        $templateClass::validateData(
             $templateData = $request->input('template_data', [])
         );
 
@@ -53,7 +53,7 @@ class PagesController extends Controller
 
         $page->save();
 
-        $templateHandler->saveData($page, $templateData);
+        $templateClass::saveData($page, $templateData);
 
         $page->saveMeta(
             $request->input('meta', [])
@@ -85,9 +85,9 @@ class PagesController extends Controller
             ? $request->input('template_id')
             : $page->template_id;
 
-        $templateHandler = PageTemplates::load($templateId);
+        $templateClass = PageTemplates::get($templateId);
 
-        $templateHandler->validateData(
+        $templateClass::validateData(
             $templateData = $request->input('template_data', [])
         );
 
@@ -103,8 +103,8 @@ class PagesController extends Controller
             'is_standalone' => $request->input('is_standalone'),
         ]);
 
-        $templateHandler->deleteData($page);
-        $templateHandler->saveData($page, $templateData);
+        $templateClass::resetData($page);
+        $templateClass::saveData($page, $templateData);
 
         $page->saveMeta(
             $request->input('meta', [])

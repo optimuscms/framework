@@ -4,6 +4,7 @@ namespace OptimusCMS\Pages\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use OptimusCMS\Meta\Http\Resources\MetaResource;
+use OptimusCMS\Pages\PageTemplates;
 
 class PageResource extends JsonResource
 {
@@ -11,7 +12,7 @@ class PageResource extends JsonResource
     {
         $page = $this->resource;
 
-        $template = $page->templateHandler();
+        $template = PageTemplates::get($page->template_id);
 
         return [
             'id' => $page->id,
@@ -26,7 +27,7 @@ class PageResource extends JsonResource
             ),
             'template_id' => $template::getId(),
             'template_name' => $template::getName(),
-            'template_data' => $template->getData($page),
+            'template_data' => $template::getData($page),
             'has_fixed_template' => $page->has_fixed_template,
             'is_standalone' => $page->is_standalone,
             'is_deletable' => $page->is_deletable,

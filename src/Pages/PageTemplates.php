@@ -3,125 +3,79 @@
 namespace OptimusCMS\Pages;
 
 use InvalidArgumentException;
+use Illuminate\Contracts\Support\Arrayable;
 use OptimusCMS\Pages\Contracts\PageTemplate;
 
 class PageTemplates
 {
-    /** @var array */
     protected static $templates = [];
 
-    /**
-     * @param mixed $templates
-     * @return void
-     */
     public static function register($templates)
     {
+        if ($templates instanceof Arrayable) {
+            $templates = $templates->toArray();
+        }
+
         if (is_array($templates)) {
-            return self::registerMany($templates);
+            self::registerMany($templates);
+
+            return;
         }
 
         self::registerOne($templates);
     }
 
-    /**
-     * @return array
-     */
-    public static function getAll()
-    {
-        return array_values(self::$templates);
-    }
-
-    /**
-     * @return array
-     */
-    public static function loadAll()
-    {
-        return array_map(
-            function ($template) {
-                return self::resolveFromContainer($template);
-            },
-            self::getAll()
-        );
-    }
-
-    /**
-     * @param string $id
-     * @return string
-     */
-    public static function get(string $id)
-    {
-        if (! self::exists($id)) {
-            throw new InvalidArgumentException();
-        }
-
-        return self::$templates[$id];
-    }
-
-    /**
-     * @param string $id
-     * @return PageTemplate
-     */
-    public static function load(string $id)
-    {
-        return self::resolveFromContainer(self::get($id));
-    }
-
-    /**
-     * @param string $id
-     * @return bool
-     */
-    public static function exists(string $id)
-    {
-        return isset(self::$templates[$id]);
-    }
-
-    /**
-     * @param array $templates
-     * @return void
-     */
     protected static function registerMany(array $templates)
     {
-        foreach ($templates as $template) {
-            self::registerOne($template);
+        foreach ($templates as $i => $template) {
+            try {
+                self::registerOne($template);
+            } catch (InvalidArgumentException $exception) {
+                // Todo: throw new InvalidPageTemplateException();
+                throw new InvalidArgumentException(
+                    "The page template given at index [{$i}] is invalid."
+                );
+            }
         }
     }
 
-    /**
-     * @param mixed $template
-     * @return void
-     */
     protected static function registerOne($template)
     {
-        if (! self::verify($template)) {
-            throw new InvalidArgumentException();
-        }
-
         if ($template instanceof PageTemplate) {
             $template = get_class($template);
+        } elseif (! (
+            // Determine if the given template is valid...
+            is_string($template)
+            && is_subclass_of($template, PageTemplate::class, true)
+        )) {
+            // Todo: throw new InvalidPageTemplateException();
+            throw new InvalidArgumentException(
+                'The given page template is invalid.'
+            );
         }
 
         self::$templates[$template::getId()] = $template;
     }
 
-    /**
-     * @param string $template
-     * @return bool
-     */
-    protected static function verify($template)
+    public function all()
     {
-        return $template instanceof PageTemplate
-            || (
-                is_string($template)
-                && is_subclass_of($template, PageTemplate::class, true)
-            );
+        return array_values(self::$templates);
     }
 
-    /**
-     * @param string $template
-     * @return PageTemplate
-     */
-    protected static function resolveFromContainer(string $template)
+    public static function get(string $id)
     {
-        return app()->get($template);
+        if (! self::exists($id)) {
+            // Todo: PageTemplateNotFoundException
+            throw new InvalidArgumentException(
+                "A page template with the id [{$id}] does not exist."
+            );
+        }
+
+        return self::$templates[$id];
+    }
+
+    public static function exists(string $id)
+    {
+        return isset(self::$templates[$id]);
     }
 }
