@@ -2,8 +2,8 @@
 
 namespace OptimusCMS\Pages;
 
-use InvalidArgumentException;
 use Illuminate\Contracts\Support\Arrayable;
+use InvalidArgumentException;
 use OptimusCMS\Pages\Contracts\PageTemplate;
 
 class PageTemplates
