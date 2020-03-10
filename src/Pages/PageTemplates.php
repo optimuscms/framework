@@ -57,7 +57,7 @@ class PageTemplates
         self::$templates[$template::getId()] = $template;
     }
 
-    public function all()
+    public static function all()
     {
         return array_values(self::$templates);
     }

@@ -23,25 +23,31 @@ class PageServiceProvider extends ServiceProvider
              ->name('admin.api.')
              ->prefix('admin/api')
              ->namespace($this->controllerNamespace)
-             ->middleware('web', 'auth:admin')
+             ->middleware('web') // , 'auth:admin')
              ->group(function ($router) {
                  // Pages
-                 $router->prefix('pages')->group(function ($router) {
-                     $router->get('/', 'PagesController@index');
-                     $router->post('/', 'PagesController@store');
-                     $router->get('{pageId}', 'PagesController@show');
-                     $router->patch('{pageId}', 'PagesController@update');
-                     $router->delete('{pageId}', 'PagesController@destroy');
+                 $router
+                     ->prefix('pages')
+                     ->name('pages.')
+                     ->group(function ($router) {
+                         $router->get('/', 'PagesController@index')->name('index');
+                         $router->post('/', 'PagesController@store')->name('store');
+                         $router->get('{pageId}', 'PagesController@show')->name('show');
+                         $router->patch('{pageId}', 'PagesController@update')->name('update');
+                         $router->delete('{pageId}', 'PagesController@destroy')->name('destroy');
 
-                     // Move
-                     $router->post('{pageId}/move', 'PagesController@move');
-                 });
+                         // Move
+                         $router->post('{pageId}/move', 'PagesController@move')->name('move');
+                     });
 
                  // Page templates
-                 $router->prefix('page-templates')->group(function ($router) {
-                     $router->get('/', 'PageTemplatesController@index');
-                     $router->show('{templateId}', 'PageTemplatesController@show');
-                 });
+                 $router
+                     ->prefix('page-templates')
+                     ->name('page-templates.')
+                     ->group(function ($router) {
+                         $router->get('/', 'PageTemplatesController@index')->name('index');
+                         $router->get('{templateId}', 'PageTemplatesController@show')->name('show');
+                     });
              });
     }
 }
