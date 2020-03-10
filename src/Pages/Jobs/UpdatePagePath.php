@@ -19,7 +19,7 @@ class UpdatePagePath
 
     public function handle()
     {
-        $this->page->path = $this->page->generatePath();
+        $this->page->path = $this->page->buildPath();
         $this->page->save();
 
         if ($this->page->wasChanged('path')) {

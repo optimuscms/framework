@@ -3,7 +3,6 @@
 namespace OptimusCMS\Pages\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use OptimusCMS\Meta\Models\Meta;
 use OptimusCMS\Pages\Http\Resources\PageResource;
@@ -55,15 +54,11 @@ class PagesController extends Controller
 
         $template::saveData($page, $templateData);
 
-        $page->saveMeta(
-            $request->input('meta', [])
-        );
+        $page->saveMeta($request->input('meta', []));
 
         UpdatePagePath::dispatch($page)->onQueue('sync');
 
-        if ($request->input('is_published')) {
-            $page->publish();
-        }
+        $page->publish((bool) $request->input('is_published'));
 
         return new PageResource($page);
     }
@@ -106,19 +101,13 @@ class PagesController extends Controller
         $template::resetData($page);
         $template::saveData($page, $templateData);
 
-        $page->saveMeta(
-            $request->input('meta', [])
-        );
+        $page->saveMeta($request->input('meta', []));
 
         if (! $page->has_fixed_path) {
             UpdatePagePath::dispatch($page)->onQueue('sync');
         }
 
-        if ($page->isDraft() && $request->input('is_published')) {
-            $page->publish();
-        } elseif ($page->isPublished() && ! $request->input('is_published')) {
-            $page->draft();
-        }
+        $page->publish((bool) $request->input('is_published'));
 
         return new PageResource($page);
     }
@@ -143,10 +132,7 @@ class PagesController extends Controller
         $page = Page::withDrafts()->findOrFail($id);
 
         if (! $page->is_deletable) {
-            abort(
-                Response::HTTP_FORBIDDEN,
-                'This page cannot be deleted.'
-            );
+            abort(403, 'This page cannot be deleted.');
         }
 
         $page->delete();

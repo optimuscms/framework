@@ -31,7 +31,7 @@ class UpdateChildPagePaths
         foreach ($childPages as $childPage) {
             $childPage->setRelation('parent', $parentPage);
 
-            $childPage->path = $childPage->generatePath();
+            $childPage->path = $childPage->buildPath();
             $childPage->save();
 
             $this->updateChildPagePaths($childPage);

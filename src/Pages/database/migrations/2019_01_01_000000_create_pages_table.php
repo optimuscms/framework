@@ -27,6 +27,11 @@ class CreatePagesTable extends Migration
             $table->unsignedBigInteger('order');
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
+
+            $table->foreign('parent_id')
+                  ->references('id')
+                  ->on('pages')
+                  ->onDelete('cascade');
         });
 
         Schema::create('page_contents', function (Blueprint $table) {

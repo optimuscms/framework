@@ -83,7 +83,7 @@ class Page extends Model implements Sortable
         }
     }
 
-    public function generatePath()
+    public function buildPath()
     {
         if ($this->has_fixed_path) {
             return $this->path;

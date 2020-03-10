@@ -3,8 +3,9 @@
 namespace OptimusCMS\Pages;
 
 use Illuminate\Contracts\Support\Arrayable;
-use InvalidArgumentException;
 use OptimusCMS\Pages\Contracts\PageTemplate;
+use OptimusCMS\Pages\Exceptions\InvalidPageTemplateException;
+use OptimusCMS\Pages\Exceptions\PageTemplateNotFoundException;
 
 class PageTemplates
 {
@@ -30,9 +31,9 @@ class PageTemplates
         foreach ($templates as $i => $template) {
             try {
                 self::registerOne($template);
-            } catch (InvalidArgumentException $exception) {
-                // Todo: throw new InvalidPageTemplateException();
-                throw new InvalidArgumentException(
+            } catch (InvalidPageTemplateException $exception) {
+                // Override the exception message...
+                throw new InvalidPageTemplateException(
                     "The page template given at index [{$i}] is invalid."
                 );
             }
@@ -48,8 +49,7 @@ class PageTemplates
             is_string($template)
             && is_subclass_of($template, PageTemplate::class, true)
         )) {
-            // Todo: throw new InvalidPageTemplateException();
-            throw new InvalidArgumentException(
+            throw new InvalidPageTemplateException(
                 'The given page template is invalid.'
             );
         }
@@ -65,8 +65,7 @@ class PageTemplates
     public static function get(string $id)
     {
         if (! self::exists($id)) {
-            // Todo: PageTemplateNotFoundException
-            throw new InvalidArgumentException(
+            throw new PageTemplateNotFoundException(
                 "A page template with the id [{$id}] does not exist."
             );
         }
