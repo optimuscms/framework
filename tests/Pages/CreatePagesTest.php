@@ -5,7 +5,6 @@ namespace OptimusCMS\Tests\Pages;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use OptimusCMS\Pages\Models\Page;
 use OptimusCMS\Pages\PageTemplates;
-use OptimusCMS\Tests\Pages\Fixtures\TestTemplateOne;
 use OptimusCMS\Tests\TestCase;
 use stdClass;
 
@@ -13,7 +12,7 @@ class CreatePagesTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $defaultTemplate = TestTemplateOne::class;
+    protected $defaultTemplate = TestCase::DEFAULT_TEMPLATE;
 
     protected function setUp(): void
     {
@@ -27,10 +26,6 @@ class CreatePagesTest extends TestCase
     /** @test */
     public function it_can_create_a_page()
     {
-        PageTemplates::register([
-            $template = TestTemplateOne::class,
-        ]);
-
         $response = $this->postJson(
             route('admin.api.pages.store'),
             $data = $this->validData()
@@ -78,7 +73,7 @@ class CreatePagesTest extends TestCase
     }
 
     /** @test */
-    public function it_will_auto_generate_the_slug_if_one_is_not_provided()
+    public function it_will_auto_generate_the_slug_if_its_not_provided()
     {
         $response = $this->postJson(
             route('admin.api.pages.store'),

@@ -6,11 +6,14 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use OptimusCMS\Media\MediaServiceProvider;
 use OptimusCMS\Meta\MetaServiceProvider;
 use OptimusCMS\Pages\PageServiceProvider;
+use OptimusCMS\Tests\Pages\Fixtures\TestTemplateOne;
 use OptimusCMS\Users\Models\AdminUser;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
+    const DEFAULT_TEMPLATE = TestTemplateOne::class;
+
     protected function setUp(): void
     {
         parent::setUp();
