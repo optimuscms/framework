@@ -4,6 +4,7 @@ namespace OptimusCMS\Pages\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Validation\Rule;
 use OptimusCMS\Meta\Models\Meta;
 use OptimusCMS\Pages\Http\Resources\PageResource;
 use OptimusCMS\Pages\Jobs\UpdatePagePath;
@@ -144,7 +145,10 @@ class PagesController extends Controller
     {
         $request->validate(array_merge([
             'title' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255',
+            'slug' => [
+                'nullable', 'string', 'max:255',
+                Rule::unique('pages')->ignore($page)
+            ],
             'template_id' => [
                 'required', new ValidPageTemplate(),
             ],

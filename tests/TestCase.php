@@ -3,15 +3,26 @@
 namespace OptimusCMS\Tests;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use OptimusCMS\Media\MediaServiceProvider;
+use OptimusCMS\Meta\MetaServiceProvider;
 use OptimusCMS\Pages\PageServiceProvider;
 use OptimusCMS\Users\Models\AdminUser;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->withFactories(__DIR__.'/factories');
+    }
+
     protected function getPackageProviders($app)
     {
         return [
+            MediaServiceProvider::class,
+            MetaServiceProvider::class,
             PageServiceProvider::class,
         ];
     }

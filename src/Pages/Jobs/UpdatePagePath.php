@@ -2,13 +2,18 @@
 
 namespace OptimusCMS\Pages\Jobs;
 
+use Illuminate\Bus\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use OptimusCMS\Pages\Models\Page;
 
 class UpdatePagePath
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable,
+        InteractsWithQueue,
+        Queueable,
+        SerializesModels;
 
     protected $page;
 

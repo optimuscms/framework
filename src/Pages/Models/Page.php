@@ -49,15 +49,10 @@ class Page extends Model implements Sortable
 
     public function getSlugOptions(): SlugOptions
     {
-        $options = SlugOptions::create()
+        return SlugOptions::create()
             ->generateSlugsFrom('title')
+            ->doNotGenerateSlugsOnUpdate()
             ->saveSlugsTo('slug');
-
-        if ($this->has_fixed_path) {
-            $options->doNotGenerateSlugsOnUpdate();
-        }
-
-        return $options;
     }
 
     protected function otherRecordExistsWithSlug(string $slug): bool

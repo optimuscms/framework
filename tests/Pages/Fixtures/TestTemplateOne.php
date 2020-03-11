@@ -20,28 +20,34 @@ class TestTemplateOne implements PageTemplate
     public static function getMeta(): array
     {
         return [
-            //
+            'one' => true,
         ];
     }
 
     public static function validateData(array $data)
     {
-        //
+        validator($data, [
+            'one' => 'required|string',
+        ])->validate();
     }
 
     public static function saveData(Page $page, array $data)
     {
-        //
+        $page->addContents([
+            'one' => $data['one'],
+        ]);
     }
 
     public static function resetData(Page $page)
     {
-        //
+        $page->clearContents();
     }
 
     public static function getData(Page $page): array
     {
-        return [];
+        return [
+            'one' => $page->getContent('one'),
+        ];
     }
 
     public static function render(Page $page)

@@ -5,23 +5,21 @@ namespace OptimusCMS\Tests\Pages\Fixtures;
 use OptimusCMS\Pages\Contracts\PageTemplate;
 use OptimusCMS\Pages\Models\Page;
 
-class TestTemplateThree implements PageTemplate
+class TestTemplateWithoutMeta implements PageTemplate
 {
     public static function getId(): string
     {
-        return 'three';
+        return 'no-meta';
     }
 
     public static function getName(): string
     {
-        return 'Three';
+        return 'No meta';
     }
 
     public static function getMeta(): array
     {
-        return [
-            'three' => true,
-        ];
+        return [];
     }
 
     public static function validateData(array $data)
@@ -41,7 +39,7 @@ class TestTemplateThree implements PageTemplate
 
     public static function getData(Page $page): array
     {
-        return [];
+        //
     }
 
     public static function render(Page $page)
