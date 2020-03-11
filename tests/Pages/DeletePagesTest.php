@@ -4,7 +4,6 @@ namespace OptimusCMS\Tests\Pages;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use OptimusCMS\Pages\Models\Page;
-use OptimusCMS\Tests\TestCase;
 
 class DeletePagesTest extends TestCase
 {

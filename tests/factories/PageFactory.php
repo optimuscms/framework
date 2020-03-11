@@ -3,7 +3,7 @@
 use Faker\Generator as Faker;
 use Illuminate\Database\Eloquent\Factory;
 use OptimusCMS\Pages\Models\Page;
-use OptimusCMS\Tests\TestCase;
+use OptimusCMS\Tests\Pages\TestCase;
 
 /** @var Factory $factory */
 $factory->define(Page::class, function (Faker $faker) {

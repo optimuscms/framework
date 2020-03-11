@@ -5,7 +5,6 @@ namespace OptimusCMS\Tests\Pages;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use OptimusCMS\Pages\Models\Page;
 use OptimusCMS\Pages\PageTemplates;
-use OptimusCMS\Tests\TestCase;
 use stdClass;
 
 class CreatePagesTest extends TestCase

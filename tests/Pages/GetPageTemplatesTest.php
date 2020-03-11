@@ -1,13 +1,12 @@
 <?php
 
-namespace OptimusCMS\Pages\Tests;
+namespace OptimusCMS\Tests\Pages;
 
 use OptimusCMS\Pages\PageTemplates;
 use OptimusCMS\Tests\Pages\Fixtures\TestTemplateOne;
 use OptimusCMS\Tests\Pages\Fixtures\TestTemplateThree;
 use OptimusCMS\Tests\Pages\Fixtures\TestTemplateTwo;
 use OptimusCMS\Tests\Pages\Fixtures\TestTemplateWithoutMeta;
-use OptimusCMS\Tests\TestCase;
 use stdClass;
 
 class GetPageTemplatesTest extends TestCase

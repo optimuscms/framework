@@ -1,10 +1,10 @@
 <?php
 
-namespace OptimusCMS\Pages;
+namespace OptimusCMS\Tests\Pages;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use OptimusCMS\Pages\Models\Page;
-use OptimusCMS\Tests\TestCase;
+use OptimusCMS\Pages\PageTemplates;
 
 class GetPagesTest extends TestCase
 {
