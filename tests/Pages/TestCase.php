@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\FactoryBuilder;
 use OptimusCMS\Pages\PageTemplates;
 use OptimusCMS\Tests\Pages\Fixtures\TestTemplateOne;
 use OptimusCMS\Tests\TestCase as BaseTestCase;
+use stdClass;
 
 class TestCase extends BaseTestCase
 {
@@ -46,5 +47,16 @@ class TestCase extends BaseTestCase
             'created_at',
             'updated_at',
         ], $overrides);
+    }
+
+    public function nonBooleanValues()
+    {
+        return [
+            [99],
+            [3.14],
+            ['jabroni'],
+            [[]],
+            [new stdClass()],
+        ];
     }
 }

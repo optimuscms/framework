@@ -6,7 +6,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use OptimusCMS\Pages\Models\Page;
 use OptimusCMS\Pages\PageTemplates;
 use OptimusCMS\Tests\Pages\TestCase;
-use stdClass;
 
 class CreatePagesTest extends TestCase
 {
@@ -43,11 +42,15 @@ class CreatePagesTest extends TestCase
             'data' => [
                 'title' => $data['title'],
                 'slug' => $data['slug'],
+                'path' => $page->path,
+                'has_fixed_path' => false,
+                'parent_id' => $data['parent_id'],
                 'template_id' => $template::getId(),
                 'template_name' => $template::getName(),
                 'template_data' => $template::getData($page),
-                'parent_id' => $data['parent_id'],
+                'has_fixed_template' => false,
                 'is_standalone' => $data['is_standalone'],
+                'is_deletable' => true,
                 'is_published' => $data['is_published'],
             ],
         ]);
@@ -56,10 +59,12 @@ class CreatePagesTest extends TestCase
     /** @test */
     public function it_can_create_a_page_with_a_parent()
     {
+        $parentPage = factory(Page::class)->create();
+
         $response = $this->postJson(
             route('admin.api.pages.store'),
             $data = $this->validData([
-                'parent_id' => factory(Page::class)->create()->id,
+                'parent_id' => $parentPage->id,
             ])
         );
 
@@ -67,6 +72,8 @@ class CreatePagesTest extends TestCase
             ->assertCreated()
             ->assertJson([
                 'data' => [
+                    'slug' => $data['slug'],
+                    'path' => "{$parentPage->path}/{$data['slug']}",
                     'parent_id' => $data['parent_id'],
                 ],
             ]);
@@ -114,9 +121,6 @@ class CreatePagesTest extends TestCase
     /** @test */
     public function the_template_id_field_must_be_the_id_of_a_registered_template()
     {
-        // Empty the registered templates...
-        PageTemplates::register([]);
-
         $response = $this->postJson(
             route('admin.api.pages.store'),
             $this->validData([
@@ -188,17 +192,6 @@ class CreatePagesTest extends TestCase
             ->assertJsonValidationErrors([
                 'is_published',
             ]);
-    }
-
-    public function nonBooleanValues()
-    {
-        return [
-            [99],
-            [3.14],
-            ['jabroni'],
-            [[]],
-            [new stdClass()],
-        ];
     }
 
     protected function validData(array $overrides = [])
