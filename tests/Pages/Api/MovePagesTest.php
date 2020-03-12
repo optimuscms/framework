@@ -13,9 +13,9 @@ class MovePagesTest extends TestCase
     /** @test */
     public function it_can_move_a_page_up_in_the_list()
     {
-        factory(Page::class)->create(['order' => 1]);
-        $secondPage = factory(Page::class)->create(['order' => 2]);
-        $thirdPage = factory(Page::class)->create(['order' => 3]);
+        factory(Page::class)->withoutEvents()->create(['order' => 1]);
+        $secondPage = factory(Page::class)->withoutEvents()->create(['order' => 2]);
+        $thirdPage = factory(Page::class)->withoutEvents()->create(['order' => 3]);
 
         $response = $this->postJson(
             route('admin.api.pages.move', $thirdPage->id),
@@ -31,9 +31,9 @@ class MovePagesTest extends TestCase
     /** @test */
     public function it_can_move_a_page_down_in_the_list()
     {
-        factory(Page::class)->create(['order' => 1]);
-        $secondPage = factory(Page::class)->create(['order' => 2]);
-        $thirdPage = factory(Page::class)->create(['order' => 3]);
+        factory(Page::class)->withoutEvents()->create(['order' => 1]);
+        $secondPage = factory(Page::class)->withoutEvents()->create(['order' => 2]);
+        $thirdPage = factory(Page::class)->withoutEvents()->create(['order' => 3]);
 
         $response = $this->postJson(
             route('admin.api.pages.move', $secondPage->id),
