@@ -11,16 +11,21 @@ class GetPagesTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function it_can_output_all_the_pages()
+    public function it_can_output_all_the_pages_in_the_correct_order()
     {
-        // Create 2 published pages...
-        $publishedPages = factory(Page::class, 2)->create([
+        $secondPage = factory(Page::class)->withoutEvents()->create([
+            'order' => 2,
             'published_at' => now(),
         ]);
 
-        // Create 2 draft pages...
-        $draftPages = factory(Page::class, 2)->create([
+        $firstPage = factory(Page::class)->withoutEvents()->create([
+            'order' => 1,
             'published_at' => null,
+        ]);
+
+        $thirdPage = factory(Page::class)->withoutEvents()->create([
+            'order' => 3,
+            'published_at' => now(),
         ]);
 
         $response = $this->getJson(
@@ -29,18 +34,22 @@ class GetPagesTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonCount(4, 'data');
+            ->assertJsonCount(3, 'data')
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => $this->expectedJsonStructure([
+                        'children_count',
+                    ]),
+                ],
+            ]);
 
-        $allPages = $publishedPages->merge($draftPages);
-
-        $ids = $response->decodeResponseJson('data.*.id');
-
-        // Draft pages should be included in the response...
-        $allPages->each(function (Page $page) use ($ids) {
-            $this->assertTrue(
-                in_array($page->id, $ids)
-            );
-        });
+        $response->assertJson([
+            'data' => [
+                ['id' => $firstPage->id],
+                ['id' => $secondPage->id],
+                ['id' => $thirdPage->id],
+            ],
+        ]);
     }
 
     /** @test */
@@ -61,7 +70,14 @@ class GetPagesTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonCount(2, 'data');
+            ->assertJsonCount(2, 'data')
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => $this->expectedJsonStructure([
+                        'children_count',
+                    ]),
+                ],
+            ]);
 
         $ids = $response->decodeResponseJson('data.*.id');
 
@@ -95,7 +111,12 @@ class GetPagesTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonCount(2, 'data');
+            ->assertJsonCount(2, 'data')
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => $this->expectedJsonStructure(),
+                ],
+            ]);
 
         $ids = $response->decodeResponseJson('data.*.id');
 
@@ -116,18 +137,33 @@ class GetPagesTest extends TestCase
             route('admin.api.pages.show', $page->id)
         );
 
+        $template = $this->defaultTemplate;
+
         $response
             ->assertOk()
+            ->assertJsonStructure([
+                'data' => $this->expectedJsonStructure([
+                    'template_data' => [
+                        'one',
+                    ],
+                ]),
+            ])
             ->assertJson([
                 'data' => [
                     'title' => $page->title,
                     'slug' => $page->slug,
-                    'template_id' => $this->defaultTemplate::getId(),
-                    'template_name' => $this->defaultTemplate::getName(),
-                    'template_data' => $this->defaultTemplate::getData($page),
+                    'path' => $page->path,
+                    'has_fixed_path' => $page->has_fixed_path,
                     'parent_id' => $page->parent_id,
+                    'template_id' => $template::getId(),
+                    'template_name' => $template::getName(),
+                    'template_data' => $template::getData($page),
+                    'has_fixed_template' => $page->has_fixed_template,
                     'is_standalone' => $page->is_standalone,
+                    'is_deletable' => $page->is_deletable,
                     'is_published' => $page->isPublished(),
+                    'created_at' => (string) $page->created_at,
+                    'updated_at' => (string) $page->updated_at,
                 ],
             ]);
     }

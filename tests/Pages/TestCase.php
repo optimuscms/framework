@@ -2,6 +2,7 @@
 
 namespace OptimusCMS\Tests\Pages;
 
+use Illuminate\Database\Eloquent\FactoryBuilder;
 use OptimusCMS\Pages\PageTemplates;
 use OptimusCMS\Tests\Pages\Fixtures\TestTemplateOne;
 use OptimusCMS\Tests\TestCase as BaseTestCase;
@@ -19,5 +20,31 @@ class TestCase extends BaseTestCase
         PageTemplates::register([
             $this->defaultTemplate,
         ]);
+
+        FactoryBuilder::macro('withoutEvents', function () {
+            $this->class::flushEventListeners();
+
+            return $this;
+        });
+    }
+
+    protected function expectedJsonStructure(array $overrides = [])
+    {
+        return array_merge([
+            'id',
+            'title',
+            'slug',
+            'path',
+            'has_fixed_path',
+            'parent_id',
+            'template_id',
+            'template_name',
+            'has_fixed_template',
+            'is_standalone',
+            'is_deletable',
+            'is_published',
+            'created_at',
+            'updated_at',
+        ], $overrides);
     }
 }

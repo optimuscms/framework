@@ -22,7 +22,9 @@ class DeletePagesTest extends TestCase
         $response->assertNoContent();
 
         $this->assertFalse(
-            Page::whereKey($page->id)->exists()
+            Page::withDrafts()
+                ->whereKey($page->id)
+                ->exists()
         );
     }
 }

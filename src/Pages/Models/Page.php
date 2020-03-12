@@ -40,13 +40,6 @@ class Page extends Model implements Sortable
         'order_column_name' => 'order',
     ];
 
-    public function buildSortQuery()
-    {
-        return $this->newQuery()->where(
-            'parent_id', $this->parent_id
-        );
-    }
-
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
@@ -62,6 +55,13 @@ class Page extends Model implements Sortable
             ->where($this->getKeyName(), '!=', $this->getKey() ?? '0')
             ->where('parent_id', $this->parent_id)
             ->exists();
+    }
+
+    public function buildSortQuery()
+    {
+        return $this->newQuery()->where(
+            'parent_id', $this->parent_id
+        );
     }
 
     public function scopeApplyFilters(Builder $query, array $filters)

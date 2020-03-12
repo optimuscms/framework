@@ -59,7 +59,7 @@ class PagesController extends Controller
 
         UpdatePagePath::dispatch($page)->onQueue('sync');
 
-        $page->publish((bool) $request->input('is_published'));
+        $page->publish($request->input('is_published'));
 
         return new PageResource($page);
     }
@@ -108,7 +108,7 @@ class PagesController extends Controller
             UpdatePagePath::dispatch($page)->onQueue('sync');
         }
 
-        $page->publish((bool) $request->input('is_published'));
+        $page->publish($request->input('is_published'));
 
         return new PageResource($page);
     }
