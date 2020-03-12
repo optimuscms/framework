@@ -1,17 +1,16 @@
 <?php
 
-namespace OptimusCMS\Tests\Pages;
+namespace OptimusCMS\Tests\Pages\Api;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use OptimusCMS\Pages\Models\Page;
 use OptimusCMS\Pages\PageTemplates;
+use OptimusCMS\Tests\Pages\TestCase;
 use stdClass;
 
 class CreatePagesTest extends TestCase
 {
     use RefreshDatabase;
-
-    protected $defaultTemplate = TestCase::DEFAULT_TEMPLATE;
 
     protected function setUp(): void
     {
@@ -38,13 +37,15 @@ class CreatePagesTest extends TestCase
 
         $this->assertNotNull($page);
 
+        $template = $this->defaultTemplate;
+
         $response->assertJson([
             'data' => [
                 'title' => $data['title'],
                 'slug' => $data['slug'],
-                'template_id' => $this->defaultTemplate::getId(),
-                'template_name' => $this->defaultTemplate::getName(),
-                'template_data' => $this->defaultTemplate::getData($page),
+                'template_id' => $template::getId(),
+                'template_name' => $template::getName(),
+                'template_data' => $template::getData($page),
                 'parent_id' => $data['parent_id'],
                 'is_standalone' => $data['is_standalone'],
                 'is_published' => $data['is_published'],

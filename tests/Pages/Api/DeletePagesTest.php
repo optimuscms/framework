@@ -1,9 +1,10 @@
 <?php
 
-namespace OptimusCMS\Tests\Pages;
+namespace OptimusCMS\Tests\Pages\Api;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use OptimusCMS\Pages\Models\Page;
+use OptimusCMS\Tests\Pages\TestCase;
 
 class DeletePagesTest extends TestCase
 {

@@ -147,7 +147,7 @@ class PagesController extends Controller
             'title' => 'required|string|max:255',
             'slug' => [
                 'nullable', 'string', 'max:255',
-                Rule::unique('pages')->ignore($page)
+                Rule::unique('pages')->ignore($page),
             ],
             'template_id' => [
                 'required', new ValidPageTemplate(),

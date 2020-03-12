@@ -1,25 +1,14 @@
 <?php
 
-namespace OptimusCMS\Tests\Pages;
+namespace OptimusCMS\Tests\Pages\Api;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use OptimusCMS\Pages\Models\Page;
-use OptimusCMS\Pages\PageTemplates;
+use OptimusCMS\Tests\Pages\TestCase;
 
 class GetPagesTest extends TestCase
 {
     use RefreshDatabase;
-
-    protected $defaultTemplate = TestCase::DEFAULT_TEMPLATE;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        PageTemplates::register([
-            $this->defaultTemplate,
-        ]);
-    }
 
     /** @test */
     public function it_can_output_all_the_pages()
