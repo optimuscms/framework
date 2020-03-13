@@ -15,13 +15,13 @@ class PageTest extends TestCase
         ]);
 
         $parentPage = new Page();
-        $parentPage->parent()->associate($rootPage);
+        $parentPage->setRelation('parent', $rootPage);
         $parentPage->forceFill([
             'path' => 'root/parent',
         ]);
 
         $page = new Page();
-        $page->parent()->associate($parentPage);
+        $page->setRelation('parent', $parentPage);
         $page->forceFill([
             'slug' => 'current',
             'path' => 'existing/path',
@@ -39,7 +39,7 @@ class PageTest extends TestCase
         ]);
 
         $page = new Page();
-        $page->parent()->associate($parentPage);
+        $page->setRelation('parent', $parentPage);
         $page->forceFill([
             'slug' => 'current',
             'path' => 'existing/path',

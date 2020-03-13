@@ -2,9 +2,9 @@
 
 namespace OptimusCMS\Pages\Exceptions;
 
-use RuntimeException;
+use Exception;
 
-class InvalidPageTemplateException extends RuntimeException
+class InvalidPageTemplateException extends Exception
 {
     //
 }

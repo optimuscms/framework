@@ -2,7 +2,10 @@
 
 namespace OptimusCMS\Pages\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Validation\Rule;
 use OptimusCMS\Meta\Models\Meta;
@@ -15,18 +18,31 @@ use OptimusCMS\Pages\Rules\ValidPageTemplate;
 
 class PagesController extends Controller
 {
+    /**
+     * Display a list of pages.
+     *
+     * @param Request $request
+     * @return ResourceCollection
+     */
     public function index(Request $request)
     {
+        /** @var Collection $pages */
         $pages = Page::withDrafts()
             ->applyFilters($request->all())
             ->withCount('children')
-            ->with('contents')
+            ->with('contents', 'meta')
             ->ordered()
             ->get();
 
         return PageResource::collection($pages);
     }
 
+    /**
+     * Create a new page.
+     *
+     * @param Request $request
+     * @return PageResource
+     */
     public function store(Request $request)
     {
         $this->validatePage($request);
@@ -55,24 +71,43 @@ class PagesController extends Controller
 
         $template::saveData($page, $templateData);
 
-        $page->saveMeta($request->input('meta', []));
+        $page->saveMeta(
+            $request->input('meta', [])
+        );
 
         UpdatePagePath::dispatch($page)->onQueue('sync');
 
-        $page->publish($request->input('is_published'));
+        $page->publish(
+            $request->input('is_published')
+        );
 
         return new PageResource($page);
     }
 
+    /**
+     * Display the specified page.
+     *
+     * @param int $pageId
+     * @return PageResource
+     */
     public function show($pageId)
     {
+        /** @var Page $page */
         $page = Page::withDrafts()->findOrFail($pageId);
 
         return new PageResource($page);
     }
 
+    /**
+     * Update the specified page.
+     *
+     * @param Request $request
+     * @param int $pageId
+     * @return PageResource
+     */
     public function update(Request $request, $pageId)
     {
+        /** @var Page $page */
         $page = Page::withDrafts()->findOrFail($pageId);
 
         $this->validatePage($request, $page);
@@ -102,19 +137,31 @@ class PagesController extends Controller
         $template::resetData($page);
         $template::saveData($page, $templateData);
 
-        $page->saveMeta($request->input('meta', []));
+        $page->saveMeta(
+            $request->input('meta', [])
+        );
 
         if (! $page->has_fixed_path) {
             UpdatePagePath::dispatch($page)->onQueue('sync');
         }
 
-        $page->publish($request->input('is_published'));
+        $page->publish(
+            $request->input('is_published')
+        );
 
         return new PageResource($page);
     }
 
+    /**
+     * Update the order of the specified page.
+     *
+     * @param Request $request
+     * @param int $pageId
+     * @return Response
+     */
     public function move(Request $request, $pageId)
     {
+        /** @var Page $page */
         $page = Page::withDrafts()->findOrFail($pageId);
 
         $request->validate([
@@ -128,8 +175,15 @@ class PagesController extends Controller
         return response()->noContent();
     }
 
+    /**
+     * Delete the specified page.
+     *
+     * @param int $id
+     * @return Response
+     */
     public function destroy($id)
     {
+        /** @var Page $page */
         $page = Page::withDrafts()->findOrFail($id);
 
         if (! $page->is_deletable) {
@@ -141,6 +195,13 @@ class PagesController extends Controller
         return response()->noContent();
     }
 
+    /**
+     * Validate the request.
+     *
+     * @param Request $request
+     * @param Page|null $page
+     * @return void
+     */
     protected function validatePage(Request $request, Page $page = null)
     {
         $request->validate(array_merge([

@@ -6,8 +6,14 @@ use Illuminate\Support\ServiceProvider;
 
 class PageServiceProvider extends ServiceProvider
 {
+    /** @var string */
     protected $controllerNamespace = 'OptimusCMS\Pages\Http\Controllers';
 
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
     public function boot()
     {
         // Migrations
@@ -17,6 +23,11 @@ class PageServiceProvider extends ServiceProvider
         $this->registerAdminRoutes();
     }
 
+    /**
+     * Register the routes provided by the package.
+     *
+     * @return void
+     */
     protected function registerAdminRoutes()
     {
         $this->app['router']

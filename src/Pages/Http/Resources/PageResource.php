@@ -2,17 +2,28 @@
 
 namespace OptimusCMS\Pages\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OptimusCMS\Meta\Http\Resources\MetaResource;
+use OptimusCMS\Pages\Contracts\PageTemplate;
+use OptimusCMS\Pages\Models\Page;
 use OptimusCMS\Pages\PageTemplates;
 use stdClass;
 
 class PageResource extends JsonResource
 {
+    /**
+     * Transform the resource into an array.
+     *
+     * @param Request $request
+     * @return array
+     */
     public function toArray($request)
     {
+        /** @var Page $page */
         $page = $this->resource;
 
+        /** @var PageTemplate $template */
         $template = PageTemplates::get($page->template_id);
 
         return [

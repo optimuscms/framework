@@ -8,13 +8,25 @@ use OptimusCMS\Pages\Exceptions\PageTemplateNotFoundException;
 
 class PageTemplates
 {
+    /** @var PageTemplate|string[] */
     protected static $templates = [];
 
+    /**
+     * Get all the registered page templates.
+     *
+     * @return PageTemplate|string[]
+     */
     public static function all()
     {
         return array_values(self::$templates);
     }
 
+    /**
+     * Set the array of page templates.
+     *
+     * @param array $templates
+     * @return void
+     */
     public static function register(array $templates)
     {
         $classes = [];
@@ -43,6 +55,12 @@ class PageTemplates
         self::$templates = $classes;
     }
 
+    /**
+     * Get the specified page template.
+     *
+     * @param string $id
+     * @return string
+     */
     public static function get(string $id)
     {
         if (! self::exists($id)) {
@@ -54,6 +72,12 @@ class PageTemplates
         return self::$templates[$id];
     }
 
+    /**
+     * Determine if the specified page template is registered.
+     *
+     * @param string $id
+     * @return bool
+     */
     public static function exists(string $id)
     {
         return isset(self::$templates[$id]);

@@ -21,6 +21,11 @@ class Page extends Model implements Sortable
         HasSlug,
         SortableTrait;
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'has_fixed_template' => 'bool',
         'has_fixed_path' => 'bool',
@@ -28,18 +33,38 @@ class Page extends Model implements Sortable
         'is_deletable' => 'bool',
     ];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = [
         'published_at',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'title', 'slug', 'template_id', 'parent_id', 'is_standalone',
     ];
 
+    /**
+     * The model's sortable options.
+     *
+     * @var array
+     */
     protected $sortable = [
         'order_column_name' => 'order',
     ];
 
+    /**
+     * Get the model's slug options.
+     *
+     * @return SlugOptions
+     */
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
@@ -48,6 +73,12 @@ class Page extends Model implements Sortable
             ->saveSlugsTo('slug');
     }
 
+    /**
+     * Determine if another record exists with the given slug.
+     *
+     * @param string $slug
+     * @return bool
+     */
     protected function otherRecordExistsWithSlug(string $slug): bool
     {
         return $this->newQueryWithoutScopes()
@@ -57,6 +88,11 @@ class Page extends Model implements Sortable
             ->exists();
     }
 
+    /**
+     * Build the sort query.
+     *
+     * @return Builder
+     */
     public function buildSortQuery()
     {
         return $this->newQuery()->where(
@@ -64,6 +100,13 @@ class Page extends Model implements Sortable
         );
     }
 
+    /**
+     * Apply filters to the query.
+     *
+     * @param Builder $query
+     * @param array $filters
+     * @return void
+     */
     public function scopeApplyFilters(Builder $query, array $filters)
     {
         // Parent
