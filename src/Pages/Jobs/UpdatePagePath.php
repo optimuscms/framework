@@ -15,7 +15,7 @@ class UpdatePagePath
         Queueable,
         SerializesModels;
 
-    /** @var Page $page */
+    /** @var Page */
     protected $page;
 
     /**

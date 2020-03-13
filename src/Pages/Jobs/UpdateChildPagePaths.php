@@ -10,7 +10,7 @@ class UpdateChildPagePaths
 {
     use Dispatchable, SerializesModels;
 
-    /** @var Page $page */
+    /** @var Page */
     protected $page;
 
     /**

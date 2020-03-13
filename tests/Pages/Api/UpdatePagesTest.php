@@ -2,12 +2,12 @@
 
 namespace OptimusCMS\Tests\Pages\Api;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use OptimusCMS\Pages\Models\Page;
 use OptimusCMS\Pages\PageTemplates;
 use OptimusCMS\Tests\Pages\Fixtures\TestTemplateOne;
 use OptimusCMS\Tests\Pages\Fixtures\TestTemplateTwo;
 use OptimusCMS\Tests\Pages\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UpdatePagesTest extends TestCase
 {
@@ -29,7 +29,7 @@ class UpdatePagesTest extends TestCase
         $this->parentPage = factory(Page::class)->create();
 
         $this->page = factory(Page::class)->create([
-            'title' => "Unedited title",
+            'title' => 'Unedited title',
             'slug' => $slug = 'unedited-title',
             'path' => "{$this->parentPage->path}/{$slug}",
             'template_id' => $template::getId(),
@@ -265,7 +265,7 @@ class UpdatePagesTest extends TestCase
     protected function validData(array $overrides = [])
     {
         return array_merge([
-            'title' => "Updated title",
+            'title' => 'Updated title',
             'slug' => 'updated-title',
             'template_id' => TestTemplateTwo::getId(),
             'template_data' => [

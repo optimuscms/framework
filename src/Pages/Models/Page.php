@@ -3,7 +3,10 @@
 namespace OptimusCMS\Pages\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use OptimusCMS\Meta\HasMeta;
 use OptimusCMS\Pages\PageTemplates;
 use Optix\Draftable\Draftable;
@@ -121,6 +124,11 @@ class Page extends Model implements Sortable
         }
     }
 
+    /**
+     * Build the page's path.
+     *
+     * @return string
+     */
     public function buildPath()
     {
         if ($this->has_fixed_path) {
@@ -138,11 +146,21 @@ class Page extends Model implements Sortable
         return $prefix.$this->slug;
     }
 
-    public function templateHandler()
+    /**
+     * Get the page's template class.
+     *
+     * @return string
+     */
+    public function template()
     {
-        return PageTemplates::load($this->template_id);
+        return PageTemplates::get($this->template_id);
     }
 
+    /**
+     * @param $key
+     * @param $value
+     * @return PageContent|false
+     */
     public function addContent($key, $value)
     {
         $content = new PageContent([
@@ -153,6 +171,10 @@ class Page extends Model implements Sortable
         return $this->contents()->save($content);
     }
 
+    /**
+     * @param array $contents
+     * @return Collection
+     */
     public function addContents(array $contents)
     {
         $models = $this->newCollection();
@@ -164,6 +186,11 @@ class Page extends Model implements Sortable
         return $models;
     }
 
+    /**
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
     public function getContent($key, $default = null)
     {
         foreach ($this->contents as $content) {
@@ -175,6 +202,10 @@ class Page extends Model implements Sortable
         return $default;
     }
 
+    /**
+     * @param $key
+     * @return bool
+     */
     public function hasContent($key)
     {
         foreach ($this->contents as $content) {
@@ -186,21 +217,39 @@ class Page extends Model implements Sortable
         return false;
     }
 
+    /**
+     * @return mixed
+     */
     public function clearContents()
     {
         return $this->contents()->delete();
     }
 
+    /**
+     * Get the parent relationship.
+     *
+     * @return BelongsTo
+     */
     public function parent()
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
 
+    /**
+     * Get the children relationship.
+     *
+     * @return HasMany
+     */
     public function children()
     {
         return $this->hasMany(self::class, 'parent_id');
     }
 
+    /**
+     * Get the contents relationship.
+     *
+     * @return HasMany
+     */
     public function contents()
     {
         return $this->hasMany(PageContent::class, 'page_id');
